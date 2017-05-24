@@ -177,7 +177,6 @@ Arquivo | Descrição
 /etc/config/simet\_installed/simetbox\_dns\_installed | Indica que o pacote para realização de testes de DNS foi instalado
 /etc/config/simet\_installed/simetbox\_ping\_installed | Indica que o pacote para realização de testes de ping foi instalado
 /usr/bin/ctorrent | Cliente Bit-Torrent personalizado para os testes do SIMET
-/usr/bin/simet\_bt.sh | Script para chamar teste de P2P (Bit-Torrent)
 /usr/lib/libsimetconfig.so | Shared Object para leitura dos arquivos de configuração do SIMETBox
 /etc/ntp.conf\_simetbox | Arquivo de configuração do servidor ntpd já com os servidores do ntp.br configurados
 /usr/bin/simet\_ntpq \*\* | Envia o escorregamento de tempo obtido via NTP para os servidores do NIC.br
