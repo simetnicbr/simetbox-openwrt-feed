@@ -41,7 +41,7 @@ Tenhamos como exemplo o roteador TP-Link Archer C60 v2. Veja como  fechar uma di
 #### Atualiza e instala pré-requisitos
 ```bash
 sudo apt-get update
-sudo apt-get install git-core build-essential libssl-dev libncurses5-dev unzip gawk zlib1g-dev
+sudo apt-get install git-core build-essential libssl-dev libncurses5-dev unzip gawk zlib1g-dev subversion
 ```
 #### Cria o diretório necessário
 ```bash
