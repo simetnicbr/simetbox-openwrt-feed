@@ -1,0 +1,77 @@
+iframe{
+	width: 100%;
+	border: 0;
+}
+
+#maincontent{
+	text-align: center;
+}
+
+.quadrao{
+	font-size: 1.6em;
+	background: #eee;
+	padding: 10px;
+	margin: 5px;
+	margin-bottom: 20px;
+}
+.mini-quadro, .mini-quadro-ultimo{
+	float: left;
+	font-size: 1.2em;
+	width: 33%;
+}
+.mini-quadro{
+	border-right: 1px solid #ccc;
+}
+.vermelho{
+	color: #f00;
+	font-weight: bold;
+}
+.azul{
+	color: #06f;
+	font-weight: bold;
+}
+.amarelo{
+	color: #fb0;
+	font-weight: bold;
+}
+.espaco-anterior{
+	margin-top: 30px
+}
+.espaco-posterior{
+	margin-bottom: 30px
+}
+
+#runsimetclient{
+	float: right;
+	margin-right: 20px;
+}
+
+#runsimetclient[disabled]{
+    -webkit-animation: blink 1s infinite;
+    -moz-animation: blink 1s infinite;
+}
+
+
+@-webkit-keyframes blink {
+    0% {
+    	background: #f5f5f5;
+	}
+	50% {
+	    background: #79a;
+	}
+	100% {
+	    background: #f5f5f5;
+	}
+}
+
+@-moz-keyframes blink {
+    0% {
+    	background: #f5f5f5;
+	}
+	50% {
+    	background: #79a;
+	}
+	100% {
+	    background: #f5f5f5;
+	}
+}

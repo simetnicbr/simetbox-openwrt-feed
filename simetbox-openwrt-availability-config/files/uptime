@@ -1,0 +1,10 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2017 NIC.br
+
+START=50
+
+start() {
+	/usr/bin/run_simet_uptime 1>/dev/null 2>/dev/null&
+}
+
+

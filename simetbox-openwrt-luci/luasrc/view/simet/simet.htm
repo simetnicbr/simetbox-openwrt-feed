@@ -1,0 +1,49 @@
+<%+header%>
+
+<%
+local fs   = require "nixio.fs"
+local simet = require "luci.controller.simet"
+local has_ping6 = fs.access("/bin/ping6") or fs.access("/usr/bin/ping6")
+local has_traceroute6 = fs.access("/usr/bin/traceroute6")
+local hash = get_device_hash()
+local mac_address = get_mac_address()
+
+require('simet.simet_utils')
+
+%>
+
+<script type="text/javascript" src="<%=resource%>/cbi.js"></script>
+<script type="text/javascript">//<![CDATA[
+	var stxhr = new XHR();
+
+	function run_simet_client()
+	{
+		stxhr.get('<%=luci.dispatcher.build_url("admin", "simet", "simet_client_process")%>', null,
+	            function(x) 
+	            { 
+	                if( x.responseText.indexOf('simet') > -1 ) 
+	                {   
+				alert('Já existe um conjunto de testes em andamento. Aguarde alguns minutos para ele finalizar');
+	                } 
+	                else 
+	                {   
+				alert('Ao fechar esta janela será realizado um conjunto de testes padrão (vazão, jitter, latência e perda de pacotes em IPv4 e IPv6). Aguarde alguns minutos para ele finalizar antes de iniciar outro.');
+				stxhr.get('<%=luci.dispatcher.build_url("admin", "simet", "run_simet_client")%>', null, function(x) { }); 
+						
+	               	}
+	            }
+	    ); 
+	}
+//]]></script>
+
+	<% if is_online() then %>
+		<div id="testesimet" align="right">
+			<button value="testeagora" onclick="run_simet_client()" class="cbi-button cbi-button-apply">Teste agora!</button>
+		</div>
+	 	<iframe  id="simet-frame" src="https://simet-publico.ceptro.br/simet-box-history/index.html?idCookie=<%=mac_address%>&hash=<%=hash%>" frameborder="0" height="1245px;" width="100%;"></iframe>
+	<% else %>
+	 	<iframe  id="simet-frame" src="/simet/nonet.htm" frameborder="0" height="1245px;" width="100%;"></iframe>
+	<% end %>
+
+	
+<%+footer%>

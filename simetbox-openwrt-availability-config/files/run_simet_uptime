@@ -1,0 +1,7 @@
+#!/bin/sh
+sleep 90
+while [ true ]
+do
+	sleep 5
+	simet_uptime
+done

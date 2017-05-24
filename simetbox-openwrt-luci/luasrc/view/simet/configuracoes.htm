@@ -1,0 +1,241 @@
+<%+header%>
+
+
+<%
+local fs   = require "nixio.fs"
+local has_ping6 = fs.access("/bin/ping6") or fs.access("/usr/bin/ping6")
+local has_traceroute6 = fs.access("/usr/bin/traceroute6")
+
+require('simet.simet_utils')
+
+%>
+
+<script type="text/javascript" src="<%=resource%>/cbi.js"></script>
+<script type="text/javascript">//<![CDATA[
+
+	var stxhr = new XHR();
+
+	window.onload = function()
+	{
+		data = {
+			simet_alexa: {time_step: undefined},
+			simet_bcp38: {time_step: undefined},
+			simet_dns: {time_step: undefined},
+			content_provider: {time_step: undefined},
+			simet_test: {time_step: undefined},
+		//	simet_bt: {time_step: undefined},
+			simet_ping: {time_step:undefined },
+			simet_port25: {time_step: undefined}
+		};
+
+
+		var form = document.getElementById('simetConfigForm');
+
+		for (var key in data)
+		{
+			for(var option in data[key])
+			{
+				data[key][option] = '';
+			}
+	} 
+
+		stxhr.get('<%=luci.dispatcher.build_url("admin", "simet", "getcrontaboptions")%>', { options: JSON.stringify(data)  },
+		function(x) 
+		{ 
+
+			var options = JSON.parse(x.responseText);
+			var keys = Object.keys(options);
+
+			keys.forEach(function(key){
+
+				var keys2 = Object.keys(options[key]);
+
+				keys2.forEach(function(key2){
+
+					form[key+'_' + key2].value = parseInt(options[key][key2]);
+
+				});
+
+			});
+
+		}
+	);
+
+	}
+	
+	function saveConfiguration(form)
+	{
+
+		for (var key in data)
+		{
+			for(var option in data[key])
+			{
+				data[key][option] = form[key+'_'+option].value;
+			}
+	} 
+
+		stxhr.post('<%=luci.dispatcher.build_url("admin", "simet", "setcrontaboptions")%>', {
+		options: JSON.stringify(data) },
+		function(x) 
+		{ 
+			alert("<%:Successfully saved%>");
+			}	
+	);
+
+	};
+
+
+//]]></script>
+
+<style>
+	h5 {}
+	em {  width:120px; display: inline-block; padding-left:15px;}
+	select, input {width:80px; height:25px; }
+</style>
+
+	<div>
+
+	<form id="simetConfigForm" onsubmit="saveConfiguration(this); return false;">
+
+	<!-- Reescrever opcoes em Lua num loop para manter codigo organizado	-->
+
+		<% if file_exists('/etc/config/simet_installed/simetbox_base_installed') then %>
+			<div> 
+				<h5><%:Throughput, Latency, Jitter and Packet Loss%></h5>
+				<p><em><%:Periodicity%></em> 
+					<select name="simet_test_time_step">
+						<option value="60">1h</option>
+						<option value="120">2h</option>
+						<option value="180">3h</option>
+						<option value="240">4h</option>
+						<option value="360">6h</option> 
+						<option value="480">8h</option>
+						<option value="720">12h</option>
+					</select>
+				</p>
+			</div>
+			<hr>
+		<% end %>
+
+		<% if file_exists('/etc/config/simet_installed/simetbox_dns_installed') then %>
+			<div> 
+				<h5><%:DNS Tests%></h5> 
+				<p><em><%:Periodicity%></em> 
+					<select name="simet_dns_time_step">
+						<option value="60">1h</option>
+						<option value="120">2h</option>
+						<option value="180">3h</option>
+						<option value="240">4h</option>
+						<option value="360">6h</option> 
+						<option value="480">8h</option>
+						<option value="720">12h</option>
+					</select>
+				</p>
+			</div>
+			<hr>
+		<% end %>
+
+		<% if file_exists('/etc/config/simet_installed/simetbox_port25_installed') then %>
+			<div> 
+				<h5><%:Port 25 Management Test%></h5> 
+				<p><em><%:Periodicity%></em> 
+					<select name="simet_port25_time_step">
+						<option value="60">1h</option>
+						<option value="120">2h</option>
+						<option value="180">3h</option>
+						<option value="240">4h</option>
+						<option value="360">6h</option> 
+						<option value="480">8h</option>
+						<option value="720">12h</option>
+					</select>
+				</p>
+			</div>
+			<hr>
+		<% end %>
+
+		<% if file_exists('/etc/config/simet_installed/simetbox_bcp38_installed') then %>
+			<div> 
+				<h5><%:BCP38 Respect Tests%></h5> 
+				<p ><em><%:Periodicity%></em> 
+					<select name="simet_bcp38_time_step">
+						<option value="60">1h</option>
+						<option value="120">2h</option>
+						<option value="180">3h</option>
+						<option value="240">4h</option>
+						<option value="360">6h</option> 
+						<option value="480">8h</option>
+						<option value="720">12h</option>
+					</select>
+				</p>
+			</div>
+			<hr>
+		<% end %>
+
+		<% if file_exists('/etc/config/simet_installed/simetbox_ping_installed') then %>
+			<div> 
+				<h5><%:Ping to Gateway Tests%></h5> 
+				<p><em><%:Periodicity%></em>  
+					<select name="simet_ping_time_step">
+						<option value="5">5min</option>
+						<option value="10">10min</option>
+						<option value="15">15min</option>
+						<option value="20">20min</option>
+						<option value="30">30min</option>
+						<option value="60">1h</option>
+						<option value="120">2h</option>
+						<option value="180">3h</option>
+						<option value="240">4h</option>
+						<option value="360">6h</option> 
+						<option value="480">8h</option>
+						<option value="720">12h</option>
+					</select>
+				</p>
+			</div>
+			<hr>
+		<% end %>
+
+
+		<% if file_exists('/etc/config/simet_installed/simetbox_top10alexa_installed') then %>
+			<div> 
+				<h5><%:Top 10 Sites Brazil%></h5> 
+				<p><em><%:Periodicity%></em>  
+					<select name="simet_alexa_time_step">
+						<option value="60">1h</option>
+						<option value="120">2h</option>
+						<option value="180">3h</option>
+						<option value="240">4h</option>
+						<option value="360">6h</option> 
+						<option value="480">8h</option>
+						<option value="720">12h</option>
+					</select>
+				</p>
+			</div>
+			<hr>
+		<% end %>
+
+
+		<% if file_exists('/etc/config/simet_installed/simetbox_contentprovider_installed') then %>
+			<div> 
+				<h5><%:Content Provider Test%></h5> 
+				<p><em><%:Periodicity%></em>  
+					<select name="content_provider_time_step">
+						<option value="60">1h</option>
+						<option value="120">2h</option>
+						<option value="180">3h</option>
+						<option value="240">4h</option>
+						<option value="360">6h</option> 
+						<option value="480">8h</option>
+						<option value="720">12h</option>
+					</select>
+				</p>
+			</div>
+			<hr>
+		<% end %>
+	
+		<input type="submit" value="<%:Save%>">
+
+	</form>
+
+<%+footer%>
+
+

@@ -1,0 +1,10 @@
+# SIMETBox configuration
+menu "Configuration"
+	depends on PACKAGE_simetbox-openwrt-availability-config
+
+	config SIMETBOX_TR069
+		string "TR-069 server address"
+		help
+			TR-069 server address
+		default "http://acs.simet.nic.br/tr069"
+endmenu
