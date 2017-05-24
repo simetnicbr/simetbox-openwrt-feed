@@ -8,8 +8,7 @@ O SIMETBox é um sistema inicialmente desenvolvido para roteadores com OpenWRT p
 
 ## Pacotes que compõem o projeto e o que medem
 
-<center>**Atenção  
-É altamente recomendado que se selecione todos os pacotes ou pelo menos os pacotes 1, 2 e 3 com todos os seus componentes na configuração.**</center>
+**Atenção: É recomendado que se selecione todos os pacotes ou pelo menos os pacotes 1, 2, 3 e 4 com todos os seus componentes na configuração.**
 
 1. simetbox-openwrt-availability-config (análise de disponibilidade e configuração remota com TR-069)  
 1.1. Configuration  
