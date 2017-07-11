@@ -61,6 +61,10 @@ cp feeds.conf feeds.conf.default
 ```bash
 make package/symlinks
 ```
+#### Corrige bug relacionado com o OpenWRT Trunk para o libmicroxml 
+```bash
+cp feeds/simetbox/libmicroxml/Makefile feeds/management/libmicroxml/Makefile
+```
 #### Escolhe plataforma e pacotes a serem compilados
 ```bash
 make menuconfig
