@@ -40,7 +40,7 @@ require('simet.simet_utils')
 		<div id="testesimet" align="right">
 			<button value="testeagora" onclick="run_simet_client()" class="cbi-button cbi-button-apply">Teste agora!</button>
 		</div>
-	 	<iframe  id="simet-frame" src="https://simet-publico.ceptro.br/simet-box-history/index.html?idCookie=<%=mac_address%>&hash=<%=hash%>" frameborder="0" height="1245px;" width="100%;"></iframe>
+	 	<iframe  id="simet-frame" src="https://as-pool.simet.nic.br/simet-box-history/index.html?idCookie=<%=mac_address%>&hash=<%=hash%>" frameborder="0" height="1245px;" width="100%;"></iframe>
 	<% else %>
 	 	<iframe  id="simet-frame" src="/simet/nonet.htm" frameborder="0" height="1245px;" width="100%;"></iframe>
 	<% end %>
