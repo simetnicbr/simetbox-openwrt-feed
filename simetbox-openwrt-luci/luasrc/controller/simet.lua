@@ -29,8 +29,8 @@ function index()
 
         node.index = tr
 
-        entry({"admin", "simet", "simet"}, template("simet/simet"), "SIMET Results", 10).dependent=false
-        entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), "Settings", 30).dependent=false
+        entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET Results"), 10).dependent=false
+        entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), translate("Settings"), 30).dependent=false
 
 
         page = entry({"admin", "simet", "getcrontaboptions"}, call("get_crontab_options"), nil)                                                        

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014,2015 Hyperboria.net
+# Copyright 2017 NIC.br
 #
 # You may redistribute this program and/or modify it under the terms of
 # the GNU General Public License as published by the Free Software Foundation,
@@ -18,8 +18,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-luci
 PKG_VERSION:=1.0
-PKG_RELEASE:1
-
+PKG_RELEASE:=1
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_I18N_DIR:=$(PKG_BUILD_DIR)/luci-i18n
+PKG_BUILD_DEPENDS:=luci-base
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -37,6 +39,7 @@ define Package/simetbox-openwrt-luci/description
 endef
 
 define Build/Compile
+	$(MAKE) -C $(CURDIR)/po PKG_BUILD_DIR=$(PKG_BUILD_DIR) PKG_I18N_DIR=$(PKG_I18N_DIR) i18n-build
 endef
 
 define Package/simetbox-openwrt-luci/install
@@ -44,6 +47,8 @@ define Package/simetbox-openwrt-luci/install
 	$(CP) luasrc/* $(1)/usr/lib/lua/luci
 	$(INSTALL_DIR) $(1)/www
 	$(CP) htdocs/* $(1)/www
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
+	$(CP) $(PKG_I18N_DIR)/* $(1)/usr/lib/lua/luci/i18n
 endef
 
 $(eval $(call BuildPackage,simetbox-openwrt-luci))

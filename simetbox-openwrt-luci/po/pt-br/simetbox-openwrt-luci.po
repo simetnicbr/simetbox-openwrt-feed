@@ -1,0 +1,49 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: simetbox-openwrt-luci\n"
+"Report-Msgid-Bugs-To: henrique@nic.br\n"
+"Last-Translator: Henrique de Moraes Holschuh <henrique@nic.br>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "BCP38 Respect Tests"
+msgstr "Testes de Respeito à BCP38"
+
+msgid "Content Provider Test"
+msgstr "Testes de Provedores de Conteúdo"
+
+msgid "DNS Tests"
+msgstr "Testes de DNS"
+
+msgid "Periodicity"
+msgstr "Periodicidade"
+
+msgid "Ping to Gateway Tests"
+msgstr "Teste de PING do gateway"
+
+msgid "Port 25 Management Test"
+msgstr "Testes de Gerência da Porta 25"
+
+msgid "SIMET"
+msgstr "SIMET"
+
+msgid "SIMET Results"
+msgstr "Resultados do SIMET"
+
+msgid "Save"
+msgstr "Grava"
+
+msgid "Settings"
+msgstr "Configurações"
+
+msgid "Successfully saved"
+msgstr "Gravado com sucesso"
+
+msgid "Throughput, Latency, Jitter and Packet Loss"
+msgstr "Vazão, Latência, Jitter, e Perda de Pacotes"
+
+msgid "Top 10 Sites Brazil"
+msgstr "Dez sites mais acessados do Brasil (ALEXA)"
