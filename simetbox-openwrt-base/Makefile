@@ -29,6 +29,8 @@ PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=$(PKG_REV)
 
+include $(INCLUDE_DIR)/package.mk
+
 # CONFIGURE_ARGS += --with-ssl-dir="$(STAGING_DIR)/usr"
 
 ifeq ($(CONFIG_SIMETBOX_COMMON),y)
@@ -116,12 +118,10 @@ define Package/simetbox-openwrt-base
   SECTION:=net
   CATEGORY:=Network
   TITLE:=SIMETBox
-  DEPENDS:=+libjson-c +simetbox-openwrt-config +libopenssl +libpthread +luci-lib-jsonc +luci-lib-json
+  DEPENDS:=+libjson-c +simetbox-openwrt-config +libopenssl +libpthread +luci-lib-jsonc +luci-lib-json +curl +ca-certificates
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
-
-include $(INCLUDE_DIR)/package.mk
 
 define Package/simetbox-openwrt-base/description
  SIMETBox is a suite of tools to measure the quality of the internet. It's designed to be used mainly in Brazil measuring the internet from users home to Internet Exchange Points.

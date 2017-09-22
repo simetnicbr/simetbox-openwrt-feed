@@ -1,0 +1,41 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+msgid "BCP38 Respect Tests"
+msgstr ""
+
+msgid "Content Provider Test"
+msgstr ""
+
+msgid "DNS Tests"
+msgstr ""
+
+msgid "Periodicity"
+msgstr ""
+
+msgid "Ping to Gateway Tests"
+msgstr ""
+
+msgid "Port 25 Management Test"
+msgstr ""
+
+msgid "SIMET"
+msgstr ""
+
+msgid "SIMET Results"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Successfully saved"
+msgstr ""
+
+msgid "Throughput, Latency, Jitter and Packet Loss"
+msgstr ""
+
+msgid "Top 10 Sites Brazil"
+msgstr ""
