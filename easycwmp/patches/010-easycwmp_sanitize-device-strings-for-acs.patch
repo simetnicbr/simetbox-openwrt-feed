@@ -1,3 +1,11 @@
+easycwmp: replace characters that will cause trouble with URIs
+
+Not everything will URL-encode correctly, and this can play very badly with
+some ACS servers, e.g., on firmware filenames.  So, replace with "_" any
+characters that are too weird to allow through on IDs, names, labels and URIs.
+
+Upstream-report: http://support.easycwmp.org/view.php?id=302
+
 --- a/ext/openwrt/init.d/easycwmpd
 +++ b/ext/openwrt/init.d/easycwmpd
 @@ -13,15 +13,15 @@ init_device_info() {
