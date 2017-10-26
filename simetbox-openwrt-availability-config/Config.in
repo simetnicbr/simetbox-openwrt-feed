@@ -6,5 +6,5 @@ menu "Configuration"
 		string "TR-069 server address"
 		help
 			TR-069 server address
-		default "http://acs.simet.nic.br/tr069"
+		default "https://acs.simet.nic.br/tr069"
 endmenu
