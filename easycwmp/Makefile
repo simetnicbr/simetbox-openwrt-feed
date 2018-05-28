@@ -8,6 +8,7 @@ PKG_NAME:=easycwmp
 PKG_VERSION:=1.6.1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://easycwmp.org/download/
+PKG_HASH:=e2f119643a21b728484ac491ed6a52e764070c16665ac61d87ad5b09bf890947
 
 PKG_FIXUP:=autoreconf
 
