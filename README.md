@@ -34,36 +34,37 @@ O SIMETBox é um sistema inicialmente desenvolvido para roteadores com OpenWRT p
 
 ## Instalação
 
-O feed do SIMETBox se integra com os projeto [OpenWRT](http://openwrt.org) e [LEDE](http://lede-project.org). Para que possa ser fechada uma distribuição com ele é necessário que se compile a imagem para o roteador desejado a partir do código fonte dos projetos.  
-Tenhamos como exemplo o roteador TP-Link Archer C60 v2. Veja como  fechar uma distribuição (imagem) para este roteador usando Ubuntu. Os passos são desde a instalação de dependências até o fechamento da imagem, baseando-se no OpenWRT versão 15:
+O feed do SIMETBox se integra com os projeto [OpenWRT](http://openwrt.org), versões "lede-17.01" e "openwrt-18.06". Para que possa ser fechada uma distribuição com ele é necessário que se compile a imagem para o roteador desejado a partir do código fonte dos projetos.
+
+Não é recomendado utilizar o openwrt-18.06 em equipamentos com menos de 64MiB de RAM: nestes casos, o lede-17.01 é mais estável.
+
+Tenhamos como exemplo o roteador TP-Link Archer C7 v2. Veja como  fechar uma distribuição (imagem) para este roteador usando Ubuntu. Os passos são desde a instalação de dependências até o fechamento da imagem, baseando-se no OpenWRT versão lede-17.01:
 
 
 #### Atualiza e instala pré-requisitos
 ```bash
 sudo apt-get update
-sudo apt-get install git-core build-essential \
-libssl-dev libncurses5-dev unzip gawk zlib1g-dev subversion
+sudo apt-get install --install-recommends build-essential ccache perl python
+binutils util-linux patch diffutils flex findutils grep gawk intltool gettext
+bzip2 xz-utils unzip libncurses5-dev zlib1g-dev libssl-dev git rsync wget curl
+subversion time
 ```
 #### Cria o diretório necessário
 ```bash
-mkdir openwrt15
-cd openwrt15
+mkdir openwrt
+cd openwrt
 ```
-#### Busca e configura o OpenWRT 15
+#### Busca e configura o OpenWRT lede-17.01
 ```bash
-git clone -b chaos_calmer git://github.com/openwrt/openwrt.git
+git clone -b lede-17.01 https://github.com/openwrt/openwrt.git
 cd openwrt
 echo "src-git simetbox https://github.com/simetnicbr/simetbox-openwrt-feed.git" > feeds.conf
 cat feeds.conf.default >> feeds.conf
-cp feeds.conf feeds.conf.default
 ```
 #### Habilita os pacotes para serem configurados
 ```bash
-make package/symlinks
-```
-#### Corrige bug relacionado com o OpenWRT Trunk para o libmicroxml 
-```bash
-cp feeds/simetbox/libmicroxml/Makefile feeds/management/libmicroxml/Makefile
+./scripts/feeds update -a
+./scripts/feeds install -a
 ```
 #### Escolhe plataforma e pacotes a serem compilados
 ```bash
@@ -71,15 +72,17 @@ make menuconfig
 ```
 * Escolher a opção **Target System** -\> **Atheros AR7xxx/AR9xxx**
 * Voltar ao menu principal
-* Escolher a opção **Target Profile** -\> **TP-LINK Archer C5/C7**
+* Escolher a opção **Target Profile** -\> **TP-LINK Archer C7 v2**
 * Marcar a opção "Image configuration" com "\*" (usa-se a tecla de espaço para marcar uma opção). É importante que apareça "\*" e não a letra "M"
 * Depois de marcada a opção "Image configuration" deve-se entrar nela pressionando a tecla \<enter\>
 * No novo menu que surge, deve-se marcar com "\*" a opção "Version configuration options" e também entrar nela
-* Pressionar a tecla enter na opção "Release version number" e escolher um número para a versão do sistema que será gerado. Esta será a versão do firmware que aparecerá caso esteja usando o protocolo TR-069 para gerência do roteador. Caso venha a fazer upgrade do firmware usando este protocolo, é o valor colocado aqui que indicará qual o firmware atual e qual será o novo. No exemplo, vamos usar a versão 100:  
+* Pressionar a tecla enter na opção "Release version code" e escolher um número para a versão do sistema que será gerado. Esta será a versão do firmware que aparecerá caso esteja usando o protocolo TR-069 para gerência do roteador. Caso venha a fazer upgrade do firmware usando este protocolo, é o valor colocado aqui que indicará qual o firmware atual e qual será o novo. No exemplo, vamos usar a versão 100:
 
-> **(100) Release version number**
-		
-* Voltar para o menu principal e escolher a opção **Network** -\> **SIMETBox** e marcar com "*" :
+> **(100) Release version code**
+
+(em versões anteriores do OpenWRT, não existia a opção "Release version code").
+
+* Voltar para o menu principal e escolher a opção **Network** -\> **SIMETBox** e marcar com "*" (usando a tecla "y") as opções relevantes :
 
 > \<\*\> simetbox-openwrt-availability-config  
 > 	Configuration  ---\>  
@@ -94,8 +97,8 @@ make menuconfig
 ```bash
 make -j 8 # tenha paciência - esta parte demora vários minutos ao ser executada pela primeira vez
 ```
-#### Os arquivos gerados (.bin) estarão no diretório bin/ar71xx
-> Neste exemplo, deve ser usado o arquivo bin/ar71xx/**openwrt-100-ar71xx-generic-archer-c7-v2-squashfs-factory.bin** para trocar o firmware original do seu roteador e o arquivo bin/ar71xx/**openwrt-100-ar71xx-generic-archer-c7-v2-squashfs-sysupgrade.bin** para atualizar algum que já está instalado
+#### Os arquivos gerados (.bin) estarão no diretório bin/targets/ar71xx/generic/
+> Lembre-se que os arquivos .bin com "factory" no nome são para trocar o firmware original do seu roteador, e o arquivos .bin com "sysupgrade" no nome são para atualizar algum que já está instalado.
 
 
 ## Regras de Firewall
@@ -208,6 +211,7 @@ simet_client | Roda um conjunto de testes da resolução 574 da ANATEL de forma 
 ## Histórico
 
 2017-05-24 - Primeiro release público
+2018-05-29 - Atualização para adequação ao LEDE-17.01 e OpenWRT-18.06
 
 ## TODO
 
