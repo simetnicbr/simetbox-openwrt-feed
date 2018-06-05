@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 
 PKG_NAME:=simetbox-openwrt-availability-config
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -38,11 +38,8 @@ define Package/simetbox-openwrt-availability-config/install
 	$(INSTALL_DIR) $(1)/etc/ifplugd
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
-	$(LN) /usr/bin/simet_tools $(1)/usr/bin/simet_uptime
 	$(CP) files/ifplugd.action $(1)/etc/ifplugd
-	$(CP) files/run_simet_uptime $(1)/usr/bin
 	$(CP) files/sendifupdown.sh $(1)/usr/bin
-	$(CP) files/uptime $(1)/etc/init.d
 	$(CP) files/60-ifupdownlog $(1)/etc/hotplug.d/iface
 	$(CP) files/aplica_transacao.sh $(1)/usr/bin
 	echo $(CONFIG_SIMETBOX_TR069) >> $(1)/etc/config/tr069_server
