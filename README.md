@@ -1,6 +1,6 @@
-# Feed do SIMETBox para os projetos OpenWRT e LEDE
+# Feed do SIMETBox para o projeto OpenWRT (incluindo LEDE)
 
-Arquivos necessários para poder compilar e instalar o sistema SIMETBox nas distribuições OpenWRT e LEDE.
+Arquivos necessários para poder compilar e instalar o sistema SIMETBox nas distribuições OpenWRT master, OpenWRT 18.06, e Openwrt LEDE 17.01.
 
 # Sobre o SIMETBox
 
@@ -8,11 +8,12 @@ O SIMETBox é um sistema inicialmente desenvolvido para roteadores com OpenWRT p
 
 ## Pacotes que compõem o projeto e o que medem
 
-**Atenção: É recomendado que se selecione todos os pacotes ou pelo menos os pacotes 1, 2, 3 e 4 com todos os seus componentes na configuração.**
+**Atenção: É recomendado que se selecione todos os pacotes ou pelo menos os pacotes 2, 3 e 4 com todos os seus componentes na configuração.**
 
 1. simetbox-openwrt-availability-config (análise de disponibilidade e configuração remota com TR-069)  
 1.1. Configuration  
 1.1.1. TR-069 server address (endereço do servidor TR-069 usado)
+
 2. simetbox-openwrt-base (medições básicas do SIMETBox)  
 2.1. Configuration  
 2.1.2. Standard measurements (jitter, latência, perda de pacotes e vazão)  
@@ -34,9 +35,9 @@ O SIMETBox é um sistema inicialmente desenvolvido para roteadores com OpenWRT p
 
 ## Instalação
 
-O feed do SIMETBox se integra com os projeto [OpenWRT](http://openwrt.org), versões "lede-17.01" e "openwrt-18.06". Para que possa ser fechada uma distribuição com ele é necessário que se compile a imagem para o roteador desejado a partir do código fonte dos projetos.
+O feed do SIMETBox se integra com os projeto [OpenWRT](http://openwrt.org), versões "lede-17.01", "openwrt-18.06" e "master".  Para que possa ser fechada uma distribuição com ele é necessário que se compile a imagem para o roteador desejado a partir do código fonte dos projetos.
 
-Não é recomendado utilizar o openwrt-18.06 em equipamentos com menos de 64MiB de RAM: nestes casos, o lede-17.01 é mais estável.
+Não é recomendado utilizar o "openwrt-18.06" ou o openwrt "master" em equipamentos com menos de 64MiB de RAM: nestes casos, o lede-17.01 é mais estável.  Ainda assim, em equipamentos com apenas 32MiB de RAM, podem haver problemas durante "sysupgrade" via interface web e é necessário utilizar tr-069, ssh, ou tftp via bootloader para atualização.  Esta é uma limitação do firmware openwrt, e não das extensões simetbox.
 
 Tenhamos como exemplo o roteador TP-Link Archer C7 v2. Veja como  fechar uma distribuição (imagem) para este roteador usando Ubuntu. Os passos são desde a instalação de dependências até o fechamento da imagem, baseando-se no OpenWRT versão lede-17.01:
 
@@ -49,8 +50,9 @@ binutils util-linux patch diffutils flex findutils grep gawk intltool gettext
 bzip2 xz-utils unzip libncurses5-dev zlib1g-dev libssl-dev git rsync wget curl
 subversion time
 ```
-#### Cria o diretório necessário
+#### Cria o diretório necessário, garate uma umask que não irá causar problemas
 ```bash
+umask 022
 mkdir openwrt
 cd openwrt
 ```
@@ -95,15 +97,15 @@ make menuconfig
 
 #### compilar tudo
 ```bash
-make -j 8 # tenha paciência - esta parte demora vários minutos ao ser executada pela primeira vez
+make -j8 # tenha paciência - esta parte demora vários minutos ao ser executada pela primeira vez
 ```
 #### Os arquivos gerados (.bin) estarão no diretório bin/targets/ar71xx/generic/
-> Lembre-se que os arquivos .bin com "factory" no nome são para trocar o firmware original do seu roteador, e o arquivos .bin com "sysupgrade" no nome são para atualizar algum que já está instalado.
+> Lembre-se que os arquivos .bin com "factory" no nome são para trocar o firmware original do seu roteador, e o arquivos .bin com "sysupgrade" no nome são para atualizar algum firmware compatível com openwrt que já está instalado (por exemplo, versão antiga do simetbox).
 
 
 ## Regras de Firewall
 
-Não são necessárias regras adicionais para que as medições sejam realizadas. Quando o pacote **simetbox-openwrt-availability-config** as regras de firewall para acesso ao servidor ACS (TR-069) já ficam previamente configuradas.  
+Não são necessárias regras adicionais para que as medições sejam realizadas.  Se o pacote **simetbox-openwrt-availability-config** for instalado, as regras de firewall para acesso ao servidor ACS (TR-069) já ficam previamente configuradas.  
 Caso haja interesse em configurar regras, como por exemplo endereços IPs que possam acessar a porta 80 (http) da interface WAN, deve-se seguir estes passos:
 
 * Na interface WEB vá em Network \-\> Firewall \-\> Open ports on router  
@@ -126,7 +128,7 @@ O protocolo [TR-069](https://pt.wikipedia.org/wiki/TR-069) foi desenvolvido pelo
 * [GenieACS](https://genieacs.com)
 * [OpenACS](http://openacs.org)
 
-O SIMETBox já deixa o sistema configurado para utilizar o servidor desejado. Caso não haja necessidade de utilizar servidor TR-069 local, pode-se manter o endereço do servidor do NIC.br, que será usado futuramente para análise de tempo de downtime dos equipamentos. O usuário e senha utilizados por padrão para cada roteador é o seu endereço MAC, tanto para o nome de usuário quanto para a senha. O servidor do NIC.br está preparado para receber registros neste formato.
+O SIMETBox já deixa o sistema configurado para utilizar o servidor desejado.  Caso não haja necessidade de utilizar servidor TR-069 local, pode-se manter o endereço do servidor do NIC.br, que será usado futuramente para análise de tempo de downtime dos equipamentos. O usuário e senha utilizados por padrão para cada roteador é o seu endereço MAC, tanto para o nome de usuário quanto para a senha. O servidor do NIC.br está preparado para receber registros neste formato.
 
 ## Contribuições ao projeto
 
@@ -190,7 +192,7 @@ Arquivo | Descrição
 /etc/zabbix\_agentd\_v2\_simetbox.conf | Configuração para o agente Zabbix 2.x (geralmente OpenWRT)
 /etc/zabbix\_agentd\_v3\_simetbox.conf | Configuração para o agente Zabbix 3.x (geralmente LEDE)
 
-\* Depreciado. Em processo de troca por análise via TR-069.  
+\* Depreciado (removido em versões atuais do firmware).  Em processo de troca por um componente novo de uptime que escala melhor no lado servidor.
 \*\* Link simbólico para /usr/bin/simet_tools.
 
 ## Como usar o sistema para fazer medições
@@ -212,10 +214,12 @@ simet_client | Roda um conjunto de testes da resolução 574 da ANATEL de forma 
 
 2017-05-24 - Primeiro release público
 2018-05-29 - Atualização para adequação ao LEDE-17.01 e OpenWRT-18.06
+2018-06-12 - Revisado.
 
 ## TODO
 
 * Adicionar testes para localização dos servidores do Netflix
+* Adicionar testes para detectar MITM contra instituições financeiras (*requer parceria com a instituição financeira*)
 * Integrar dados do servidor Zabbix usado pelo NIC.br na interface de visualização dos resultados
 * Integrar dados do servidor TR-069 usado pelo NIC.br na interface de visualização dos resultados
 * Apresentar resultados dos testes de DNS na interface
