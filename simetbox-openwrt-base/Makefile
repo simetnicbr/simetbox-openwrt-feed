@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 PKG_BRANCH:=branches/master
 
 PKG_NAME:=simetbox-openwrt-base
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -23,7 +23,7 @@ PKG_SOURCE_VERSION:=HEAD
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simetbox-openwrt-base.git
 
 PKG_REV:=HEAD
-PKG_VERSION:=36
+PKG_VERSION:=37
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
 PKG_SOURCE_PROTO:=git
@@ -136,6 +136,8 @@ define Package/simetbox-openwrt-base/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_DIR) $(1)/etc/factory_config
+	$(INSTALL_DIR) $(1)/lib/upgrade
+	$(CP) files/* $(1)/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_client
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_ws
