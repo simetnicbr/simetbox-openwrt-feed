@@ -9,6 +9,19 @@
 # Also detect corrupt config tarballs (using gzip -dc >/dev/null), since
 # sysupgrade could generate one of those during OOM.
 
+
+nicbr_update_oomkscore() {
+if [ -r /proc/$$/oom_score_adj ] && [ "$(cat /proc/$$/oom_score_adj)" -gt "$1" ] ; then
+	printf "%d" "$1" > /proc/$$/oom_score_adj
+fi
+:
+}
+
+## HIGH PRIORITY ADJUSTMENTS
+##   By default, make it hard but not impossible for the kernel OOMK
+##   to select sysupgrade and its children
+nicbr_update_oomkscore -500
+
 nicbr_no_new_processes() {
 	if [ "$( awk '/MemFree:/ { print $2 }' < /proc/meminfo )" -lt 20000 ] ; then
 		rm -fr /tmp/opkg-lists
@@ -149,5 +162,7 @@ nicbr_lowram() {
 # openwrt-18.06:   we have been sourced by stage2
 if [ -f /tmp/sysupgrade ] || [ "${0##*/}" = "stage2" ] ; then
 	nicbr_lowram
+	# disable kernel OOMK for sysupgrade late stage and its children
+	nicbr_update_oomkscore -1000
 fi
 :
