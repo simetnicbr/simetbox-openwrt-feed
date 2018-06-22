@@ -141,13 +141,9 @@ O SIMETBox já deixa o sistema configurado para utilizar o servidor desejado.  C
 
 Arquivo | Descrição
 --------|----------
-/usr/bin/simet_uptime\* \*\* | Se conecta ao servidor que indica disponibilidade
 /etc/ifplugd/ifplugd.action | Ação do ifplugd para registro da mudança de estado das interfaces de rede
-/usr/bin/run\_simet\_uptime* | Chama simet_uptime
 /usr/bin/sendifupdown.sh | Envia alterações de estado da interface
-/etc/init.d/uptime\* | Script para inicialização do simet_uptime
 /etc/hotplug.d/iface/60-ifupdownlog | Chama um ifplugd por interface que sobe
-/usr/bin/aplica_transacao.sh* | Aplica transações remotas
 /etc/config/tr069_server | Endereço do servidor TR-069 (ACS) utilizado
 /etc/config/simet\_installed/simetbox\_network\_and\_config\_installed | Indica se foi instalado o pacote de gerência de disponibilide
 /usr/bin/simet_client \*\* | Cliente para realização de teste de latência, jitter, perda de pacotes e vazão
@@ -166,7 +162,6 @@ Arquivo | Descrição
 /usr/bin/run_simet.sh | Roda um conjunto de testes do SIMET (testes relacionados a resolução 574 da ANATEL)
 /usr/bin/simetbox_register.sh | Registra o SIMETBox e seu HASH único para liberar consulta via WEB
 /etc/uci-defaults/99-simet-cron | Configura crontab para os testes do SIMET
-/usr/lib/lua/simet/json\_to\_uci.lua | Biblioteca LUA com funções para conversão de JSON para UCI
 /usr/lib/lua/simet/crontab_writer.lua | Biblioteca LUA usada para gerar a crontab
 /usr/lib/lua/simet/personal_data.lua | Biblioteca LUA usada para gravar os dados cadastrados pelo usuário (nome, velocidade contratada e outros)
 /etc/config/simet\_installed/simetbox\_base\_installed | Indica que o pacote básico do SIMETBox foi instalado
