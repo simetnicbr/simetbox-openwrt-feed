@@ -41,7 +41,6 @@ define Package/simetbox-openwrt-availability-config/install
 	$(CP) files/ifplugd.action $(1)/etc/ifplugd
 	$(CP) files/sendifupdown.sh $(1)/usr/bin
 	$(CP) files/60-ifupdownlog $(1)/etc/hotplug.d/iface
-	$(CP) files/aplica_transacao.sh $(1)/usr/bin
 	echo $(CONFIG_SIMETBOX_TR069) >> $(1)/etc/config/tr069_server
 	touch $(1)/etc/config/simet_installed/simetbox_network_and_config_installed
 endef

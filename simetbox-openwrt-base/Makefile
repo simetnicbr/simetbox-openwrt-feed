@@ -155,7 +155,6 @@ define Package/simetbox-openwrt-base/install
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/run_simet.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simetbox_register.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/uci-defaults/99-simet-cron  $(1)/etc/uci-defaults
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/json_to_uci.lua  $(1)/usr/lib/lua/simet
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/crontab_writer.lua  $(1)/usr/lib/lua/simet
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/personal_data.lua  $(1)/usr/lib/lua/simet
 	$(TOUCH_SIMET_CLIENT) $(1)/etc/config/simet_installed/simetbox_base_installed
