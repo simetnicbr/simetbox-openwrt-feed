@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 PKG_BRANCH:=branches/master
 
 PKG_NAME:=simetbox-openwrt-base
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -137,6 +137,7 @@ define Package/simetbox-openwrt-base/install
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_DIR) $(1)/etc/factory_config
 	$(INSTALL_DIR) $(1)/lib/upgrade
+	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
 	$(CP) files/* $(1)/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_client

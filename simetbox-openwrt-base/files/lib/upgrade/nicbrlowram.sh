@@ -33,11 +33,11 @@ nicbr_no_new_processes() {
 		# nicbr SIMET-specific:
 		SIMET_KILL="run_simet.sh simet_dns_ping_traceroute.sh simet_ping.sh simet_traceroute.sh simetbox_register.sh simet_send_if_traffic.sh simet_client simet_alexa simet_bcp38 simet_dns simet_ntpq simet_porta25 simet_tools simet_ws"
 		for i in 1 2 ; do
-			killall -q -TERM $SIMET_KILL
+			killall -q -TERM $SIMET_KILL || true
 			sleep 1
 		done
 		for i in 1 2 ; do
-			killall -q -KILL $SIMET_KILL
+			killall -q -KILL $SIMET_KILL || true
 			sleep 1
 		done
 		rm -fr /tmp/simet*
