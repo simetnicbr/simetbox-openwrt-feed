@@ -137,6 +137,7 @@ define Package/simetbox-openwrt-base/install
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_DIR) $(1)/etc/factory_config
 	$(INSTALL_DIR) $(1)/lib/upgrade
+	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
 	$(CP) files/* $(1)/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_client
