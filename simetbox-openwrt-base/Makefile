@@ -184,6 +184,11 @@ define Package/simetbox-openwrt-base/install
 endef
 
 define Package/simetbox-openwrt-base/config
+	select BUSYBOX_CUSTOM
+	select BUSYBOX_CONFIG_TRACEROUTE
+	select BUSYBOX_CONFIG_FEATURE_TRACEROUTE_USE_ICMP
+	select BUSYBOX_CONFIG_FEATURE_TRACEROUTE_VERBOSE
+	select BUSYBOX_CONFIG_TRACEROUTE6 if IPV6 && !PACKAGE_iputils-traceroute6
 	source "$(SOURCE)/Config.in"
 endef
 
