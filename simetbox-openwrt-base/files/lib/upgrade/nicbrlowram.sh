@@ -164,5 +164,7 @@ if [ -f /tmp/sysupgrade ] || [ "${0##*/}" = "stage2" ] ; then
 	nicbr_lowram
 	# disable kernel OOMK for sysupgrade late stage and its children
 	nicbr_update_oomkscore -1000
+	# blink specific leds on most TP-Link devices
+	( cd /sys/class/leds && for i in *:power *:system *:qss *:wps ; do echo timer > "$i/trigger" || true ; done ) >/dev/null 2>&1 || true
 fi
 :
