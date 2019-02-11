@@ -95,6 +95,10 @@ make menuconfig
 > \<\*\> simetbox-openwrt-ntpd....................................... Ntpd Support  
 > \<\*\> simetbox-openwrt-zabbix................................... Zabbix Support  
 
+* Voltar para o menu principal e escolher a opção **Libraries** -\> **libcurl**. Trocar o SSL support para OpenSSL e habilitar o **Enable cryptographic authentication**
+
+* Salvar as modificações feitas na configuração
+
 #### compilar tudo
 ```bash
 make -j8 # tenha paciência - esta parte demora vários minutos ao ser executada pela primeira vez
