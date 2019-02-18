@@ -38,3 +38,8 @@ start_service() {
 	procd_close_instance
 }
 
+reload_service() {
+	/etc/init.d/simet-lmapd reload || true
+	restart "$@"
+}
+

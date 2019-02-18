@@ -1,0 +1,55 @@
+#!/bin/sh /etc/rc.common
+
+# simet-lmapd - SIMET2 Measurement Agent LMAP scheduler
+# Copyright (c) 2019 NIC.br
+# Distributed under the GPLv3+
+
+START=99
+STOP=10
+USE_PROCD=1
+
+LMAP_OPTS="-j"
+
+init_lmapd_fs() {
+	mkdir -p /var/run/lmapd
+	chown nicbr-simet:nicbr-simet /var/run/lmapd \
+		&& chmod 0775 /var/run/lmapd
+	mkdir -p /var/spool/lmapd/queue
+	chown -R nicbr-simet:nicbr-simet /var/spool/lmapd \
+		&& chmod 02770 /var/spool/lmapd /var/spool/lmapd/queue
+	ln -sf /usr/lib/simet/lmap-default-schedule.json \
+		      /var/run/lmapd/lmap-schedule.json \
+		&& chown nicbr-simet:nicbr-simet /var/run/lmapd/*json \
+		&& chmod +r /var/run/lmapd/*json
+}
+
+# FIXME: refuse to start the lmapd if the engine is disabled
+#        refuse to start the lmapd if the MA is not registered?
+#        (we handle registering and schedule download in simet-ma)
+boot() {
+	init_lmapd_fs
+	start "$@"
+}
+
+reload_service() {
+	if lmapctl $LMAP_OPTS validate ; then
+		lmapctl $LMAP_OPTS reload
+		return 0
+	else
+		echo "%0: lmapd configuration invalid, not reloading" >&2
+		return 1
+	fi
+}
+
+start_service() {
+	init_lmapd_fs
+	procd_open_instance simet-lmapd
+	procd_set_param user nicbr-simet
+	procd_set_param respawn 180 5 10
+	procd_set_param stderr 1
+	procd_set_param stdout 1
+	procd_set_param command /usr/bin/lmapd $LMAP_OPTS
+	lmapctl validate || procd_set_param error "lmapd configuration invalid"
+	procd_close_instance
+}
+

@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 #
 
 PKG_NAME:=simetbox-openwrt-simet-ma
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -33,7 +33,7 @@ define Package/simetbox-openwrt-simet-ma
   SECTION:=net
   CATEGORY:=Network
   TITLE:=SIMETBox SIMET-2 measurement engine
-  DEPENDS:=+simetbox-openwrt-base +libcurl +curl +ca-certificates +!BUSYBOX_CONFIG_FLOCK:flock
+  DEPENDS:=+simetbox-openwrt-base +simetbox-openwrt-simet-lmapd +libcurl +curl +ca-certificates +!BUSYBOX_CONFIG_FLOCK:flock
   URL:=https://simet.nic.br
 #  MENU:=1
 endef
@@ -49,9 +49,10 @@ define Build/Compile
 endef
 
 define Package/simetbox-openwrt-simet-ma/install
-	$(INSTALL_DIR) $(1)/usr/bin $(1)/etc/simet $(1)/usr/lib/simet
+	$(INSTALL_DIR) $(1)/usr/bin $(1)/etc/simet $(1)/etc/simet/lmap \
+		$(1)/usr/lib/simet/lmap/registry.d $(1)/usr/lib/simet/lmap/config.d
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/simet/* $(1)/usr/lib/simet
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/simet/. $(1)/usr/lib/simet/
 	# this one can fail, we often have it empty
 	-$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/simet/* $(1)/etc/simet
 	chmod -R og-w files/ && $(CP) files/. $(1)/
@@ -61,8 +62,9 @@ define Package/simetbox-openwrt-simet-ma/postinst
 #!/bin/sh
 #check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	echo "Enabling rc.d symlink for simetbox-openwrt-simet-ma (simet-ma)"
+	echo "Enabling rc.d symlinks for simetbox-openwrt-simet-ma (simet-ma)"
 	/etc/init.d/simet-ma enable
+	/etc/init.d/simet-lmapd enable
 fi
 :
 endef
@@ -71,8 +73,9 @@ define Package/simetbox-openwrt-simet-ma/prerm
 #!/bin/sh
 #check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	echo "Removing rc.d symlink for simetbox-openwrt-simet-ma (simet-ma)"
+	echo "Removing rc.d symlinks for simetbox-openwrt-simet-ma (simet-ma)"
 	/etc/init.d/simet-ma disable
+	/etc/init.d/simet-lmapd disable
 fi
 :
 endef
