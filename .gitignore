@@ -1,3 +1,6 @@
+# OpenWRT devel hardlinks
+git-src
+
 # Object files
 *.o
 *.ko
