@@ -18,16 +18,14 @@ PKG_INSTALL:=1
 
 PKG_BUILD_PARALLEL:=0
 
-PKG_SOURCE_VERSION:=HEAD
-
-PKG_SOURCE_URL:=https://github.com/simetnicbr/simetbox-openwrt-base.git
-
 PKG_REV:=HEAD
 PKG_VERSION:=100
+PKG_SOURCE_VERSION:=$(PKG_REV)
+
+PKG_SOURCE_URL:=https://github.com/simetnicbr/simetbox-openwrt-base.git
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=$(PKG_REV)
 
 include $(INCLUDE_DIR)/package.mk
 
