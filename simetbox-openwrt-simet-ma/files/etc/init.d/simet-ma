@@ -18,7 +18,7 @@ BOXID=$(get_mac_address.sh 2>/dev/null | tr A-F a-f | tr -d ': -') || true
 BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
 
 boot() {
-	simetbox_register_ma.sh <&- 2>&- >&- &
+	( simetbox_register_ma.sh <&- 2>&- >&- && simetbox_lmap-fetch-schedule.sh <&- 2>&- ) <&- 2>&- &
 	start "$@"
 }
 

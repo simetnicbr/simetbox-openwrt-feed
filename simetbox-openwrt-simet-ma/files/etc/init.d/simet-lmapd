@@ -17,9 +17,12 @@ init_lmapd_fs() {
 	mkdir -p /var/spool/lmapd/queue
 	chown -R nicbr-simet:nicbr-simet /var/spool/lmapd \
 		&& chmod 02770 /var/spool/lmapd /var/spool/lmapd/queue
-	ln -sf /usr/lib/simet/lmap-default-schedule.json \
-		      /var/run/lmapd/lmap-schedule.json \
-		&& chown nicbr-simet:nicbr-simet /var/run/lmapd/*json \
+	# might race a fetch script, and we don't want to clobber the
+	# downloaded schedule, so ln -s (not -sf), which might fail
+	[ -r /var/run/lmapd/lmap-schedule.json ] || \
+		ln -s /usr/lib/simet/lmap-default-schedule.json \
+		      /var/run/lmapd/lmap-schedule.json 2>/dev/null || true
+	chown nicbr-simet:nicbr-simet /var/run/lmapd/*json \
 		&& chmod +r /var/run/lmapd/*json
 }
 
