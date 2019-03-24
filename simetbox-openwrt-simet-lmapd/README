@@ -1,0 +1,23 @@
+Directory layout on openwrt, SIMETBOX version.  Most/all of the
+files are actually provided by the simet-ma package, but we hardcode
+their paths in several places inside the simet-lmapd package.
+
+/usr/lib/simet/
+   + lmap-default-schedule.json  (default measurement schedule at boot)
+
+/usr/lib/simet/lmap/config.d/
+   +  simetbox.json... (hardcoded internal tasks)
+   +  simet-ma.json [simet-ma tasks]
+
+/usr/lib/simet/lmap/registry.d/
+   +  simetbox.json... (hardcoded internal utilities)
+   +  simet-ma.json [simet-ma tasks]
+   +  ...
+
+/etc/simet/lmap/
+   + lmap-agent.json     (agent-id -- created on register by simet-ma)
+   + lmap-group.json     (group-id -- not implemented yet)
+   + ...
+
+/var/run/lmapd/
+   + lmap-schedule.json  (test schedule) -- may ship an uci-default, download from controller

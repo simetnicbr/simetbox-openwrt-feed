@@ -25,13 +25,13 @@ nicbr_update_oomkscore -500
 nicbr_no_new_processes() {
 	if [ "$( awk '/MemFree:/ { print $2 }' < /proc/meminfo )" -lt 20000 ] ; then
 		rm -fr /tmp/opkg-lists
-		for i in cron atd xinetd ; do
+		for i in simet-lmapd cron atd xinetd ; do
 			[ -x "/etc/init.d/$i" ] && "/etc/init.d/$i" stop && \
 				echo "$0: service $i stopped" >&2
 		done
 
 		# nicbr SIMET-specific:
-		SIMET_KILL="run_simet.sh simet_dns_ping_traceroute.sh simet_ping.sh simet_traceroute.sh simetbox_register.sh simet_send_if_traffic.sh simet_client simet_alexa simet_bcp38 simet_dns simet_ntpq simet_porta25 simet_tools simet_ws"
+		SIMET_KILL="lmapd run_simet.sh simet_dns_ping_traceroute.sh simet_ping.sh simet_traceroute.sh simetbox_register.sh simet_send_if_traffic.sh simet_client simet_alexa simet_bcp38 simet_dns simet_ntpq simet_porta25 simet_tools simet_ws"
 		for i in 1 2 ; do
 			killall -q -TERM $SIMET_KILL || true
 			sleep 1

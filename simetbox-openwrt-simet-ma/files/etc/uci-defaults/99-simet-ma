@@ -1,10 +1,14 @@
 #!/bin/sh
 # Copyright (C) 2018 NIC.br
 # Released under the public domain or GPLv2+ at your option
+#
+# cleanup history for upgrades:
+#  previous: simetbox_register_ma.sh
+#  cuurent : simetbox_refresh_cron.sh
 
 crontab -l >/dev/null 2>&1 || exit 0
-crontab -l 2>/dev/null | grep -q simetbox_register_ma.sh && exit 0
+crontab -l 2>/dev/null | grep -q simetbox_refresh_cron.sh && exit 0
 
-( crontab -l ;
-  echo simetbox_register_ma.sh | awk '{ srand(); print int(60*rand()) " " int(24*rand()) " * * * " $0 }' ) | crontab -
+( crontab -l | sed -e '/simetbox_refresh_cron/ d' -e '/simetbox_register_ma/ d' ;
+  echo simetbox_refresh_cron.sh | awk '{ srand(); print int(60*rand()) " " int(24*rand()) " * * * " $0 }' ) | crontab -
 :
