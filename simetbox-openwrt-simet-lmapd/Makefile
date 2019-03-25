@@ -46,6 +46,7 @@ endef
 
 CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE:STRING=MinSizeRel -DBUILD_SHARED_LIBS:BOOL=ON \
 	-DBUILD_TESTS:BOOL=OFF -DBUILD_XML:BOOL=OFF -DBUILD_JSON:BOOL=ON \
+	-DBUILD_DOCUMENTATION:BOOL=OFF \
 	-DLMAPD_CONFIG_DIR:PATH="/usr/lib/simet/lmap/config.d:/etc/simet/lmap:/var/run/lmapd/lmap-schedule.json" \
 	-DLMAPD_CAPABILITY_DIR:PATH="/usr/lib/simet/lmap/registry.d" \
 	-DLMAPD_RUN_DIR:PATH="/var/run/lmapd"
