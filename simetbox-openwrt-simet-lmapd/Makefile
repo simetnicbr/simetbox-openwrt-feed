@@ -46,9 +46,32 @@ endef
 
 CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE:STRING=MinSizeRel -DBUILD_SHARED_LIBS:BOOL=ON \
 	-DBUILD_TESTS:BOOL=OFF -DBUILD_XML:BOOL=OFF -DBUILD_JSON:BOOL=ON \
+	-DBUILD_DOCUMENTATION:BOOL=OFF \
 	-DLMAPD_CONFIG_DIR:PATH="/usr/lib/simet/lmap/config.d:/etc/simet/lmap:/var/run/lmapd/lmap-schedule.json" \
 	-DLMAPD_CAPABILITY_DIR:PATH="/usr/lib/simet/lmap/registry.d" \
 	-DLMAPD_RUN_DIR:PATH="/var/run/lmapd"
+
+# we detect cmake 2.8.12 and emergency-patch the build, for chaos-calmer
+# compatibility.  This keeps the braindamage very contained, but it is
+# quite brittle.
+ifneq ($(findstring 2.8.12,$(shell cmake --version 2>&1)),)
+  $(info "Enabling workaround for CMake 2.8.12")
+  CMAKE28PATCH = 1
+else
+  CMAKE28PATCH = 0
+endif
+
+# This is written to work with the rather... peculiar include/cmake.mk from
+# OpenWRT Chaos Calmer.  Beware pitfalls if you touch it.
+#
+# Also apply other OpenWRT-CC specific patches while at it
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	if [ $(CMAKE28PATCH) -eq 1 ] && grep -q 'VERSION 3\.' $(PKG_BUILD_DIR)/CMakeLists.txt ; then \
+		echo "Attempting to patch the CMakeLists..." >&2 ; \
+		cat patch_ancient_cmake.patch patch_uclibc.patch | (cd $(PKG_BUILD_DIR) && patch -p1) ; \
+	fi
+endef
 
 define Package/simetbox-openwrt-simet-lmapd/install
 	$(INSTALL_DIR) $(1)/usr/bin $(1)/usr/lib/simet $(1)/usr/lib/simet/lmap $(1)/etc/simet/lmap

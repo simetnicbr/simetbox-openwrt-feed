@@ -6,13 +6,14 @@ their paths in several places inside the simet-lmapd package.
    + lmap-default-schedule.json  (default measurement schedule at boot)
 
 /usr/lib/simet/lmap/config.d/
-   +  simetbox.json... (hardcoded internal tasks)
-   +  simet-ma.json [simet-ma tasks]
+   + simetbox.json... (hardcoded internal tasks)
+   + simet-ma_base-config.json [simet-ma tasks]
+   + ...
 
 /usr/lib/simet/lmap/registry.d/
-   +  simetbox.json... (hardcoded internal utilities)
-   +  simet-ma.json [simet-ma tasks]
-   +  ...
+   + simetbox.json... (hardcoded internal utilities)
+   + simet-ma_base-registry.json [simet-ma tasks]
+   + ...
 
 /etc/simet/lmap/
    + lmap-agent.json     (agent-id -- created on register by simet-ma)
