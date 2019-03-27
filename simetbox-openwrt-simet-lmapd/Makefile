@@ -49,7 +49,8 @@ CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE:STRING=MinSizeRel -DBUILD_SHARED_LIBS:BOOL=O
 	-DBUILD_DOCUMENTATION:BOOL=OFF \
 	-DLMAPD_CONFIG_DIR:PATH="/usr/lib/simet/lmap/config.d:/etc/simet/lmap:/var/run/lmapd/lmap-schedule.json" \
 	-DLMAPD_CAPABILITY_DIR:PATH="/usr/lib/simet/lmap/registry.d" \
-	-DLMAPD_RUN_DIR:PATH="/var/run/lmapd"
+	-DLMAPD_RUN_DIR:PATH="/var/run/lmapd" \
+	-DLMAPD_QUEUE_DIR:PATH="/var/spool/lmapd/queue"
 
 # we detect cmake 2.8.12 and emergency-patch the build, for chaos-calmer
 # compatibility.  This keeps the braindamage very contained, but it is

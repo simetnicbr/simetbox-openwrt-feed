@@ -22,3 +22,6 @@ their paths in several places inside the simet-lmapd package.
 
 /var/run/lmapd/
    + lmap-schedule.json  (test schedule) -- may ship an uci-default, download from controller
+
+/var/spool/lmapd
+   + queue -- LMAPd task::action input/output queue, includes also the unsent report queue
