@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-simet-lmapd
-PKG_RELEASE:=9
+PKG_RELEASE:=1
 
 #PKG_FIXUP:=
 PKG_INSTALL:=1
@@ -17,7 +17,7 @@ PKG_SOURCE_VERSION:=HEAD
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simet-lmapd.git
 
 PKG_REV:=HEAD
-PKG_VERSION:=0.12.0
+PKG_VERSION:=0.13.0
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
 PKG_SOURCE_PROTO:=git
