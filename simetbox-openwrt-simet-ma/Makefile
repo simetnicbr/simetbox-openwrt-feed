@@ -64,20 +64,6 @@ define Package/simetbox-openwrt-simet-ma/postinst
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	echo "Clearing previous non-hardcoded LMAP configuration"
 	rm -f /var/run/lmapd/*.json
-	echo "Enabling rc.d symlinks for simetbox-openwrt-simet-ma (simet-ma)"
-	/etc/init.d/simet-ma enable
-	/etc/init.d/simet-lmapd enable
-fi
-:
-endef
-
-define Package/simetbox-openwrt-simet-ma/prerm
-#!/bin/sh
-#check if we are on real system
-if [ -z "$${IPKG_INSTROOT}" ]; then
-	echo "Removing rc.d symlinks for simetbox-openwrt-simet-ma (simet-ma)"
-	/etc/init.d/simet-ma disable
-	/etc/init.d/simet-lmapd disable
 fi
 :
 endef

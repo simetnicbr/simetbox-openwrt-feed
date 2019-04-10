@@ -1,5 +1,4 @@
 #!/bin/sh /etc/rc.common
-
 # simet-lmapd - SIMET2 Measurement Agent LMAP scheduler
 # Copyright (c) 2019 NIC.br
 # Distributed under the GPLv3+
@@ -9,9 +8,6 @@ STOP=10
 USE_PROCD=1
 
 LMAP_OPTS="-j"
-
-# disable script if the binary is missing (simet-lmapd not installed)
-test -x /usr/bin/lmapd || exit 0
 
 init_lmapd_fs() {
 	mkdir -p /var/run/lmapd

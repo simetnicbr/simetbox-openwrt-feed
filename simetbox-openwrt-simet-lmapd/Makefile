@@ -36,8 +36,6 @@ define Package/simetbox-openwrt-simet-lmapd
   DEPENDS:=+libevent2 +libjson-c
   URL:=https://simet.nic.br
   USERID:=nicbr-simet:nicbr-simet
-#  MENU:=1
-#  DEPENDS:=+simetbox-openwrt-base +libcurl +curl +ca-certificates +!BUSYBOX_CONFIG_FLOCK:flock
 endef
 
 define Package/simetbox-openwrt-simet-lmapd/description
@@ -81,16 +79,6 @@ define Package/simetbox-openwrt-simet-lmapd/install
 	# these may fail if we're not using them on this build
 	-$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/simet/* $(1)/usr/lib/simet
 	-chmod -R og-w files/ && $(CP) files/. $(1)/
-endef
-
-define Package/simetbox-openwrt-simet-lmapd/prerm
-#!/bin/sh
-#check if we are on real system
-if [ -z "$${IPKG_INSTROOT}" ] && [ -x /etc/init.d/simet-lmapd ]; then
-	echo "Removing rc.d symlinks for simetbox-openwrt-simet-lmapd (simet-lmapd)"
-	/etc/init.d/simet-lmapd disable || true
-fi
-:
 endef
 
 $(eval $(call BuildPackage,simetbox-openwrt-simet-lmapd))
