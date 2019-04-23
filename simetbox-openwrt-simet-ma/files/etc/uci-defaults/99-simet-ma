@@ -1,10 +1,16 @@
 #!/bin/sh
-# Copyright (C) 2018 NIC.br
+# Copyright (C) 2018-2019 NIC.br
 # Released under the public domain or GPLv2+ at your option
 
 crontab -l >/dev/null 2>&1 || exit 0
-crontab -l 2>/dev/null | grep -q simetbox_register_ma.sh && exit 0
-
-( crontab -l ;
-  echo simetbox_register_ma.sh | awk '{ srand(); print int(60*rand()) " " int(24*rand()) " * * * " $0 }' ) | crontab -
+( crontab -l 2>/dev/null ;
+  crontab -l 2>/dev/null | awk -- \
+  'BEGIN { srand(); DOREGISTER = 1; DOGEO = 1 }
+  /simetbox_register_ma.sh/ { DOREGISTER=0 }
+  /simet_geolocation.sh/ { DOGEO=0 }
+  END {
+    if (DOREGISTER) { print int(60*rand()) " " int(24*rand()) " * * * simetbox_register_ma.sh" } ;
+    if (DOGEO) { print int(60*rand()) " 1,5,9,13,17,21 * * * simet_geolocation.sh" }
+    }'
+) | crontab -
 :

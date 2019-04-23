@@ -13,12 +13,15 @@ USE_PROCD=1
 AGENT_ID_FILE=${AGENT_ID_FILE:-/etc/simet/agent-id}
 AGENT_TOKEN_FILE=${AGENT_TOKEN_FILE:-/etc/simet/agent.jwt}
 SIMET_INETUP_SERVER=${SIMET_INETUP_SERVER:-simet-monitor-inetup.simet.nic.br}
+GEOLOC_CACHE=${GEOLOC_CACHE:-/var/run/simet/geoloc-cache.txt}
 
 BOXID=$(get_mac_address.sh 2>/dev/null | tr A-F a-f | tr -d ': -') || true
 BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
 
 boot() {
-	simetbox_register_ma.sh <&- 2>&- >&- &
+	GEO_DIR=$(dirname "${GEOLOC_CACHE}")
+	[ -n "$GEO_DIR" ] && mkdir -m 0750 -p "$GEO_DIR" && chgrp nicbr-simet "$GEO_DIR"
+	( simetbox_register_ma.sh <&- 2>&- >&- && simet_geolocation.sh <&- 2>&1 >&- ) <&- 2>&1 >&- &
 	start "$@"
 }
 
