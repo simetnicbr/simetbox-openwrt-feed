@@ -117,6 +117,7 @@ define Package/simetbox-openwrt-base
   CATEGORY:=Network
   TITLE:=SIMETBox
   DEPENDS:=+libjson-c +simetbox-openwrt-config +libopenssl +libpthread +luci-lib-jsonc +luci-lib-json +curl +ca-certificates
+  SELECT:=simetbox-openwrt-simet-ma
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
