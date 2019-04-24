@@ -19,7 +19,7 @@ PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=0
 
 PKG_REV:=HEAD
-PKG_VERSION:=101
+PKG_VERSION:=102
 PKG_SOURCE_VERSION:=$(PKG_REV)
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simetbox-openwrt-base.git
