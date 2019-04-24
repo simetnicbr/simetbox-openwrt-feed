@@ -117,6 +117,7 @@ define Package/simetbox-openwrt-base
   CATEGORY:=Network
   TITLE:=SIMETBox
   DEPENDS:=+libjson-c +simetbox-openwrt-config +libopenssl +libpthread +luci-lib-jsonc +luci-lib-json +curl +ca-certificates
+  SELECT:=simetbox-openwrt-simet-ma
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
@@ -150,7 +151,7 @@ define Package/simetbox-openwrt-base/install
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_utils.lua  $(1)/usr/lib/lua/simet
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_uci.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/set_uci.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_geolocation.sh  $(1)/usr/bin
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_geolocation_legado.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/run_simet.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simetbox_register.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/uci-defaults/99-simet-cron  $(1)/etc/uci-defaults

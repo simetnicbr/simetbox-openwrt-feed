@@ -1,14 +1,16 @@
 #!/bin/sh
-# Copyright (C) 2018 NIC.br
+# Copyright (C) 2018-2019 NIC.br
 # Released under the public domain or GPLv2+ at your option
 #
 # cleanup history for upgrades:
 #  previous: simetbox_register_ma.sh
-#  cuurent : simetbox_refresh_cron.sh
+#  current : simetbox_refresh_cron.sh simet_geolocation.sh
 
 crontab -l >/dev/null 2>&1 || exit 0
-crontab -l 2>/dev/null | grep -q simetbox_refresh_cron.sh && exit 0
 
-( crontab -l | sed -e '/simetbox_refresh_cron/ d' -e '/simetbox_register_ma/ d' ;
-  echo simetbox_refresh_cron.sh | awk '{ srand(); print int(60*rand()) " " int(24*rand()) " * * * " $0 }' ) | crontab -
+( crontab -l 2>/dev/null | sed -e '/simetbox_refresh_cron/ d' -e '/simetbox_register_ma/ d' -e '/simet_geolocation.sh/ d' ;
+  awk -- 'BEGIN { srand();
+		  print int(60*rand()) " " int(24*rand()) " * * * simetbox_refresh_cron.sh" ;
+		  print int(60*rand()) " 1,5,9,13,17,21 * * * simet_geolocation.sh"
+		}' ) | crontab -
 :
