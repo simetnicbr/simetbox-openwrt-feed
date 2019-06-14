@@ -1,0 +1,31 @@
+## Copyright (c) 2019 NIC.br <medicoes@simet.nic.br>
+## Distributed under the GPLv3 or any later version
+
+## Never use https. TZ= works around some bugs, leave it alone
+## accepts BusyBox and GNU coreutils "date"
+
+URL="http://timesync.simet.nic.br/"
+
+sysfixtime_http_settime() {
+	local httptime
+	local maxtime
+	local curtime
+	[ -r /var/run/http-timesync-done ] && return 0
+	httptime=$(curl --max-time 5 -s -I -i $URL 2>/dev/null | sed -n -e '/^Date:/ { s/^Date:[[:blank:]].*,[[:blank:]]\+// ; p; q }')
+	[ -z "$httptime" ] && return 0
+	maxtime=$(TZ='' LC_ALL=C date +%s -D "%d %b %Y %T GMT" -u --date "$httptime" 2>/dev/null) \
+	  || maxtime=$(TZ='' date +%s -u --date="$httptime" 2>/dev/null) \
+	  || return 0
+        curtime=$(TZ='' date +%s) || return 0
+	[ $curtime -lt $maxtime ] && TZ='' date -s @$maxtime && {
+		touch /var/run/http-timesync-done
+		logger -t "hotplug iface: $INTERFACE" -p daemon.info "updated system time from $URL" || true
+	}
+}
+
+[ "$ACTION" = "ifup" ] && case $INTERFACE in
+	wan*)
+		sysfixtime_http_settime
+		;;
+esac
+:
