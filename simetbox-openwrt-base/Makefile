@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 PKG_BRANCH:=branches/master
 
 PKG_NAME:=simetbox-openwrt-base
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
