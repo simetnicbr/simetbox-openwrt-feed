@@ -31,7 +31,16 @@
 <div class="cbi-section">
 	<h3><%:Version information%></h3>
 	<table class="table" width="100%">
-		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox version%></td><td class="td left"><%=sbx_version%></td></tr>
+		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox version%></td><td class="td left"><%=sbx_version%>
+			<input class="cbi-button cbi-button-action important" type="button" value="<%:Check for firmware updates%>"
+			       onclick="simet_auto_update(this)"
+			       <% if not has_autoupgrade then write('disabled style="display:none"') end %>
+			/>
+			<p class="alert-message notice update-message" style="display:none">
+				<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
+				<span><%:Device will check for new firmware updates and apply any that are found...%></span>
+			</p>
+		</td></tr>
 		<tr class="tr"><td class="td left" width="33%"><%:Base firmware%></td><td class="td left"><%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%></td></tr>
 		<tr class="tr"><td class="td left" width="33%"><%:SIMET Engine%></td><td class="td left"><%=simetma_engine%></td></tr>
 	</table>
@@ -51,5 +60,34 @@
 	<p><%:Security contact%>: security@simet.nic.br<p>
 	<p><%:More information%>: <a href="https://simet.nic.br/simetbox">https://simet.nic.br/simetbox</a></p>
 </div>
+
+<script type="text/javascript">//<![CDATA[
+	var tries = 0,
+	    message = document.querySelector('p.update-message'),
+	    label = message.querySelector('span');
+
+	function ok() { window.location = '<%=url("admin/simet/sobre")%>'; }
+	function check() { window.setTimeout(ping, 5000); }
+	function ping() {
+		var img = document.createElement('img');
+
+		img.onload = ok;
+		img.onerror = check;
+		img.src = '<%=resource%>/icons/loading.gif?' + Math.random();
+
+		if (tries++ >= 30) {
+			message.classList.remove('notice');
+			message.classList.add('warning');
+			label.innerHTML = '<%:Device unreachable! Still waiting for device...%>';
+		}
+	}
+
+	function simet_auto_update(button) {
+		button.style.display = 'none';
+		message.style.display = '';
+		label.innerHTML = '<%:Waiting for device... DO NOT POWER OFF DEVICE%>';
+
+		(new XHR()).get('<%=url("admin/simet/simet_auto_upgrade_now")%>', null, check); }
+//]]></script>
 
 <%+footer%>

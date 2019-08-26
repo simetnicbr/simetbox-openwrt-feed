@@ -32,6 +32,10 @@ function index()
 
 	page = entry({"admin", "simet", "simet_client_process"}, call("simet_client_process"), nil)
 	page.leaf = true
+
+	page = entry({"admin", "simet", "simet_auto_upgrade_now"}, call("run_simet_autoupgrade"), nil)
+	page.leaf = true
+
 end
 
 function get_crontab_options()
@@ -70,6 +74,12 @@ end
 
 function run_simet_client()
 	local result = read_from_bash('run_simet.sh')
+	luci.http.write(result)
+end
+
+function run_simet_autoupgrade()
+	luci.http.prepare_content("text/plain")
+	local result = read_from_bash('auto_upgrade 2>&1')
 	luci.http.write(result)
 end
 
