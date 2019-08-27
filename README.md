@@ -1,6 +1,8 @@
-# Feed do SIMETBox para o projeto OpenWRT (incluindo LEDE)
+# Feed do SIMETBox para o projeto OpenWRT
 
-Arquivos necessários para poder compilar e instalar o sistema SIMETBox nas distribuições OpenWRT master, OpenWRT 18.06, e Openwrt LEDE 17.01.
+Arquivos necessários para poder compilar e instalar o sistema SIMETBox nas distribuições OpenWRT (master, 19.07, 18.06, 17.01).
+
+Há suporte muito limitado ao OpenWRT "Chaos Calmer" (15.05), mas requer alguns backports (do openwrt, luci e packages) disponíveis em simetnicbr/openwrt-openwrt, simetnicbr/openwrt-luci e simetnicbr/openwrt-packages.
 
 # Sobre o SIMETBox
 
@@ -8,7 +10,7 @@ O SIMETBox é um sistema inicialmente desenvolvido para roteadores com OpenWRT p
 
 ## Pacotes que compõem o projeto e o que medem
 
-**Atenção: É recomendado que se selecione todos os pacotes ou pelo menos os pacotes 2, 3 e 4 com todos os seus componentes na configuração.**
+**Atenção: É recomendado que se selecione todos os pacotes ou pelo menos os pacotes 2, 3, 4, 7 e 8 com todos os seus componentes na configuração.**
 
 1. simetbox-openwrt-availability-config (análise de disponibilidade e configuração remota com TR-069)  
 1.1. Configuration  
@@ -32,12 +34,18 @@ O SIMETBox é um sistema inicialmente desenvolvido para roteadores com OpenWRT p
 
 6. simetbox-openwrt-zabbix (análise de memória e processamento)
 
+7. simetbox-openwrt-simet-ma (novo motor de medição SIMET -- obrigatório!)
+
+8. simetbox-openwrt-core (configuração openwrt -- irá substituir o simetbox-openwrt-base no futuro)
+
+9. simetbox-openwrt-simet-lmapd (componente do novo motor de medição)
+
 
 ## Instalação
 
-O feed do SIMETBox se integra com os projeto [OpenWRT](http://openwrt.org), versões "lede-17.01", "openwrt-18.06" e "master".  Para que possa ser fechada uma distribuição com ele é necessário que se compile a imagem para o roteador desejado a partir do código fonte dos projetos.
+O feed do SIMETBox se integra com os projeto [OpenWRT](http://openwrt.org).  Para que possa ser fechada uma distribuição com ele é necessário que se compile a imagem para o roteador desejado a partir do código fonte dos projetos.
 
-Não é recomendado utilizar o "openwrt-18.06" ou o openwrt "master" em equipamentos com menos de 64MiB de RAM: nestes casos, o lede-17.01 é mais estável.  Ainda assim, em equipamentos com apenas 32MiB de RAM, podem haver problemas durante "sysupgrade" via interface web e é necessário utilizar tr-069, ssh, ou tftp via bootloader para atualização.  Esta é uma limitação do firmware openwrt, e não das extensões simetbox.
+Não é recomendado utilizar o "openwrt-18.06" e posteriores (inclusive openwrt "master") em equipamentos com menos de 64MiB de RAM: nestes casos, o lede-17.01 é mais estável.  Ainda assim, em equipamentos com apenas 32MiB de RAM, podem haver problemas durante "sysupgrade" via interface web e é necessário utilizar tr-069, ssh, ou tftp via bootloader para atualização.  Esta é uma limitação do firmware openwrt, e não das extensões simetbox.  Nesses casos, considerar remover os pacotes que ocupam memória o tempo inteiro (zabbix, tr-069...).
 
 Tenhamos como exemplo o roteador TP-Link Archer C7 v2. Veja como  fechar uma distribuição (imagem) para este roteador usando Ubuntu. Os passos são desde a instalação de dependências até o fechamento da imagem, baseando-se no OpenWRT versão lede-17.01:
 
@@ -94,6 +102,7 @@ make menuconfig
 > \<\*\> simetbox-openwrt-luci................................ SIMETBox Luci Files  
 > \<\*\> simetbox-openwrt-ntpd....................................... Ntpd Support  
 > \<\*\> simetbox-openwrt-zabbix................................... Zabbix Support  
+> ...
 
 * Voltar para o menu principal e escolher a opção **Libraries** -\> **libcurl**. Trocar o SSL support para OpenSSL e habilitar o **Enable cryptographic authentication**
 
