@@ -19,7 +19,7 @@ PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=0
 
 PKG_REV:=stable
-PKG_VERSION:=100.2
+PKG_VERSION:=104
 PKG_SOURCE_VERSION:=$(PKG_REV)
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simetbox-openwrt-base.git
@@ -117,7 +117,6 @@ define Package/simetbox-openwrt-base
   CATEGORY:=Network
   TITLE:=SIMETBox
   DEPENDS:=+libjson-c +simetbox-openwrt-config +libopenssl +libpthread +luci-lib-jsonc +luci-lib-json +libuci-lua +curl +ca-bundle
-  SELECT:=simetbox-openwrt-simet-ma
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
@@ -188,6 +187,8 @@ define Package/simetbox-openwrt-base/config
 	select BUSYBOX_CONFIG_FEATURE_TRACEROUTE_USE_ICMP
 	select BUSYBOX_CONFIG_FEATURE_TRACEROUTE_VERBOSE
 	select BUSYBOX_CONFIG_TRACEROUTE6 if IPV6 && !PACKAGE_iputils-traceroute6
+	select BUSYBOX_CONFIG_SHA256SUM
+	select BUSYBOX_CONFIG_MD5SUM
 	source "$(SOURCE)/Config.in"
 endef
 

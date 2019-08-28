@@ -21,7 +21,10 @@ BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
 boot() {
 	GEO_DIR=$(dirname "${GEOLOC_CACHE}")
 	[ -n "$GEO_DIR" ] && mkdir -m 0750 -p "$GEO_DIR" && chgrp nicbr-simet "$GEO_DIR"
-	( simetbox_register_ma.sh <&- 2>&- >&- && simet_geolocation.sh <&- 2>&1 >&- ) <&- 2>&1 >&- &
+	( simet_register_ma.sh <&- 2>&- >&- && {
+		simet_geolocation.sh <&- 2>&- >&- &
+		simetbox_lmap-fetch-schedule.sh <&- 2>&- &
+	} ) <&- 2>&- >&- &
 	start "$@"
 }
 
@@ -32,12 +35,17 @@ start_service() {
 	procd_set_param pidfile /var/run/simet-inetupc.pid
 	procd_set_param respawn 180 5 10
 	procd_set_param stderr 1
-	procd_set_param command /usr/bin/inetupc -M "${LMAP_TASK_NAME_PREFIX}inetupc"
+	procd_set_param command /usr/bin/inetupc -M "${LMAP_TASK_NAME_PREFIX}inetconn-state"
 	[ -r "$AGENT_TOKEN_FILE" ] && procd_append_param command -j "$(cat $AGENT_TOKEN_FILE)"
 	[ -r "$AGENT_ID_FILE" ] && procd_append_param command -d "$(cat $AGENT_ID_FILE)"
 	[ -n "$BOOTID" ] && procd_append_param command -b "$BOOTID"
 	[ -n "$BOXID" ] && procd_append_param command -m "$BOXID"
 	procd_append_param command "$SIMET_INETUP_SERVER"
 	procd_close_instance
+}
+
+reload_service() {
+	/etc/init.d/simet-lmapd reload || true
+	restart "$@"
 }
 

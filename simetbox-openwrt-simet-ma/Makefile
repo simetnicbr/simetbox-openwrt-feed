@@ -8,13 +8,13 @@ include $(TOPDIR)/rules.mk
 #
 
 PKG_NAME:=simetbox-openwrt-simet-ma
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
 PKG_REV:=stable
-PKG_VERSION:=0.9.7
+PKG_VERSION:=0.14.4
 PKG_SOURCE_VERSION:=$(PKG_REV)
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simet-ma.git
@@ -28,12 +28,14 @@ include $(INCLUDE_DIR)/package.mk
 
 CONFIGURE_ARGS += --enable-simetbox
 
+# FIXME: sha256sum dependency below changes do md5sum in simet-ma 0.14.5 and later
 define Package/simetbox-openwrt-simet-ma
   SUBMENU:=SIMETBox
   SECTION:=net
   CATEGORY:=Network
   TITLE:=SIMETBox SIMET-2 measurement engine
-  DEPENDS:=+simetbox-openwrt-base +libcurl +curl +ca-bundle +!BUSYBOX_CONFIG_FLOCK:flock
+  DEPENDS:=+simetbox-openwrt-base +simetbox-openwrt-simet-lmapd +libcurl +curl +ca-bundle +!BUSYBOX_CONFIG_FLOCK:flock
+  DEPENDS+=+!BUSYBOX_CONFIG_SHA256SUM:coreutils-sha256sum
   URL:=https://simet.nic.br
   USERID:=nicbr-simet:nicbr-simet
 #  MENU:=1
@@ -50,9 +52,10 @@ define Build/Compile
 endef
 
 define Package/simetbox-openwrt-simet-ma/install
-	$(INSTALL_DIR) $(1)/usr/bin $(1)/etc/simet $(1)/usr/lib/simet
+	$(INSTALL_DIR) $(1)/usr/bin $(1)/etc/simet $(1)/etc/simet/lmap \
+		$(1)/usr/lib/simet/lmap/registry.d $(1)/usr/lib/simet/lmap/config.d
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/simet/* $(1)/usr/lib/simet
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/simet/. $(1)/usr/lib/simet/
 	# this one can fail, we often have it empty
 	-$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/simet/* $(1)/etc/simet
 	chmod -R og-w files/ && $(CP) files/. $(1)/
@@ -62,18 +65,8 @@ define Package/simetbox-openwrt-simet-ma/postinst
 #!/bin/sh
 #check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	echo "Enabling rc.d symlink for simetbox-openwrt-simet-ma (simet-ma)"
-	/etc/init.d/simet-ma enable
-fi
-:
-endef
-
-define Package/simetbox-openwrt-simet-ma/prerm
-#!/bin/sh
-#check if we are on real system
-if [ -z "$${IPKG_INSTROOT}" ]; then
-	echo "Removing rc.d symlink for simetbox-openwrt-simet-ma (simet-ma)"
-	/etc/init.d/simet-ma disable
+	echo "Clearing previous non-hardcoded LMAP configuration"
+	rm -f /var/run/lmapd/*.json
 fi
 :
 endef

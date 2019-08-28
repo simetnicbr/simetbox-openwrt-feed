@@ -1,41 +1,141 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: simetbox-openwrt-luci/luasrc/controller/simet.lua:22
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:27
+msgid "About SIMETBox"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:158
 msgid "BCP38 Respect Tests"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:44
+msgid "Base firmware"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:35
+msgid "Check for firmware updates"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:219
 msgid "Content Provider Test"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:122
 msgid "DNS Tests"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:81
+msgid "Device unreachable! Still waiting for device..."
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:41
+msgid "Device will check for new firmware updates and apply any that are found..."
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:49
+msgid "Equipment information"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:55
+msgid "Geolocation"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:40
+msgid "Loading"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:61
+msgid "More information"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:105
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:123
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:141
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:159
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:177
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:201
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:220
 msgid "Periodicity"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:176
 msgid "Ping to Gateway Tests"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:140
 msgid "Port 25 Management Test"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/controller/simet.lua:12
 msgid "SIMET"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:45
+msgid "SIMET Engine"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/controller/simet.lua:20
 msgid "SIMET Results"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:54
+msgid "SIMET agent id"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:53
+msgid "SIMET agent label"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:52
+msgid "SIMETBox device id"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:51
+msgid "SIMETBox device model"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:34
+msgid "SIMETBox version"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:235
 msgid "Save"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:60
+msgid "Security contact"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:59
+msgid "Security information"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/controller/simet.lua:21
 msgid "Settings"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:81
 msgid "Successfully saved"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:29
+msgid "Support contact"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:104
 msgid "Throughput, Latency, Jitter and Packet Loss"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:200
 msgid "Top 10 Sites Brazil"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:32
+msgid "Version information"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:88
+msgid "Waiting for device... DO NOT POWER OFF DEVICE"
 msgstr ""

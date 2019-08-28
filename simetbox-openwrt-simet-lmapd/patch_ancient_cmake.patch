@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,21 @@
+ # So cmake can tell whether or not it can process this file
+-cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
++cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+ 
+-project(simet-lmapd VERSION 0.13.1 LANGUAGES C)
++# He had this pretty thing with a minimum Cmake of 3.0.0:
++#project(simet-lmapd VERSION 0.13.1 LANGUAGES C)
++#
++# But thanks to OpenWRT CC's ancient Cmake, we now make do with this:
++project(simet-lmapd C)
++set (PROJECT_VERSION 0.13.1)
++set (PROJECT_VERSION_MAJOR 0)
++set (PROJECT_VERSION_MINOR 13)
++set (PROJECT_VERSION_PATCH 1)
++set (PROJECT_SOURCE_DIR ${simet-lmapd_SOURCE_DIR})
++set (PROJECT_BINARY_DIR ${simet-lmapd_BINARY_DIR})
++set (simet-lmapd_VERSION ${PROJECT_VERSION})
++set (simet-lmapd_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
++set (simet-lmapd_VERSION_MINOR ${PROJECT_VERSION_MINOR})
++set (simet-lmapd_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+ 
+ option(BUILD_SHARED_LIBS "Build the shared library" OFF)
+ option(BUILD_TESTS "Build test programs (requires JSON and XML support)" ON)
+diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
+index e2b97ff..2dc1616 100644
+--- a/doc/CMakeLists.txt
++++ b/doc/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # So CMake can tell whether or not it can process this file
+-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
++#cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+ 
+ include(GNUInstallDirs)
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 5b6b33f..b710da0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # So CMake can tell whether or not it can process this file
+-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
++#cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+ 
+ include(GNUInstallDirs)
+ 
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index d0c3c6e..b0da462 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # So CMake can tell whether or not it can process this file
+-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
++#cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+ 
+ pkg_check_modules(CHECK REQUIRED check)
+ 

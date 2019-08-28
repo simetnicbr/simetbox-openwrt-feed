@@ -18,7 +18,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-luci
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_I18N_DIR:=$(PKG_BUILD_DIR)/luci-i18n
 PKG_BUILD_DEPENDS:=luci-base
@@ -30,7 +30,7 @@ define Package/simetbox-openwrt-luci
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=SIMETBox Luci Files
-	DEPENDS:=+simetbox-openwrt-base +luci
+	DEPENDS:=+simetbox-openwrt-base +!PACKAGE_luci-ssl:luci-ssl-openssl
 	URL:=http://simet.nic.br
 endef
 
