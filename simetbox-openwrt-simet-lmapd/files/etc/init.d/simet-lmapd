@@ -30,7 +30,10 @@ init_lmapd_fs() {
 #        (we handle registering and schedule download in simet-ma)
 boot() {
 	init_lmapd_fs
-	start "$@"
+	# delay start of the measurement engine to lessen the RAM+CPU
+	# load during boot.  We might switch to a lmap-suppression-based
+	# scheme eventually.
+	( sleep 120 ; start "$@" ) <&- 2>&- >&- &
 }
 
 reload_service() {

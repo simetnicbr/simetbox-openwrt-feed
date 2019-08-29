@@ -21,8 +21,9 @@ BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
 boot() {
 	GEO_DIR=$(dirname "${GEOLOC_CACHE}")
 	[ -n "$GEO_DIR" ] && mkdir -m 0750 -p "$GEO_DIR" && chgrp nicbr-simet "$GEO_DIR"
+	# warning: try to keep RAM load down for 32MiB devices!
 	( simet_register_ma.sh <&- 2>&- >&- && {
-		simet_geolocation.sh <&- 2>&- >&- &
+		simet_geolocation.sh <&- 2>&- >&- || true
 		simetbox_lmap-fetch-schedule.sh <&- 2>&- &
 	} ) <&- 2>&- >&- &
 	start "$@"
