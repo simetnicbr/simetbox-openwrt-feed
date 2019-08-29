@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 
 PKG_NAME:=simetbox-openwrt-availability-config
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -18,7 +18,7 @@ define Package/simetbox-openwrt-availability-config
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Availability analysis and remote configuration using PAS (https://pas.nic.br)
-  DEPENDS:=+@BUSYBOX_CONFIG_IFPLUGD +simetbox-openwrt-base +easycwmp
+  DEPENDS:=+simetbox-openwrt-base +easycwmp
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
@@ -35,12 +35,6 @@ define Package/simetbox-openwrt-availability-config/install
 	$(INSTALL_DIR) $(1)/etc/config/simet_installed
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_DIR) $(1)/etc/ifplugd
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
-	$(CP) files/ifplugd.action $(1)/etc/ifplugd
-	$(CP) files/sendifupdown.sh $(1)/usr/bin
-	$(CP) files/60-ifupdownlog $(1)/etc/hotplug.d/iface
 	echo $(CONFIG_SIMETBOX_TR069) >> $(1)/etc/config/tr069_server
 	touch $(1)/etc/config/simet_installed/simetbox_network_and_config_installed
 endef

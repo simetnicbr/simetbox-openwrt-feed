@@ -1,3 +1,0 @@
-#!/bin/sh
-uptime=`cat /proc/uptime | awk -F. {'print $1'}`;
-echo "$1,$2,`date +%s`",$uptime >> /etc/config/ifupdown.data
