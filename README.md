@@ -154,9 +154,6 @@ O SIMETBox já deixa o sistema configurado para utilizar o servidor desejado.  C
 
 Arquivo | Descrição
 --------|----------
-/etc/ifplugd/ifplugd.action | Ação do ifplugd para registro da mudança de estado das interfaces de rede
-/usr/bin/sendifupdown.sh | Envia alterações de estado da interface
-/etc/hotplug.d/iface/60-ifupdownlog | Chama um ifplugd por interface que sobe
 /etc/config/tr069_server | Endereço do servidor TR-069 (ACS) utilizado
 /etc/config/simet\_installed/simetbox\_network\_and\_config\_installed | Indica se foi instalado o pacote de gerência de disponibilide
 /usr/bin/simet_client \*\* | Cliente para realização de teste de latência, jitter, perda de pacotes e vazão
