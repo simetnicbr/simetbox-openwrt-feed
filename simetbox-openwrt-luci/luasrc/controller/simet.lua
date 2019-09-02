@@ -78,9 +78,13 @@ function run_simet_client()
 end
 
 function run_simet_autoupgrade()
-	luci.http.prepare_content("text/plain")
-	local result = read_from_bash('auto_upgrade 2>&1')
-	luci.http.write(result)
+	local result = luci.util.ubus("auto_upgrade", "trigger") or {}
+	if #result > 0 then
+		luci.http.prepare_content("application/json")
+		luci.http.write_json(result)
+	else
+		luci.http.status(503, "auto_upgrade non-functional")
+	end
 end
 
 function simet_client_process()
