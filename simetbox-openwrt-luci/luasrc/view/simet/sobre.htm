@@ -8,12 +8,11 @@
 	local sbx_model = luci.sys.exec("get_model.sh") or "?"
 	local sbx_version = luci.sys.exec("get_simet_box_version.sh") or "?"
 
-	has_autoupgrade = false
-	if luci.sys.call("type auto_upgrade >/dev/null 2>&1") == 0 then
-		local sbx_autoupgrade1 = fs.readfile("/rom/lib/simet/auto_upgrade/auto_upgrade.epoch") or nil
-		local sbx_autoupgrade2 = fs.readfile("lib/simet/auto_upgrade/auto_upgrade.epoch") or sbx_autoupgrade1
-		if sbx_autoupgrade1 then
-			sbx_version = sbx_version .. " ( NIC.br " .. sbx_autoupgrade1 .. " / " .. sbx_autoupgrade2 .. ")"
+	local has_autoupgrade = false
+	local au_stats = luci.util.ubus("auto_upgrade","status") or {}
+	if au_stats.available == true then
+		if au_stats.firmware_release then
+			sbx_version = sbx_version .. " ( NIC.br " .. au_stats.firmware_release .. " )"
 		end
 		has_autoupgrade = true
 	end
