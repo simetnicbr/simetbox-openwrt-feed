@@ -1,0 +1,102 @@
+commit e4fb8f9d13c44c14a31fc47e9a7ed5f565ad07fe
+Author: Henrique de Moraes Holschuh <henrique@nic.br>
+Date:   Thu Sep 19 13:55:44 2019 -0300
+
+    [MDC-654] nping: handle related icmps for tracefilter only
+    
+    We need nping to inform the other side about ICMPs of type "TTL exceeded
+    in transit" related to an ongoing udp traceroute.
+    
+    This allows us to do a poor-man's tracefilter.
+    
+    Note that the echo-client/server implementation in nping is rather
+    strange and full of border conditions, and won't handle receiving
+    several CAPT for a single SEND, or the fact that these could be
+    out-of-order.  Thus, we do limit it to only TTL EXCEEDED for now.
+
+diff --git a/nping/EchoServer.cc b/nping/EchoServer.cc
+index 70f39b0f2..6763d8b16 100644
+--- a/nping/EchoServer.cc
++++ b/nping/EchoServer.cc
+@@ -608,13 +608,14 @@ clientid_t EchoServer::nep_match_headers(IPv4Header *ip4, IPv6Header *ip6, TCPHe
+ 
+ clientid_t EchoServer::nep_match_packet(const u8 *pkt, size_t pktlen){
+   nping_print(DBG_4, "%s(%p, %lu)", __func__, pkt, (long unsigned)pktlen);
+-  int iplen=0, ip6len=0, tcplen=0, udplen=0;
++  int iplen=0, ip6len=0, tcplen=0, udplen=0, icmplen=0;
++  int inner_pktlen=0,inner_iplen=0;
+   bool payload_included=false;
+-  IPv4Header ip4;
++  IPv4Header ip4, inner_ip4;
+   IPv6Header ip6;
+   TCPHeader tcp;
+-  UDPHeader udp;
+-  ICMPv4Header icmp4;
++  UDPHeader udp, inner_udp;
++  ICMPv4Header icmp4, inner_icmp4;
+   RawData payload;
+ 
+   if(this->client_id_count<0){
+@@ -637,10 +638,59 @@ clientid_t EchoServer::nep_match_packet(const u8 *pkt, size_t pktlen){
+     }else{
+         switch( ip4.getNextProto() ){
+             case 1: // ICMP
+-                if( icmp4.storeRecvData(pkt+iplen, pktlen-iplen)==OP_FAILURE )
++                if( icmp4.storeRecvData(pkt+iplen, pktlen-iplen)==OP_FAILURE ){
+                     return CLIENT_NOT_FOUND;
+-                else
+-                    return this->nep_match_headers(&ip4, NULL, NULL, NULL, &icmp4, NULL);
++                }else{
++                    clientid_t client = this->nep_match_headers(&ip4, NULL, NULL, NULL, &icmp4, NULL);
++                    if( client != CLIENT_NOT_FOUND ){
++                        return client;
++                    }else{
++                        /* check headers the icmp is related to */
++                        /* FIXME: only if this mode is enabled ? */
++                        if ( (icmplen = icmp4.validate()) == OP_FAILURE )
++                            return CLIENT_NOT_FOUND;
++                        if ( !icmp4.validateType() || !icmp4.validateCode(icmp4.getType(), icmp4.getCode()) )
++                            return CLIENT_NOT_FOUND;
++
++			/* FIXME: the echo client cannot handle both a CAPT from a probe + CAPT from a
++			 * related ICMP (UDP + ICMP port unreach, for example).  There is at the very least
++			 * an issue with the server sequence numbering, and looks like something else misbehaves
++			 * badly as well.  To work around this, do just what we need for tracefilter mode, where
++			 * you'll get only either the probe or the ICMP */
++			if (icmp4.getType() != ICMP_TIMXCEED || icmp4.getCode() != ICMP_TIMXCEED_INTRANS)
++				return CLIENT_NOT_FOUND;
++
++                        inner_pktlen = icmp4.getLen() - icmplen;
++                        if (inner_pktlen < IP_HEADER_LEN + 8)
++                            return CLIENT_NOT_FOUND;
++
++                        if (inner_ip4.storeRecvData(pkt+iplen+icmplen, inner_pktlen)==OP_FAILURE)
++                            return CLIENT_NOT_FOUND;
++                        if (inner_ip4.getVersion()!=0x04)
++                            return CLIENT_NOT_FOUND;
++                        if( (inner_iplen=inner_ip4.validate())==OP_FAILURE)
++                            return CLIENT_NOT_FOUND;
++
++                        switch( inner_ip4.getNextProto() ){
++                            case 1: // ICMP
++                                if (inner_icmp4.storeRecvData(pkt+iplen+icmplen+inner_iplen, inner_pktlen - inner_iplen)==OP_FAILURE)
++                                    return CLIENT_NOT_FOUND;
++                                return this->nep_match_headers(&inner_ip4, NULL, NULL, NULL, &inner_icmp4, NULL);
++                            case 17: // UDP
++                                if (inner_udp.storeRecvData(pkt+iplen+icmplen+inner_iplen, inner_pktlen - inner_iplen)==OP_FAILURE)
++                                    return CLIENT_NOT_FOUND;
++                                return this->nep_match_headers(&inner_ip4, NULL, NULL, &inner_udp, NULL, NULL);
++#if 0
++                            case 6: // TCP
++                                if (inner_tcp.storeRecvData(pkt+iplen+icmplen+inner_iplen, inner_pktlen - inner_iplen)==OP_FAILURE)
++                                    return CLIENT_NOT_FOUND;
++                                return this->nep_match_headers(&inner_ip4, NULL, &inner_tcp, NULL, NULL, NULL);
++#endif
++                        }
++                        return CLIENT_NOT_FOUND;
++                    }
++                    return CLIENT_NOT_FOUND;
++                }
+             break;
+ 
+             case 6: // TCP

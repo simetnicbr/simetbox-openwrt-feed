@@ -1,0 +1,24 @@
+commit 8a20ef33a6760a8703d111d54ccec399abfc639d
+Author: Henrique de Moraes Holschuh <henrique@nic.br>
+Date:   Wed Oct 2 16:39:33 2019 -0300
+
+    [MDC-654] nping: default to --privileged mode
+    
+    We will be installed to be either seteuid(0) or have cap_net_raw=ep, so
+    we should default to --privileged mode.  The proper fix would be to
+    teach nping about POSIX capabilities and query for cap_net_raw... AND
+    drop all those capabilities once the sockets are open, too!
+
+diff --git a/nping/NpingOps.cc b/nping/NpingOps.cc
+index fe9d6f5c6..10a95fcc9 100644
+--- a/nping/NpingOps.cc
++++ b/nping/NpingOps.cc
+@@ -206,7 +206,7 @@ NpingOps::NpingOps() {
+   else if (getenv("NMAP_UNPRIVILEGED") || getenv("NPING_UNPRIVILEGED"))
+     isr00t=false;
+   else
+-    isr00t = !(geteuid());
++    isr00t=true; /* because we will be either cap_net_raw=ep or seteuid 0 */
+ #endif
+ 
+     /* Payloads */

@@ -1,0 +1,78 @@
+commit 1f4390529611abb9edccddace87948096697bb26
+Author: Henrique de Moraes Holschuh <henrique@nic.br>
+Date:   Thu Sep 26 16:34:44 2019 -0300
+
+    [MDC-654] nping: try to scale the echo-server better
+    
+    We need to serve several concurrent connections, not the ludricous
+    "accept only one new connection per second" rate of current nping.
+    
+    Hack something to accept() in batches and only sleep when there is
+    nothing to accept().
+    
+    single-shot mode untested (this dirty hack might have broken it), and it
+    appears to not ensure the connection stays up for long enough to get the
+    last packet sometimes (or ICMP replies to it, anyway).
+
+diff --git a/nping/EchoClient.h b/nping/EchoClient.h
+index c00b3d2dc..9ae3a5671 100644
+--- a/nping/EchoClient.h
++++ b/nping/EchoClient.h
+@@ -134,7 +134,7 @@
+ #include "NEPContext.h"
+ #include "ProbeMode.h"
+ 
+-#define ECHO_CONNECT_TIMEOUT (10*1000) /* 10 Seconds */
++#define ECHO_CONNECT_TIMEOUT (30*1000) /* 30 Seconds */
+ #define ECHO_READ_TIMEOUT    (10*1000)
+ #define ECHO_WRITE_TIMEOUT   (10*1000)
+ 
+diff --git a/nping/EchoServer.cc b/nping/EchoServer.cc
+index 6763d8b16..afd1361df 100644
+--- a/nping/EchoServer.cc
++++ b/nping/EchoServer.cc
+@@ -1535,7 +1535,7 @@ int EchoServer::start() {
+     if(o.once()==false || this->client_id_count==-1){
+         /* Check if we have received a connection*/
+         unblock_socket(listen_sd);
+-        if ((client_sd=accept(listen_sd, (struct sockaddr *)&ss, &sslen)) >= 0){
++        while ((client_sd=accept(listen_sd, (struct sockaddr *)&ss, &sslen)) >= 0){
+             nping_print(VB_0, "[%lu] Connection received from %s:%d", (unsigned long)time(NULL), IPtoa(&ss), sockaddr2port(&ss));
+             /* Assign a new client identifier. The ID is bound to the IOD */
+             if( (idpnt=(clientid_t *)calloc(1, sizeof(clientid_t)))==NULL ){
+@@ -1578,13 +1578,15 @@ int EchoServer::start() {
+         }
+         block_socket(listen_sd);
+     }
+-    /* Sleep for a second until we check again for incoming connection requests */
+-    nsock_timer_create(nsp, empty_handler, 1000, NULL);
+-    loopret=nsock_loop(nsp, 1000);
+-    //If something went wrong in nsock_loop, let's just bail out.
+-    if (loopret == NSOCK_LOOP_ERROR) {
+-        nping_warning(QT_3, "Unexpected nsock_loop error.\n");
+-        return OP_FAILURE;
++    if (client_sd < 0) {
++	/* Sleep for a second until we check again for incoming connection requests */
++	nsock_timer_create(nsp, empty_handler, 1000, NULL);
++	loopret=nsock_loop(nsp, 1000);
++	//If something went wrong in nsock_loop, let's just bail out.
++	if (loopret == NSOCK_LOOP_ERROR) {
++	    nping_warning(QT_3, "Unexpected nsock_loop error.\n");
++	    return OP_FAILURE;
++	}
+     }
+   }
+   return OP_SUCCESS;
+diff --git a/nping/EchoServer.h b/nping/EchoServer.h
+index 5e21f94fc..b606ab29a 100644
+--- a/nping/EchoServer.h
++++ b/nping/EchoServer.h
+@@ -138,7 +138,7 @@
+ 
+ using namespace std;
+ 
+-#define LISTEN_QUEUE_SIZE 10
++#define LISTEN_QUEUE_SIZE 100
+ 
+ class EchoServer  {
+ 
