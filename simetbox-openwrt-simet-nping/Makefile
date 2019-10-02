@@ -61,7 +61,7 @@ CONFIGURE_VARS += \
 # use setcap cap_net_raw+ep instead, but that would add an extra dependency
 define Package/simet-nping/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/nping $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/nping $(1)/usr/bin/simet-nping
 	chmod -R og-w files/ && $(CP) files/. $(1)/
 endef
 
