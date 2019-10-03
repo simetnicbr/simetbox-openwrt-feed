@@ -1,5 +1,3 @@
-include $(TOPDIR)/rules.mk
-
 #
 # Copyright (C) 2018-2019 NIC.br
 #
@@ -7,20 +5,23 @@ include $(TOPDIR)/rules.mk
 # See /LICENSE for more information.
 #
 
+include $(TOPDIR)/rules.mk
+
 PKG_NAME:=simetbox-openwrt-simet-ma
 PKG_RELEASE:=2
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
-PKG_REV:=HEAD
 PKG_VERSION:=0.14.4
-PKG_SOURCE_VERSION:=$(PKG_REV)
+PKG_REV:=v$(PKG_VERSION)
+PKG_REV:=HEAD
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simet-ma.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
+PKG_SOURCE_VERSION:=$(PKG_REV)
 
 PKG_BUILD_DEPENDS:=curl
 
