@@ -6,16 +6,16 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 -cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 +cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
  
--project(simet-lmapd VERSION 0.13.1 LANGUAGES C)
+-project(simet-lmapd VERSION 0.13.2 LANGUAGES C)
 +# He had this pretty thing with a minimum Cmake of 3.0.0:
-+#project(simet-lmapd VERSION 0.13.1 LANGUAGES C)
++#project(simet-lmapd VERSION 0.13.2 LANGUAGES C)
 +#
 +# But thanks to OpenWRT CC's ancient Cmake, we now make do with this:
 +project(simet-lmapd C)
-+set (PROJECT_VERSION 0.13.1)
++set (PROJECT_VERSION 0.13.2)
 +set (PROJECT_VERSION_MAJOR 0)
 +set (PROJECT_VERSION_MINOR 13)
-+set (PROJECT_VERSION_PATCH 1)
++set (PROJECT_VERSION_PATCH 2)
 +set (PROJECT_SOURCE_DIR ${simet-lmapd_SOURCE_DIR})
 +set (PROJECT_BINARY_DIR ${simet-lmapd_BINARY_DIR})
 +set (simet-lmapd_VERSION ${PROJECT_VERSION})
