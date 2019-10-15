@@ -17,7 +17,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nmap
 PKG_VERSION:=7.70
-PKG_RELEASE:=100
+PKG_RELEASE:=101
 PKG_MAINTAINER:=SIMET <medicoes@simet.nic.br>
 
 PKG_SOURCE:=nmap-$(PKG_VERSION).tar.bz2
@@ -29,6 +29,9 @@ PKG_LICENSE_FILES:=COPYING
 PKG_INSTALL:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
+
+# because we do build nmap, even if we only take nping
+PKG_BUILD_DEPENDS:=pcre zlib
 
 include $(INCLUDE_DIR)/package.mk
 
