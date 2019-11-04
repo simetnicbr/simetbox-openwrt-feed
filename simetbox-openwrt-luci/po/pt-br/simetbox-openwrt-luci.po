@@ -118,7 +118,7 @@ msgstr "Contato para falhas de segurança"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:59
 msgid "Security information"
-msgstr "Informções de segurança"
+msgstr "Informações de segurança"
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:21
 msgid "Settings"
