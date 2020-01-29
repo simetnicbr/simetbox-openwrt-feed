@@ -8,18 +8,24 @@ function index()
 
 	local env = luci.http.getenv()
 	local user_data = read_uci_section('personal_data', 'user_data')
+	local page
 
-	local node = entry({"admin", "simet"}, firstchild(), _("SIMET"), 10)
+	page = entry({"admin", "simet"}, firstchild(), _("SIMET"), 10)
 
+	page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET Results"), 10)
+	page.dependent = false
 	if not user_data then
-		node.sysauth = false
+		page.sysauth = false
 	end
+	page.leaf = true
 
-	node.index = tr
+	page = entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), translate("Settings"), 30)
+	page.dependent = false
+	page.leaf = true
 
-	entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET Results"), 10).dependent=false
-	entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), translate("Settings"), 30).dependent=false
-	entry({"admin", "simet", "sobre"}, template("simet/sobre"), translate("About SIMETBox"), 40).dependent=false
+	page = entry({"admin", "simet", "sobre"}, template("simet/sobre"), translate("About SIMETBox"), 40)
+	page.dependent = false
+	page.leaf = true
 
 	page = entry({"admin", "simet", "getcrontaboptions"}, call("get_crontab_options"), nil)
 	page.leaf = true
@@ -35,7 +41,6 @@ function index()
 
 	page = entry({"admin", "simet", "simet_auto_upgrade_now"}, call("run_simet_autoupgrade"), nil)
 	page.leaf = true
-
 end
 
 function get_crontab_options()
