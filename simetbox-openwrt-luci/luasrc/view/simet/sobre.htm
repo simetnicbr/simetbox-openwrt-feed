@@ -33,7 +33,7 @@
 		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox version%></td><td class="td left"><%=sbx_version%>
 			<input class="cbi-button cbi-button-action important" type="button" value="<%:Check for firmware updates%>"
 			       onclick="simet_auto_update(this)"
-			       <% if not has_autoupgrade then write('disabled style="display:none"') end %>
+			       <% if not has_autoupgrade then write('disabled="" style="display:none"') end %>
 			/>
 			<p class="alert-message notice update-message" style="display:none">
 				<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
@@ -56,7 +56,7 @@
 </div>
 <div class="cbi-section">
 	<h3><%:Security information%></h3>
-	<p><%:Security contact%>: security@simet.nic.br<p>
+	<p><%:Security contact%>: security@simet.nic.br</p>
 	<p><%:More information%>: <a href="https://simet.nic.br/simetbox">https://simet.nic.br/simetbox</a></p>
 </div>
 

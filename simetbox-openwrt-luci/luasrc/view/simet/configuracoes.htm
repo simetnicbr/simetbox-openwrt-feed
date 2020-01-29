@@ -93,9 +93,7 @@ require('simet.simet_utils')
 	select, input {width:80px; height:25px; }
 </style>
 
-	<div>
-
-	<form id="simetConfigForm" onsubmit="saveConfiguration(this); return false;">
+	<div><form id="simetConfigForm" onsubmit="saveConfiguration(this); return false;">
 
 	<!-- Reescrever opcoes em Lua num loop para manter codigo organizado	-->
 
@@ -114,7 +112,7 @@ require('simet.simet_utils')
 					</select>
 				</p>
 			</div>
-			<hr>
+			<hr/>
 		<% end %>
 
 		<% if file_exists('/etc/config/simet_installed/simetbox_dns_installed') then %>
@@ -132,7 +130,7 @@ require('simet.simet_utils')
 					</select>
 				</p>
 			</div>
-			<hr>
+			<hr/>
 		<% end %>
 
 		<% if file_exists('/etc/config/simet_installed/simetbox_port25_installed') then %>
@@ -150,7 +148,7 @@ require('simet.simet_utils')
 					</select>
 				</p>
 			</div>
-			<hr>
+			<hr/>
 		<% end %>
 
 		<% if file_exists('/etc/config/simet_installed/simetbox_bcp38_installed') then %>
@@ -168,7 +166,7 @@ require('simet.simet_utils')
 					</select>
 				</p>
 			</div>
-			<hr>
+			<hr/>
 		<% end %>
 
 		<% if file_exists('/etc/config/simet_installed/simetbox_ping_installed') then %>
@@ -191,7 +189,7 @@ require('simet.simet_utils')
 					</select>
 				</p>
 			</div>
-			<hr>
+			<hr/>
 		<% end %>
 
 
@@ -210,7 +208,7 @@ require('simet.simet_utils')
 					</select>
 				</p>
 			</div>
-			<hr>
+			<hr/>
 		<% end %>
 
 
@@ -229,12 +227,12 @@ require('simet.simet_utils')
 					</select>
 				</p>
 			</div>
-			<hr>
+			<hr/>
 		<% end %>
 	
-		<input type="submit" value="<%:Save%>">
+		<input type="submit" value="<%:Save%>"></input>
 
-	</form>
+	</form></div>
 
 <%+footer%>
 
