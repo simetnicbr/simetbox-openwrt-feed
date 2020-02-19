@@ -1,0 +1,15 @@
+#!/bin/sh
+# Copyright (c) 2020 NIC.br
+# Released under the public domain or GPLv2+ at your option
+
+# Nothing updates UCI when tzdata gets updated...
+TZN=$(uci -q get system.@system[0].zonename) || exit 0
+case "$TZN" in
+	"America/Sao Paulo") TZV="<-03>3" ;;
+	"America/Campo Grande"|"America/Cuiaba") TZV="<-04>4" ;;
+	*) exit 0 ;;
+esac
+
+uci set system.@system[0].timezone="$TZV" && uci commit system
+exit 0
+:
