@@ -49,6 +49,7 @@ define Package/simetbox-openwrt-luci/install
 	$(CP) htdocs/* $(1)/www
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 	$(CP) $(PKG_I18N_DIR)/* $(1)/usr/lib/lua/luci/i18n
+	-chmod -R og-w files/ && $(CP) files/. $(1)/
 endef
 
 $(eval $(call BuildPackage,simetbox-openwrt-luci))
