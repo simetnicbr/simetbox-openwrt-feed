@@ -1,0 +1,7 @@
+#!/bin/sh
+simet_restart_services_override() {
+	[ -z "$SIMETMA_RECONFIG" ] && exit 0
+	/etc/init.d/simet-lmapd reload || true
+	/etc/init.d/simet-ma reload || true
+}
+:

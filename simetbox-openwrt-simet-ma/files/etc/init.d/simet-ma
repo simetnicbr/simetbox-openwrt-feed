@@ -8,17 +8,22 @@ START=99
 STOP=10
 USE_PROCD=1
 
-[ -r /usr/lib/simet/simet-ma.conf ] && . /usr/lib/simet/simet-ma.conf
-[ -r /etc/simet/simet-ma.conf ] && . /etc/simet/simet-ma.conf
-AGENT_ID_FILE=${AGENT_ID_FILE:-/etc/simet/agent-id}
-AGENT_TOKEN_FILE=${AGENT_TOKEN_FILE:-/etc/simet/agent.jwt}
-SIMET_INETUP_SERVER=${SIMET_INETUP_SERVER:-simet-monitor-inetup.simet.nic.br}
-GEOLOC_CACHE=${GEOLOC_CACHE:-/var/run/simet/geoloc-cache.txt}
+simet_config() {
+	RC=0
+	. /usr/lib/simet/simet_lib_config.sh || RC=$?
+	if [ $RC -ne 0 ] || [ -z "$AGENT_ID_FILE" ] || [ -z "$AGENT_TOKEN_FILE" ] || \
+		[ -z "$GEOLOC_CACHE" ] || [ -z "$SIMET_INETUP_SERVER" ] ; then
+		echo "$0: required configuration missing, aborting..." >&2
+		exit 1
+	fi
 
-BOXID=$(get_mac_address.sh 2>/dev/null | tr A-F a-f | tr -d ': -') || true
-BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
+	BOXID=$(get_mac_address.sh 2>/dev/null | tr A-F a-f | tr -d ': -') || true
+	BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
+}
 
 boot() {
+	simet_config
+
 	GEO_DIR=$(dirname "${GEOLOC_CACHE}")
 	[ -n "$GEO_DIR" ] && mkdir -m 0750 -p "$GEO_DIR" && chgrp nicbr-simet "$GEO_DIR"
 	# warning: try to keep RAM load down for 32MiB devices!
@@ -30,23 +35,26 @@ boot() {
 }
 
 start_service() {
+	simet_config
+
 	procd_open_instance simet-inetuptime
-	procd_set_param file "$AGENT_ID_FILE" "$AGENT_TOKEN_FILE" /usr/lib/simet/simet-ma.conf /etc/simet/simet-ma.conf
-	procd_set_param user nobody
+	procd_set_param file "$AGENT_ID_FILE" "$AGENT_TOKEN_FILE" /usr/lib/simet/simet-ma.conf /etc/simet/simet-ma.conf /usr/lib/simet/conf.d/*
+	procd_set_param user nicbr-simet
 	procd_set_param pidfile /var/run/simet-inetupc.pid
 	procd_set_param respawn 180 5 10
 	procd_set_param stderr 1
+	procd_set_param reload_signal HUP
 	procd_set_param command /usr/bin/inetupc -M "${LMAP_TASK_NAME_PREFIX}inetconn-state"
-	[ -r "$AGENT_TOKEN_FILE" ] && procd_append_param command -j "$(cat $AGENT_TOKEN_FILE)"
-	[ -r "$AGENT_ID_FILE" ] && procd_append_param command -d "$(cat $AGENT_ID_FILE)"
+	[ -n "$AGENT_TOKEN_FILE" ] && procd_append_param command -j "$AGENT_TOKEN_FILE"
+	[ -n "$AGENT_ID_FILE" ] && procd_append_param command -d "$AGENT_ID_FILE"
 	[ -n "$BOOTID" ] && procd_append_param command -b "$BOOTID"
 	[ -n "$BOXID" ] && procd_append_param command -m "$BOXID"
 	procd_append_param command "$SIMET_INETUP_SERVER"
 	procd_close_instance
 }
 
+# openwrt-CC doesn't handle procd_send_signal or reload_signal, but
+# just in case we manage to backport either...
 reload_service() {
-	/etc/init.d/simet-lmapd reload || true
-	restart "$@"
+	procd_send_signal simet-ma '*' HUP || killall -HUP inetupc
 }
-

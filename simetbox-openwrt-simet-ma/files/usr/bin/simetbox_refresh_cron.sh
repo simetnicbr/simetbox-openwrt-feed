@@ -5,14 +5,14 @@
 
 set +e
 
+# force-renew registration
 simet_register_ma.sh >/dev/null
 
-[ -r /opt/simet/lib/simet/simet-ma.conf ] && . /opt/simet/lib/simet/simet-ma.conf
-[ -r /opt/simet/etc/simet/simet-ma.conf ] && . /opt/simet/etc/simet/simet-ma.conf
-LMAP_SCHEDULE_FILE="${LMAP_SCHEDULE_FILE:-/var/run/lmapd/lmap-schedule.json}"
-test -n "$(find $LMAP_SCHEDULE_FILE -mtime +1)" && simetbox_lmap-fetch-schedule.sh
+# force-reload schedule when too old (lmapd might have crashed)
+. /usr/lib/simet/simet_lib_config.sh \
+	&& test -n "$(find $LMAP_SCHEDULE_FILE -mtime +1)" \
+	&& simetbox_lmap-fetch-schedule.sh || true
 
 # self-heal permissions
 . /etc/init.d/simet-lmapd && init_lmapd_fs
-
 :
