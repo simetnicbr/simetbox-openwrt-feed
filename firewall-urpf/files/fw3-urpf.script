@@ -1,0 +1,86 @@
+#!/bin/sh
+# firewall-urpf openwrt fw3 integration script
+# Copyright (c) 2020 NIC.br <medicoes@simet.nic.br>
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 3 of the License, or (at your option) any later
+# version.
+
+C=FWURPF
+
+_detect_table() {
+	for i in raw mangle ; do
+		"$@" -t "$i" -n -L >/dev/null 2>&1 && {
+			printf %s "$i"
+			return 0
+		}
+	done
+	return 1
+}
+_detect_rule() {
+	LIPT="$1"
+	LT="$2"
+	shift 2
+	"$LIPT" -t "$LT" "$@" -S | grep -q "PREROUTING.*$C" && return 0
+	return 1
+}
+
+add_urpf_ip4() {
+	T=$(_detect_table iptables) || return 1
+
+	# optimized ignoring high-pps multicast
+	# owrt dhcp *client* work-around, slow to accept unicast from server
+	iptables -t "$T" -N "$C" 2>/dev/null || iptables -t "$T" -F "$C" || return 1
+	iptables -t "$T" -A "$C" -p udp --sport=68 --dport=67 -s 0.0.0.0/32 -d 255.255.255.255/32 -j RETURN \
+	&& iptables -t "$T" -A "$C" -p udp --sport=67 --dport=68 -j RETURN \
+	&& iptables -t "$T" -A "$C" -d 224.0.0.0/4 -j RETURN \
+	&& iptables -t "$T" -A "$C" -s 169.254.0.0/16 -j RETURN \
+	&& iptables -t "$T" -A "$C" -j LOG --log-prefix="uRPF4: discard: " \
+	&& iptables -t "$T" -A "$C" -j DROP || return 1
+
+	_detect_rule iptables "$T" || {
+		iptables -t "$T" -I PREROUTING ! -d 224.0.0.0/4 -m rpfilter --invert -j "$C" || return 1
+	}
+	:
+}
+delete_urpf_ip4() {
+	T=$(_detect_table iptables) && {
+		iptables -t "$T" -D PREROUTING ! -d 224.0.0.0/4 -m rpfilter --invert -j "$C" 2>/dev/null || true
+		iptables -t "$T" -F "$C" 2>/dev/null && iptables -t "$T" -X "$C" 2>/dev/null || true
+	}
+	:
+}
+
+add_urpf_ip6() {
+	T=$(_detect_table ip6tables) || return 1
+
+	# optimized ignoring link-local source
+	ip6tables -t "$T" -N "$C" 2>/dev/null || ip6tables -t "$T" -F "$C" || return 1
+	ip6tables -t "$T" -A "$C" -s fe80::/10 -j RETURN \
+	&& ip6tables -t "$T" -A "$C" -d ff00::/8 -j RETURN \
+	&& ip6tables -t "$T" -A "$C" -j LOG --log-prefix="uRPF6: discard: " \
+	&& ip6tables -t "$T" -A "$C" -j DROP || return 1
+
+	_detect_rule ip6tables "$T" || {
+		ip6tables -t "$T" -I PREROUTING ! -s fe80::/10 -m rpfilter --invert -j "$C" || return 1
+	}
+	:
+}
+delete_urpf_ip6() {
+	T=$(_detect_table ip6tables) && {
+		ip6tables -t "$T" -D PREROUTING ! -s fe80::/10 -m rpfilter --invert -j "$C" 2>/dev/null || true
+		ip6tables -t "$T" -F "$C" 2>/dev/null && ip6tables -t "$T" -X "$C" 2>/dev/null || true
+	}
+	:
+}
+
+ENABLED=$(uci -q get firewall.urpf.active) || ENABLED=0
+if [ $ENABLED -eq 1 ] ; then
+	add_urpf_ip4 || echo "$0: failed to enable IPv4 uRPF (BCP38)" >&2
+	add_urpf_ip6 || echo "$0: failed to enable IPv6 uRPF (BCP38)" >&2
+else
+	delete_urpf_ip4
+	delete_urpf_ip6
+fi
+:

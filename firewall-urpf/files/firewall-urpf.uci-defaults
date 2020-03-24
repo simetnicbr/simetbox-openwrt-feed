@@ -1,0 +1,13 @@
+#!/bin/sh
+
+uci -q get firewall.urpf.active >/dev/null || uci -q batch <<-EOT
+	delete firewall.urpf
+	set firewall.urpf=include
+	set firewall.urpf.type=script
+	set firewall.urpf.path=/usr/lib/firewall-urpf/fw3-urpf.script
+	set firewall.urpf.reload=1
+	set firewall.urpf.active=1
+	commit firewall
+EOT
+
+exit 0
