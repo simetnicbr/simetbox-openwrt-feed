@@ -51,6 +51,8 @@ define Package/firewall-urpf/install
 	$(INSTALL_BIN) ./files/fw3-urpf.script $(1)/usr/lib/firewall-urpf/fw3-urpf.script
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/firewall-urpf.uci-defaults $(1)/etc/uci-defaults/firewall-urpf
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
+	$(CP) luasrc/* $(1)/usr/lib/lua/luci
 endef
 
 #define Package/firewall-urpf/postinst
