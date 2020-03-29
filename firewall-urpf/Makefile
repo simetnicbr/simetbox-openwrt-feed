@@ -9,6 +9,9 @@ PKG_NAME:=firewall-urpf
 PKG_VERSION:=1
 PKG_RELEASE:=1
 PKG_LICENCE:=GPL-3.0-or-later
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_I18N_DIR:=$(PKG_BUILD_DIR)/luci-i18n
+PKG_BUILD_DEPENDS:=luci-base
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -31,10 +34,8 @@ define Package/firewall-urpf/description
  This package provides anti-spoofing protection against forged source
  addresses.  It protects both internal and external hosts automatically,
  at the cost of one extra route lookup per packet.
-endef
 
-define Package/firewall-urpf/conffiles
-/etc/config/firewall-urpf
+ This package includes integration with the LuCI firewall module.
 endef
 
 define Build/Prepare
@@ -44,6 +45,7 @@ define Build/Configure
 endef
 
 define Build/Compile
+	$(MAKE) -C $(CURDIR)/po PKG_BUILD_DIR=$(PKG_BUILD_DIR) PKG_I18N_DIR=$(PKG_I18N_DIR) i18n-build
 endef
 
 define Package/firewall-urpf/install
@@ -53,6 +55,8 @@ define Package/firewall-urpf/install
 	$(INSTALL_BIN) ./files/firewall-urpf.uci-defaults $(1)/etc/uci-defaults/firewall-urpf
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
 	$(CP) luasrc/* $(1)/usr/lib/lua/luci
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
+	$(CP) $(PKG_I18N_DIR)/* $(1)/usr/lib/lua/luci/i18n
 endef
 
 #define Package/firewall-urpf/postinst
