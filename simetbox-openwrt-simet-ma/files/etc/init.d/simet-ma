@@ -24,8 +24,9 @@ simet_config() {
 boot() {
 	simet_config
 
-	GEO_DIR=$(dirname "${GEOLOC_CACHE}")
-	[ -n "$GEO_DIR" ] && mkdir -m 0750 -p "$GEO_DIR" && chgrp nicbr-simet "$GEO_DIR"
+	# used for the geolocation cache and ephemeral tokens
+	[ -n "$SIMET_RUNSTATE_DIR" ] && mkdir -m 0750 -p "$SIMET_RUNSTATE_DIR" && chgrp nicbr-simet "$SIMET_RUNSTATE_DIR"
+
 	# warning: try to keep RAM load down for 32MiB devices!
 	( simet_register_ma.sh <&- 2>&- >&- && {
 		simet_geolocation.sh <&- 2>&- >&- || true
