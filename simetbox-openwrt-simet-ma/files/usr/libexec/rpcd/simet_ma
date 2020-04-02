@@ -1,0 +1,54 @@
+#!/bin/sh
+# SIMET-MA rpcd module for OpenWRT
+# Copyright (C) 2020 by NIC.br <medicoes@simet.nic.br>
+# Distributed under the GPLv3+ license
+
+geolocate() {
+  GEO=$(simet_geolocation.sh "$@" 2>/dev/null) && \
+    GEO=$(printf %s "$GEO" | jsonfilter -e "timestamp=@.row[0].value[0]" -e "lat=@.row[0].value[3]" -e "long=@.row[0].value[4]") && \
+      eval "$GEO" || {
+        echo "{ }"
+        return 0
+      }
+  echo "{ \"timestamp\":$timestamp,\"latitude\":$lat,\"longitude\":$long }"
+  :
+}
+
+case "$1" in
+  list)
+    echo '{ "simet_engine_status":{}, "renew_registration":{}, "geolocate":{"force":false,"fast":true} }'
+    ;;
+  call)
+    case "$2" in
+      renew_registration)
+        # FIXME: run as root or as nicbr-simet ?
+        RC=0
+        simet_register_ma.sh >/dev/null 2>&1 || RC=$?
+        echo "{ \"status\":$RC }"
+        ;;
+      geolocate)
+        fast=true
+        force=false
+        [ -n "$input" ] && {
+          fast=$(jsonfilter -s "$input" -e '@.fast') || :
+          force=$(jsonfilter -s "$input" -e '@.force') || :
+        }
+        if [ "$force" = "true" ] ; then
+          # simple rate limit...
+          geolocate --max-age 3600
+        elif [ "$fast" != "false" ] ; then
+          geolocate --from-cache
+        else
+          geolocate
+        fi
+        ;;
+      simet_engine_status)
+        au_enabled=true
+        au_version=$(cat /usr/lib/simet/agent-version.txt) || au_version=
+        echo "{ \"enabled\":$au_enabled, \"version\":\"$au_version\" }"
+        ;;
+    esac
+    ;;
+esac
+:
+
