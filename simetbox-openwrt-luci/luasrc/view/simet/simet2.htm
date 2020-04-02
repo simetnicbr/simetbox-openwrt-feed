@@ -1,0 +1,65 @@
+<%+header%>
+
+<%
+	local fs   = require "nixio.fs"
+	local ver  = require "luci.version"
+	local uci  = require("luci.model.uci").cursor()
+
+	local simetma_agentid = fs.readfile("/etc/simet/agent-id-v2") or ""
+	local simet2_viewtok = fs.readfile("/var/run/simet/agent-vtk") or ""
+	local sbx_uilang = uci:get("luci", "main", "lang") or ""
+
+	function is_online()
+		return true
+	end
+%>
+
+<h2 name="content"><%:SIMET Measurement Results%></h2>
+
+<div class="cbi-section">
+	<h3><%:SIMET2 Measurement Results%></h3>
+	<table class="table" width="100%"><tr class="tr">
+		<td class="td left">
+			<p><%:Should the report system below complain of invalid credentials, please use the button to renew them.%></p>
+			<p><%:Note: the device must be connected to the Internet to be able to show reports and to renew access credentials.%></p>
+		</td><td class="td right">
+			<input class="cbi-button cbi-button-action important" type="button" value="<%:Renew Credentials%>"
+			       onclick="simet_register_ma(this)" />
+			<p class="alert-message notice ma-register-message" style="display:none">
+				<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
+				<span><%:Device is attempting to renew credentials...%></span>
+			</p>
+		</td>
+	</tr></table>
+
+	<iframe src="https://api.simet.nic.br/agent_measurements/agent_viewport?agentid=<%=pcdata(simetma_agentid)%>;authtoken=&quot;<%=pcdata(simet2_viewtok)%>&quot;;lang=<%=pcdata(sbx_uilang)%>" width="100%"></iframe>
+</div>
+
+<div class="cbi-section">
+	<h3><%:SIMET1 Measurement Results%></h3>
+	<p><%:To access the historical data measured by the older measurement engine (SIMET1), please refer to the%>
+	<a href="simet"><%:SIMET1 measurement results page%></a>.</p>
+</div>
+
+<div class="cbi-section">
+	<h3><%:Contact information%></h3>
+	<p><a href="sobre"><%:Device information and contacts page%></a></p>
+	<p><%:SIMETBox project pages:%> <a href="https://simet.nic.br/simetbox">https://simet.nic.br/simetbox</a></p>
+</div>
+
+<script type="text/javascript">//<![CDATA[
+	var tries = 0,
+	    message = document.querySelector('p.ma-register-message'),
+	    label = message.querySelector('span');
+
+	function ok() { window.location.reload(true); }
+	function simet_register_ma(button) {
+		button.style.display = 'none';
+		message.style.display = '';
+		label.innerHTML = '<%:Waiting for device...%>';
+
+		(new XHR()).get('<%=url("admin/simet/simet_register")%>', null, ok);
+	}
+//]]></script>
+
+<%+footer%>

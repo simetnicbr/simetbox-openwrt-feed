@@ -19,6 +19,10 @@ function index()
 	end
 	page.leaf = true
 
+	page = entry({"admin", "simet", "simet2"}, template("simet/simet2"), translate("SIMET2 Results"), 15)
+	page.dependent = false
+	page.leaf = true
+
 	page = entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), translate("Settings"), 30)
 	page.dependent = false
 	page.leaf = true
@@ -40,6 +44,9 @@ function index()
 	page.leaf = true
 
 	page = entry({"admin", "simet", "simet_auto_upgrade_now"}, call("run_simet_autoupgrade"), nil)
+	page.leaf = true
+
+	page = entry({"admin", "simet", "simet_register"}, call("simet_ma_renew_registration"), nil)
 	page.leaf = true
 end
 
@@ -89,6 +96,16 @@ function run_simet_autoupgrade()
 		luci.http.write_json(result)
 	else
 		luci.http.status(503, "auto_upgrade non-functional")
+	end
+end
+
+function simet_ma_renew_registration()
+	local result = luci.util.ubus("simet_ma", "renew_registration") or {}
+	result = json_decode(result)
+	if result ~= nil and result["status"] > 0 then
+		luci.http.status(503, "failed to register agent and renew tokens")
+	else
+		luci.http.status(204)
 	end
 end
 
