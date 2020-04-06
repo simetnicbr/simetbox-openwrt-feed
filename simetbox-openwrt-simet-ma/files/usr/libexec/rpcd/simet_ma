@@ -10,7 +10,7 @@ geolocate() {
         echo "{ }"
         return 0
       }
-  echo "{ \"timestamp\":$timestamp,\"latitude\":$lat,\"longitude\":$long }"
+  echo "{ \"timestamp\":\"$timestamp\",\"latitude\":\"$lat\",\"longitude\":\"$long\" }"
   :
 }
 
@@ -29,9 +29,10 @@ case "$1" in
       geolocate)
         fast=true
         force=false
+        input=$(cat) || input=
         [ -n "$input" ] && {
-          fast=$(jsonfilter -s "$input" -e '@.fast') || :
-          force=$(jsonfilter -s "$input" -e '@.force') || :
+          fast=$(jsonfilter -s "$input" -e '@.fast') || fast=true
+          force=$(jsonfilter -s "$input" -e '@.force') || force=false
         }
         if [ "$force" = "true" ] ; then
           # simple rate limit...
