@@ -17,7 +17,8 @@
 		has_autoupgrade = true
 	end
 
-	local sbx_geolocation = luci.sys.exec("simet_geolocation.sh --from-cache | jsonfilter -e @.row[0].value[3,4]") or ""
+	local sbx_geo = luci.util.ubus("simet_ma", "geolocate", [[{"fast":true}]]) or
+		{ latitude="?", longitude="?", timestamp=0 }
 	local simetma_vlabel = luci.sys.exec("simet_read_vlabel.sh") or ""
 	local simetma_agentid = fs.readfile("/etc/simet/agent-id-v2") or ""
 	local simetma_engine = fs.readfile("/usr/lib/simet/agent-version.txt") or ""
@@ -51,7 +52,7 @@
 		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox device id%></td><td class="td left"><%=sbx_mac_address%></td></tr>
 		<tr class="tr"><td class="td left" width="33%"><%:SIMET agent label%></td><td class="td left"><%=simetma_vlabel%></td></tr>
 		<tr class="tr"><td class="td left" width="33%"><%:SIMET agent id%></td><td class="td left"><%=simetma_agentid%></td></tr>
-		<tr class="tr"><td class="td left" width="33%"><%:Geolocation%></td><td class="td left"><%=sbx_geolocation%></td></tr>
+		<tr class="tr"><td class="td left" width="33%"><%:Geolocation%></td><td class="td left"><%=sbx_geo.latitude%> <%=sbx_geo.longitude%></td></tr>
 	</table>
 </div>
 <div class="cbi-section">
