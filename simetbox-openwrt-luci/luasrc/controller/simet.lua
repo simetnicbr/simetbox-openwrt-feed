@@ -101,11 +101,10 @@ end
 
 function simet_ma_renew_registration()
 	local result = luci.util.ubus("simet_ma", "renew_registration") or {}
-	result = json_decode(result)
-	if result ~= nil and result["status"] > 0 then
-		luci.http.status(503, "failed to register agent and renew tokens")
-	else
+	if result ~= nil and result.status == 0 then
 		luci.http.status(204)
+	else
+		luci.http.status(503, "failed to register agent and renew tokens")
 	end
 end
 
