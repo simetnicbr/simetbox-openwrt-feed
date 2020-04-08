@@ -60,6 +60,8 @@ msgid ""
 "Firmware update requested. If one is found, the device will apply it in a "
 "few minutes. DO NOT POWER OFF THE DEVICE"
 msgstr ""
+"Atualização de firmware requisitada. Se alguma atualização for encontrada, o "
+"dispositivo irá aplicá-la nos próximos minutos. NÃO DESLIGUE O DISPOSITIVO"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:73
 msgid "Geolocation"
@@ -134,6 +136,7 @@ msgstr "Etiqueta SIMET"
 msgid "SIMET1 Measurement Results"
 msgstr "Resultado das Medições do SIMET1 (antigo)"
 
+# fragmento de frase, começar em minúsculas
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:41
 msgid "SIMET1 measurement results page"
 msgstr "página de resultados das medições do SIMET1"
