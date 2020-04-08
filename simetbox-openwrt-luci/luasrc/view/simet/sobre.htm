@@ -31,28 +31,47 @@
 <div class="cbi-section">
 	<h3><%:Version information%></h3>
 	<table class="table" width="100%">
-		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox version%></td><td class="td left"><%=sbx_version%>
-			<input class="cbi-button cbi-button-action important" type="button" value="<%:Check for firmware updates%>"
-			       onclick="simet_auto_update(this)"
-			       <% if not has_autoupgrade then write('disabled="" style="display:none"') end %>
-			/>
-			<p class="alert-message notice update-message" style="display:none">
-				<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
-				<span><%:Device will check for new firmware updates and apply any that are found...%></span>
-			</p>
-		</td></tr>
-		<tr class="tr"><td class="td left" width="33%"><%:Base firmware%></td><td class="td left"><%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%></td></tr>
-		<tr class="tr"><td class="td left" width="33%"><%:SIMET Engine%></td><td class="td left"><%=simetma_engine%></td></tr>
+		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox version%></td><td class="td left"><%=sbx_version%></td>
+			<td class="td right">
+				<input class="cbi-button cbi-button-action important" type="button" value="<%:Check for firmware updates%>"
+				       onclick="simet_auto_update(this)"
+				       <% if not has_autoupgrade then write('disabled="" style="display:none"') end %>
+				/>
+				<p class="alert-message notice update-message" style="display:none">
+					<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
+					<span><%:Firmware update requested.  If one is found, the device will apply it in a few minutes.  DO NOT POWER OFF THE DEVICE%></span></p>
+			</td>
+		</tr>
+		<tr class="tr"><td class="td left" width="33%"><%:Base firmware%></td><td class="td left" colspan="2"><%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%></td></tr>
+		<tr class="tr"><td class="td left" width="33%"><%:SIMET Engine%></td><td class="td left" colspan="2"><%=simetma_engine%></td></tr>
 	</table>
 </div>
 <div class="cbi-section">
 	<h3><%:Equipment information%></h3>
 	<table class="table" width="100%">
-		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox device model%></td><td class="td left"><%=sbx_model%></td></tr>
-		<tr class="tr"><td class="td left" width="33%"><%:SIMETBox device id%></td><td class="td left"><%=sbx_mac_address%></td></tr>
-		<tr class="tr"><td class="td left" width="33%"><%:SIMET agent label%></td><td class="td left"><%=simetma_vlabel%></td></tr>
-		<tr class="tr"><td class="td left" width="33%"><%:SIMET agent id%></td><td class="td left"><%=simetma_agentid%></td></tr>
-		<tr class="tr"><td class="td left" width="33%"><%:Geolocation%></td><td class="td left"><%=sbx_geo.latitude%> <%=sbx_geo.longitude%></td></tr>
+		<tr class="tr">
+			<td class="td left" width="33%"><%:SIMETBox device model%></td><td class="td left" colspan="2"><%=sbx_model%></td>
+		</tr>
+		<tr class="tr">
+			<td class="td left" width="33%"><%:SIMETBox device id%></td><td class="td left" colspan="2"><%=sbx_mac_address%></td>
+		</tr>
+		<tr class="tr">
+			<td class="td left" width="33%"><%:SIMET agent label%></td><td class="td left" colspan="2"><%=simetma_vlabel%></td>
+		</tr>
+		<tr class="tr">
+			<td class="td left" width="33%"><%:SIMET agent id%></td><td class="td left"><%=simetma_agentid%></td>
+			<td class="td right">
+				<input class="cbi-button cbi-button-action important" type="button" value="<%:Renew Credentials%>"
+				       onclick="simet_register_ma(this)" />
+				<p class="alert-message notice ma-register-message" style="display:none">
+					<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
+					<span><%:Device is attempting to renew credentials...%></span>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td left" width="33%"><%:Geolocation%></td><td class="td left" colspan="2"><%=sbx_geo.latitude%> <%=sbx_geo.longitude%></td>
+		</tr>
 	</table>
 </div>
 <div class="cbi-section">
@@ -63,10 +82,12 @@
 
 <script type="text/javascript">//<![CDATA[
 	var tries = 0,
-	    message = document.querySelector('p.update-message'),
-	    label = message.querySelector('span');
+	    upd_message = document.querySelector('p.update-message'),
+	    upd_label = upd_message.querySelector('span'),
+	    reg_message = document.querySelector('p.ma-register-message'),
+	    reg_label = reg_message.querySelector('span');
 
-	function ok() { window.location = '<%=url("admin/simet/sobre")%>'; }
+	function ok() { location.reload(true); }
 	function check() { window.setTimeout(ping, 5000); }
 	function ping() {
 		var img = document.createElement('img');
@@ -84,10 +105,20 @@
 
 	function simet_auto_update(button) {
 		button.style.display = 'none';
-		message.style.display = '';
-		label.innerHTML = '<%:Waiting for device... DO NOT POWER OFF DEVICE%>';
+		upd_message.style=display = '';
 
-		(new XHR()).get('<%=url("admin/simet/simet_auto_upgrade_now")%>', null, check); }
+		message=upd_message;
+		label=upd_label;
+		(new XHR()).get('<%=url("admin/simet/simet_auto_upgrade_now")%>', null, check);
+	}
+	function simet_register_ma(button) {
+		button.style.display = 'none';
+		reg_message.style.display = '';
+
+		message = reg_message;
+		label = reg_label;
+		(new XHR()).get('<%=url("admin/simet/simet_register")%>', null, check);
+	}
 //]]></script>
 
 <%+footer%>
