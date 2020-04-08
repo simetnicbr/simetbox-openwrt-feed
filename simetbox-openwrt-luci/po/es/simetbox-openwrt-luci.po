@@ -10,7 +10,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:30
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:26
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:27
 msgid "About SIMETBox"
 msgstr "Sobre la SIMETBox"
 
@@ -18,11 +18,11 @@ msgstr "Sobre la SIMETBox"
 msgid "BCP38 Respect Tests"
 msgstr "Pruebas de respeto a BCP38"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:43
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:45
 msgid "Base firmware"
 msgstr "Firmware de base"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:34
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:36
 msgid "Check for firmware updates"
 msgstr "Buscar por actualización de firmware"
 
@@ -43,34 +43,35 @@ msgid "Device information and contacts page"
 msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:30
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:68
 msgid "Device is attempting to renew credentials..."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:80
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:103
 msgid "Device unreachable! Still waiting for device..."
 msgstr "¡Dispositivo indisponible! Todavía aguardando por dispositivo..."
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:40
-msgid ""
-"Device will check for new firmware updates and apply any that are found..."
-msgstr ""
-"El dispositivo verificará por actualizaciónes de firmware e aplicará "
-"cualquier una encontrada..."
-
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:48
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:50
 msgid "Equipment information"
 msgstr "Informaciónes del dispositivo"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:54
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:42
+msgid ""
+"Firmware update requested. If one is found, the device will apply it in a "
+"few minutes. DO NOT POWER OFF THE DEVICE"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:73
 msgid "Geolocation"
 msgstr "Geolocalización"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:29
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:39
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:41
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:67
 msgid "Loading"
 msgstr "Cargando"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:60
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:80
 msgid "More information"
 msgstr "Más informaciónes"
 
@@ -99,6 +100,7 @@ msgid "Port 25 Management Test"
 msgstr "Prueba de gestión del puerto 25 (SMTP)"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:26
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:64
 msgid "Renew Credentials"
 msgstr ""
 
@@ -106,7 +108,7 @@ msgstr ""
 msgid "SIMET"
 msgstr "SIMET"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:44
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:46
 msgid "SIMET Engine"
 msgstr "Motor SIMET"
 
@@ -118,11 +120,11 @@ msgstr ""
 msgid "SIMET Results"
 msgstr "Resultados de SIMET"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:53
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:62
 msgid "SIMET agent id"
 msgstr "ID de agente SIMET"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:52
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:59
 msgid "SIMET agent label"
 msgstr "Etiqueta de agente SIMET"
 
@@ -142,11 +144,11 @@ msgstr ""
 msgid "SIMET2 Results"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:51
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:56
 msgid "SIMETBox device id"
 msgstr "ID de dispositivo SIMETBox"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:50
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:53
 msgid "SIMETBox device model"
 msgstr "Modelo de dispositivo SIMETBox"
 
@@ -154,7 +156,7 @@ msgstr "Modelo de dispositivo SIMETBox"
 msgid "SIMETBox project pages:"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:33
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:34
 msgid "SIMETBox version"
 msgstr "Versión SIMETBox"
 
@@ -162,11 +164,11 @@ msgstr "Versión SIMETBox"
 msgid "Save"
 msgstr "Guardar"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:59
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:79
 msgid "Security contact"
 msgstr "Contacto de seguridad"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:58
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:78
 msgid "Security information"
 msgstr "Informaciónes de seguridad"
 
@@ -184,7 +186,7 @@ msgstr ""
 msgid "Successfully saved"
 msgstr "Guardado con éxito"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:28
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:29
 msgid "Support contact"
 msgstr "Contacto de ayuda"
 
@@ -202,7 +204,7 @@ msgstr ""
 msgid "Top 10 Sites Brazil"
 msgstr "Diez sitios más accedidos (Brasil, ALEXA)"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:31
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:32
 msgid "Version information"
 msgstr "Informaciónes de vérsion"
 
@@ -210,6 +212,11 @@ msgstr "Informaciónes de vérsion"
 msgid "Waiting for device..."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:87
-msgid "Waiting for device... DO NOT POWER OFF DEVICE"
-msgstr "Aguardando por dispositivo... NO APAGUE EL DISPOSITIVO"
+#~ msgid ""
+#~ "Device will check for new firmware updates and apply any that are found..."
+#~ msgstr ""
+#~ "El dispositivo verificará por actualizaciónes de firmware e aplicará "
+#~ "cualquier una encontrada..."
+
+#~ msgid "Waiting for device... DO NOT POWER OFF DEVICE"
+#~ msgstr "Aguardando por dispositivo... NO APAGUE EL DISPOSITIVO"
