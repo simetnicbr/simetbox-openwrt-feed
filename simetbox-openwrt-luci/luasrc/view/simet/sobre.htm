@@ -38,7 +38,7 @@
 				       <% if not has_autoupgrade then write('disabled="" style="display:none"') end %>
 				/>
 				<p class="alert-message notice update-message" style="display:none">
-					<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
+				<!-- <img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> -->
 					<span><%:Firmware update requested.  If one is found, the device will apply it in a few minutes.  DO NOT POWER OFF THE DEVICE%></span></p>
 			</td>
 		</tr>
@@ -80,6 +80,7 @@
 	<p><%:More information%>: <a href="https://simet.nic.br/simetbox">https://simet.nic.br/simetbox</a></p>
 </div>
 
+<!-- auto_update feedback disabled until it is fully implemented -->
 <script type="text/javascript">//<![CDATA[
 	var tries = 0,
 	    upd_message = document.querySelector('p.update-message'),
@@ -109,7 +110,7 @@
 
 		message=upd_message;
 		label=upd_label;
-		(new XHR()).get('<%=url("admin/simet/simet_auto_upgrade_now")%>', null, check);
+		(new XHR()).get('<%=url("admin/simet/simet_auto_upgrade_now")%>', null, null);
 	}
 	function simet_register_ma(button) {
 		button.style.display = 'none';
