@@ -6,6 +6,11 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "About SIMETBox"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:30
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:68
+msgid "Attempting to renew credentials..."
+msgstr ""
+
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:156
 msgid "BCP38 Respect Tests"
 msgstr ""
@@ -18,7 +23,7 @@ msgstr ""
 msgid "Check for firmware updates"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:45
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:57
 msgid "Contact information"
 msgstr ""
 
@@ -30,13 +35,8 @@ msgstr ""
 msgid "DNS Tests"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:46
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:58
 msgid "Device information and contacts page"
-msgstr ""
-
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:30
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:68
-msgid "Device is attempting to renew credentials..."
 msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:103
@@ -67,10 +67,22 @@ msgstr ""
 msgid "More information"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:36
+msgid ""
+"Note: It takes some time for results of a recent measurement run to be "
+"available. Please reload this page to check for new results."
+msgstr ""
+
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:24
 msgid ""
 "Note: the device must be connected to the Internet to be able to show "
 "reports and to renew access credentials."
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:35
+msgid ""
+"Periodic measurement runs are carried out automatically. You may trigger an "
+"immediate measurement run using the button."
 msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:103
@@ -91,7 +103,7 @@ msgstr ""
 msgid "Port 25 Management Test"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:26
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:27
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:64
 msgid "Renew Credentials"
 msgstr ""
@@ -120,11 +132,11 @@ msgstr ""
 msgid "SIMET agent label"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:39
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:51
 msgid "SIMET1 Measurement Results"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:41
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:53
 msgid "SIMET1 measurement results page"
 msgstr ""
 
@@ -144,7 +156,7 @@ msgstr ""
 msgid "SIMETBox device model"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:47
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:59
 msgid "SIMETBox project pages:"
 msgstr ""
 
@@ -174,6 +186,10 @@ msgid ""
 "the button to renew them."
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:39
+msgid "Start a measurement run"
+msgstr ""
+
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:81
 msgid "Successfully saved"
 msgstr ""
@@ -182,11 +198,15 @@ msgstr ""
 msgid "Support contact"
 msgstr ""
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:42
+msgid "The device is doing a measurement run..."
+msgstr ""
+
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:102
 msgid "Throughput, Latency, Jitter and Packet Loss"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:40
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:52
 msgid ""
 "To access the historical data measured by the older measurement engine "
 "(SIMET1), please refer to the"
@@ -198,8 +218,4 @@ msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:32
 msgid "Version information"
-msgstr ""
-
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:59
-msgid "Waiting for device..."
 msgstr ""

@@ -14,6 +14,11 @@ msgstr ""
 msgid "About SIMETBox"
 msgstr "Sobre a SIMETBox"
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:30
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:68
+msgid "Attempting to renew credentials..."
+msgstr "Tentando renovar credenciais..."
+
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:156
 msgid "BCP38 Respect Tests"
 msgstr "Testes de Respeito à BCP38"
@@ -26,7 +31,7 @@ msgstr "Firmware base"
 msgid "Check for firmware updates"
 msgstr "Procure por atualizações"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:45
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:57
 msgid "Contact information"
 msgstr "Informações de contato"
 
@@ -38,14 +43,9 @@ msgstr "Testes de Provedores de Conteúdo"
 msgid "DNS Tests"
 msgstr "Testes de DNS"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:46
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:58
 msgid "Device information and contacts page"
 msgstr "Página de informações de contato e do dispositivo"
-
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:30
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:68
-msgid "Device is attempting to renew credentials..."
-msgstr "Tentando renovar credenciais..."
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:103
 msgid "Device unreachable! Still waiting for device..."
@@ -77,6 +77,15 @@ msgstr "Carregando"
 msgid "More information"
 msgstr "Mais informações"
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:36
+msgid ""
+"Note: It takes some time for results of a recent measurement run to be "
+"available. Please reload this page to check for new results."
+msgstr ""
+"Nota: leva algum tempo para os resultados de medições recentes estarem "
+"disponíveis. Por favor, recarregue essa pagina para verificar se há novos "
+"resultados."
+
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:24
 msgid ""
 "Note: the device must be connected to the Internet to be able to show "
@@ -84,6 +93,14 @@ msgid ""
 msgstr ""
 "Nota: o dispositivo precisa estar conectado com a Internet para ser capaz de "
 "mostrar relatórios e renovar credenciais de acesso."
+
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:35
+msgid ""
+"Periodic measurement runs are carried out automatically. You may trigger an "
+"immediate measurement run using the button."
+msgstr ""
+"Medições são automaticamente executadas periodicamente. Você pode requisitar "
+"uma medição imediata usando o botão."
 
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:103
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:121
@@ -103,7 +120,7 @@ msgstr "Teste de PING do gateway"
 msgid "Port 25 Management Test"
 msgstr "Testes de Gerência da Porta 25"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:26
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:27
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:64
 msgid "Renew Credentials"
 msgstr "Renovar Credenciais"
@@ -132,12 +149,12 @@ msgstr "Id. do agente SIMET"
 msgid "SIMET agent label"
 msgstr "Etiqueta SIMET"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:39
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:51
 msgid "SIMET1 Measurement Results"
 msgstr "Resultado das Medições do SIMET1 (antigo)"
 
 # fragmento de frase, começar em minúsculas
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:41
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:53
 msgid "SIMET1 measurement results page"
 msgstr "página de resultados das medições do SIMET1"
 
@@ -157,7 +174,7 @@ msgstr "Id. da SIMETBox"
 msgid "SIMETBox device model"
 msgstr "Modelo da SIMETBox"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:47
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:59
 msgid "SIMETBox project pages:"
 msgstr "Páginas do projeto SIMETBox:"
 
@@ -189,6 +206,10 @@ msgstr ""
 "Se o sistema de relatórios abaixo reclamar de credenciais inválidas, por "
 "favor utilize o botão para renová-las."
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:39
+msgid "Start a measurement run"
+msgstr "Inicie uma medição agora"
+
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:81
 msgid "Successfully saved"
 msgstr "Gravado com sucesso"
@@ -197,11 +218,15 @@ msgstr "Gravado com sucesso"
 msgid "Support contact"
 msgstr "Contato de suporte"
 
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:42
+msgid "The device is doing a measurement run..."
+msgstr "O dispositivo está medindo nesse momento..."
+
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:102
 msgid "Throughput, Latency, Jitter and Packet Loss"
 msgstr "Vazão, Latência, Jitter, e Perda de Pacotes"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:40
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:52
 msgid ""
 "To access the historical data measured by the older measurement engine "
 "(SIMET1), please refer to the"
@@ -217,9 +242,11 @@ msgstr "Dez sites mais acessados do Brasil (ALEXA)"
 msgid "Version information"
 msgstr "Informações de versão"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:59
-msgid "Waiting for device..."
-msgstr "Esperando pelo dispositivo..."
+#~ msgid "Device is attempting to renew credentials..."
+#~ msgstr "Tentando renovar credenciais..."
+
+#~ msgid "Waiting for device..."
+#~ msgstr "Esperando pelo dispositivo..."
 
 #~ msgid ""
 #~ "Device will check for new firmware updates and apply any that are found..."
