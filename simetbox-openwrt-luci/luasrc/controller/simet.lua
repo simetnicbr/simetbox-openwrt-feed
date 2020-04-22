@@ -48,6 +48,12 @@ function index()
 
 	page = entry({"admin", "simet", "simet_register"}, call("simet_ma_renew_registration"), nil)
 	page.leaf = true
+
+	page = entry({"admin", "simet", "simet_engine_status"}, call("simet_ma_get_engine_status"), nil)
+	page.leaf = true
+
+	page = entry({"admin", "simet", "simet_start_measurement_run"}, call("simet_ma_start_measuring"), nil)
+	page.leaf = true
 end
 
 function get_crontab_options()
@@ -105,6 +111,26 @@ function simet_ma_renew_registration()
 		luci.http.status(204)
 	else
 		luci.http.status(503, "failed to register agent and renew tokens")
+	end
+end
+
+function simet_ma_get_engine_status()
+	local result = luci.util.ubus("simet_ma", "simet_engine_status") or {}
+	if result ~= nil then
+		luci.http.prepare_content("application/json")
+		luci.http.write_json(result)
+	else
+		luci.http.status(503, "failed to retrieve SIMET engine status")
+	end
+end
+
+function simet_ma_start_measuring()
+	local result = luci.util.ubus("simet_ma", "start_measurement_run") or {}
+	if result ~= nil then
+		luci.http.prepare_content("application/json")
+		luci.http.write_json(result)
+	else
+		luci.http.status(503, "failed to contact SIMET2 engine")
 	end
 end
 

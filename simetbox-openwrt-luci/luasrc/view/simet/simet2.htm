@@ -23,12 +23,24 @@
 			<p><%:Should the report system below complain of invalid credentials, please use the button to renew them.%></p>
 			<p><%:Note: the device must be connected to the Internet to be able to show reports and to renew access credentials.%></p>
 		</td><td class="td right">
-			<input class="cbi-button cbi-button-action important" type="button" value="<%:Renew Credentials%>"
-			       onclick="simet_register_ma(this)" />
-			<p class="alert-message notice ma-register-message" style="display:none">
-				<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
-				<span><%:Device is attempting to renew credentials...%></span>
-			</p>
+			<input class="cbi-button cbi-button-action important ma-renew-credentials" type="button"
+				value="<%:Renew Credentials%>" onclick="simet_register_ma(this)" />
+			<div class="alert-message notice ma-register-message" style="display:none">
+				<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle;float:left" />
+				<p><%:Attempting to renew credentials...%></p>
+			</div>
+		</td>
+	</tr><tr class="tr">
+		<td class="td left">
+			<p><%:Periodic measurement runs are carried out automatically.  You may trigger an immediate measurement run using the button.%></p>
+			<p><%:Note: It takes some time for results of a recent measurement run to be available.  Please reload this page to check for new results.%></p>
+		</td><td class="td right">
+			<input class="cbi-button cbi-button-action important ma-measure-now" type="button" disabled=disabled
+				value="<%:Start a measurement run%>" onclick="simet_trigger_run(this)" />
+			<div class="alert-message notice ma-measuring-message" style="display:none">
+				<img src="<%=resource%>/icons/loading.gif" style="vertical-align:middle;float:left" />
+				<p><%:The device is doing a measurement run...%></p>
+			</div>
 		</td>
 	</tr></table>
 
@@ -48,18 +60,57 @@
 </div>
 
 <script type="text/javascript">//<![CDATA[
-	var tries = 0,
-	    message = document.querySelector('p.ma-register-message'),
-	    label = message.querySelector('span');
+	var mrun_message = document.querySelector('div.ma-measuring-message'),
+	    mrun_button  = document.querySelector('input.ma-measure-now');
+
+	function mrun_running() {
+		mrun_message.style.display = '';
+		mrun_button.disabled = true;
+		mrun_button.style.display = 'none';
+	}
+	function mrun_not_running() {
+		mrun_message.style.display = 'none';
+		mrun_button.disabled = false;
+		mrun_button.style.display = '';
+	}
 
 	function ok() { window.location.reload(true); }
+	function simet_update_engine_status_xhr_cb(xhr, data, time_elapsed) {
+		if (data != null) {
+			if (data.main_measurement_running == "true") {
+				mrun_running();
+				window.setTimeout(function(){window.location.reload(false);}, 30000);
+			} else {
+				mrun_not_running();
+			}
+		}
+	}
+	function simet_trigger_engine_status_update() {
+		(new XHR()).get('<%=url("admin/simet/simet_engine_status")%>', null, simet_update_engine_status_xhr_cb);
+	}
+	function simet_trigger_run_xhr_cb(xhr, data, time_elapsed) {
+		if (data != null) {
+			if (data.status != "failed") {
+				mrun_running();
+				window.setTimeout(function(){window.location.reload(false);}, 30000);
+			} else {
+				mrun_not_running();
+			}
+		}
+	}
+	function simet_trigger_run(button) {
+		button.style.display = 'none';
+		button.disabled = true;
+		mrun_message.style.display = '';
+		(new XHR()).get('<%=url("admin/simet/simet_start_measurement_run")%>', null, simet_trigger_run_xhr_cb);
+	}
 	function simet_register_ma(button) {
 		button.style.display = 'none';
-		message.style.display = '';
-		label.innerHTML = '<%:Waiting for device...%>';
-
+		document.querySelector('div.ma-register-message').style.display = '';
 		(new XHR()).get('<%=url("admin/simet/simet_register")%>', null, ok);
 	}
+
+	simet_trigger_engine_status_update();
 //]]></script>
 
 <%+footer%>

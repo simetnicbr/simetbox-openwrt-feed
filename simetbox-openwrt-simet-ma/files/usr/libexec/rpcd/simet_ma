@@ -14,9 +14,17 @@ geolocate() {
   :
 }
 
+is_measurement_running() {
+  [ -f /var/lock/simet/simet-ma.lock ] || return 1
+  flock -s -n /var/lock/simet/simet-ma.lock -c true && return 1
+  :
+}
+
 case "$1" in
   list)
-    echo '{ "simet_engine_status":{}, "renew_registration":{}, "geolocate":{"force":false,"fast":true} }'
+    echo '{ "simet_engine_status":{}, "renew_registration":{}, '\
+           '"geolocate":{"force":false,"fast":true}, '\
+           '"start_measurement_run":{} }'
     ;;
   call)
     case "$2" in
@@ -43,10 +51,21 @@ case "$1" in
           geolocate
         fi
         ;;
+      start_measurement_run)
+        if is_measurement_running ; then
+          echo '{ "status": "already running" }'
+        elif start-stop-daemon -S -b -c nicbr-simet -x /usr/bin/simet-ma_run.sh && sleep 1 && is_measurement_running ; then
+          echo '{ "status": "started" }'
+        else
+          echo '{ "status": "failed" }'
+        fi
+        ;;
       simet_engine_status)
         au_enabled=true
+        au_measurement_running=false
         au_version=$(cat /usr/lib/simet/agent-version.txt) || au_version=
-        echo "{ \"enabled\":$au_enabled, \"version\":\"$au_version\" }"
+        [ "$au_enabled" = "true" ] && is_measurement_running && au_measurement_running=true
+        echo "{ \"enabled\":$au_enabled, \"version\":\"$au_version\", \"main_measurement_running\":\"$au_measurement_running\" }"
         ;;
     esac
     ;;
