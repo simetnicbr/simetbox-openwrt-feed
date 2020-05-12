@@ -8,9 +8,11 @@
 
 crontab -l >/dev/null 2>&1 || exit 0
 
+seed=$(printf %u "0x$(get_mac_address.sh | tail -c 5)") || seed=
+
 ( crontab -l 2>/dev/null | sed -e '/simetbox_refresh_cron/ d' -e '/simetbox_register_ma/ d' -e '/simet_geolocation.sh/ d' ;
-  awk -- 'BEGIN { srand();
-		  print int(60*rand()) " " int(24*rand()) " * * * simetbox_refresh_cron.sh" ;
-		  print int(60*rand()) " 1,5,9,13,17,21 * * * simet_geolocation.sh"
-		}' ) | crontab -
+  awk -- "BEGIN { srand($seed);
+		  print int(60*rand()) \" \" int(24*rand()) \" * * * simetbox_refresh_cron.sh\" ;
+		  print int(60*rand()) \" 1,5,9,13,17,21 * * * simet_geolocation.sh\"
+		}" ) | crontab -
 :
