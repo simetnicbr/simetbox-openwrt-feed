@@ -12,15 +12,15 @@ function index()
 
 	page = entry({"admin", "simet"}, firstchild(), _("SIMET"), 10)
 
-	page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET Results"), 10)
+	page = entry({"admin", "simet", "simet2"}, template("simet/simet2"), translate("SIMET2 Results"), 10)
+	page.dependent = false
+	page.leaf = true
+
+	page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET1 Results"), 15)
 	page.dependent = false
 	if not user_data then
 		page.sysauth = false
 	end
-	page.leaf = true
-
-	page = entry({"admin", "simet", "simet2"}, template("simet/simet2"), translate("SIMET2 Results"), 15)
-	page.dependent = false
 	page.leaf = true
 
 	page = entry({"admin", "simet", "status"}, template("simet/status"), translate("SIMETBox status"), 20)
