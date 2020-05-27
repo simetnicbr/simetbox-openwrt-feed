@@ -1,0 +1,95 @@
+<%+header%>
+
+<h2 name="content"><%:SIMETBox status%></h2>
+<p><a href="https://simet.nic.br/simetbox">https://simet.nic.br/simetbox</a></p>
+<p><%:Support contact%>: <a href="mailto:medicoes@simet.nic.br?subject=SIMETBOX">medicoes@simet.nic.br</a></p>
+
+<div class="cbi-section">
+	<h3><%:Internet connection status%> <%:IPv6 (modern Internet)%></h3>
+
+	<div class="ma-loading">
+		<p style="text-align:center"><img src="<%=resource%>/icons/loading.gif" style="vertical-align:middle" /></p>
+	</div>
+	<table class="table ma-loaded" width="100%" style="display:none">
+		<tr class="tr">
+			<td class="td left" width="33%"><%:Connection%></td><td class="td left" colspan="2"><p class="important sbx-ip6-wan">...</p></td>
+		</tr>
+		<tr class="tr">
+			<td class="td left" width="33%"><%:ISP Gateway%></td><td class="td left" colspan="2"><p class="important sbx-ip6-gw">...</p></td>
+		</tr>
+	</table>
+</div>
+<div class="cbi-section">
+	<h3><%:Internet connection status%> <%:IPv4 (Internet)%></h3>
+	<div class="ma-loading">
+		<p style="text-align:center"><img src="<%=resource%>/icons/loading.gif" style="vertical-align:middle" /></p>
+	</div>
+	<table class="table ma-loaded" width="100%" style="display:none">
+		<tr class="tr">
+			<td class="td left" width="33%"><%:Connection%></td><td class="td left" colspan="2"><p class="important sbx-ip4-wan">...</p></td>
+		</tr>
+		<tr class="tr">
+			<td class="td left" width="33%"><%:ISP Gateway%></td><td class="td left" colspan="2"><p class="important sbx-ip4-gw">...</p></td>
+		</tr>
+	</table>
+</div>
+
+<div class="cbi-section">
+	<h3><%:Security information%></h3>
+	<p><%:Security contact%>: security@simet.nic.br</p>
+	<p><%:More information%>: <a href="https://simet.nic.br/simetbox">https://simet.nic.br/simetbox</a></p>
+</div>
+
+<script type="text/javascript">//<![CDATA[
+	var sbx_ip4_wan_msg = document.querySelector('p.sbx-ip4-wan'),
+	    sbx_ip6_wan_msg = document.querySelector('p.sbx-ip6-wan'),
+	    sbx_ip4_gw_msg = document.querySelector('p.sbx-ip4-gw'),
+	    sbx_ip6_gw_msg = document.querySelector('p.sbx-ip6-gw');
+
+	function simet_wan_status_xhr_cb(xhr, data, time_elapsed) {
+	    var willhide = ".ma-loading,.ma-noinet", willshow = ".ma-inet,.ma-loaded";
+
+	    if (data && data.ip4_wan_status != null) {
+		sbx_ip4_wan_msg.innerHTML=(data.ip4_wan_status == "true") ? "<%:enabled%>" : "<%:disabled%>";
+	    } else {
+		sbx_ip4_wan_msg.innerHTML="<%:unknown%>";
+	    }
+	    if (data && data.ip6_wan_status != null) {
+		sbx_ip6_wan_msg.innerHTML=(data.ip6_wan_status == "true") ? "<%:enabled%>" : "<%:disabled%>";
+	    } else {
+		sbx_ip6_wan_msg.innerHTML="<%:unknown%>";
+	    }
+
+	    if (data && data.ip4_wan_status == "true" && data.ip4_gateway_ping != null) {
+		sbx_ip4_gw_msg.innerHTML=(data.ip4_gateway_ping == "true") ? "<%:reachable%>" : "<%:unreachable%>";
+	    } else {
+		sbx_ip4_gw_msg.innerHTML="<%:unknown%>";
+	    }
+	    if (data && data.ip6_wan_status == "true" && data.ip6_gateway_ping != null) {
+		sbx_ip6_gw_msg.innerHTML=(data.ip6_gateway_ping == "true") ? "<%:reachable%>" : "<%:unreachable%>";
+	    } else {
+		sbx_ip6_gw_msg.innerHTML="<%:unknown%>";
+	    }
+
+	    if (xhr == null || data == null || (data.ip4_gateway_ping != "true" && data.ip6_gateway_ping != "true")) {
+		willhide = ".ma-loading,.ma-inet";
+		willshow = ".ma-noinet,.ma-loaded";
+	    }
+	    for (let i of document.querySelectorAll(willhide)) {
+		i.style.display = 'none';
+	    }
+	    for (let i of document.querySelectorAll(willshow)) {
+		i.style.display = '';
+	    }
+	}
+	function simet_trigger_wan_status() {
+	    (new XHR()).get('<%=url("admin/simet/simet_wan_status")%>', null, simet_wan_status_xhr_cb);
+	}
+
+	for (let i of document.querySelectorAll(".ma-inet,.ma-noinet,.ma-loaded")) {
+	    i.style.display = 'none'
+	}
+	simet_trigger_wan_status();
+//]]></script>
+
+<%+footer%>
