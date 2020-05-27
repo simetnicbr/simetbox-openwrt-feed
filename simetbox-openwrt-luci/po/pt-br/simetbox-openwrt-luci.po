@@ -11,7 +11,7 @@ msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:16
 msgid "ATTENTION"
-msgstr ""
+msgstr "ATENÇÃO"
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:34
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:27
@@ -38,7 +38,7 @@ msgstr "Procure por atualizações"
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:15
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:29
 msgid "Connection"
-msgstr ""
+msgstr "Conexão"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:67
 msgid "Contact information"
@@ -74,7 +74,7 @@ msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:18
 msgid "For details on the connection problem, please go to the"
-msgstr ""
+msgstr "Para maiores detalhes sobre o problema de conexão, por favor vá para a"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:73
 msgid "Geolocation"
@@ -82,21 +82,21 @@ msgstr "Geolocalização"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:23
 msgid "IPv4 (Internet)"
-msgstr ""
+msgstr "IPv4 (Internet)"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:8
 msgid "IPv6 (modern Internet)"
-msgstr ""
+msgstr "IPv6 (Internet moderna)"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:18
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:32
 msgid "ISP Gateway"
-msgstr ""
+msgstr "Roteador do Provedor de Internet"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:8
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:23
 msgid "Internet connection status"
-msgstr ""
+msgstr "Estado da conexão com a Internet"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:25
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:35
@@ -125,6 +125,9 @@ msgid ""
 "SIMETBox renews its access credentials, typically once a day as well as when "
 "it boots."
 msgstr ""
+"Nota: por motivos de proteção da privacidade, o link será invalidado na "
+"próxima vez que a SIMETBox renovar suas credenciais de acesso. Isso ocorre "
+"tipicamente uma vez por dia, e toda vez que ela é reiniciada."
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:30
 msgid ""
@@ -191,7 +194,7 @@ msgstr "Resultado das Medições do SIMET1 (antigo)"
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:19
 msgid "SIMET1 Results"
-msgstr ""
+msgstr "Resultados do SIMET1"
 
 # fragmento de frase, começar em minúsculas
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:63
@@ -208,7 +211,7 @@ msgstr "Resultados do SIMET2"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:54
 msgid "SIMET2 results page for this device (temporary link)"
-msgstr ""
+msgstr "Página de resultados do SIMET2 deste medidor (link temporário)"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:56
 msgid "SIMETBox device id"
@@ -225,11 +228,11 @@ msgstr "Páginas do projeto SIMETBox:"
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:26
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:3
 msgid "SIMETBox status"
-msgstr ""
+msgstr "Estado da SIMETBox"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:19
 msgid "SIMETBox status page"
-msgstr ""
+msgstr "Página de estado da SIMETBox"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:34
 msgid "SIMETBox version"
@@ -279,6 +282,8 @@ msgid ""
 "The SIMETBox is not connected to the Internet. Some functions on this page "
 "will not work at this time."
 msgstr ""
+"A SIMETBox não está conectada à Internet. Algumas das funções desta página "
+"não estarão operacionais por este motivo."
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:48
 msgid "The device is doing a measurement run..."
@@ -289,6 +294,8 @@ msgid ""
 "This SIMETBox is currently offline, but you can try to access past "
 "measurement results through the following link:"
 msgstr ""
+"Essa SIMETBox está desconectada da Internet no momento, mas você pode tentar "
+"acessar os resultados das medições passadas através do seguinte link:"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/configuracoes.htm:102
 msgid "Throughput, Latency, Jitter and Packet Loss"
@@ -313,29 +320,29 @@ msgstr "Informações de versão"
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:53
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:58
 msgid "disabled"
-msgstr ""
+msgstr "desabilitado"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:53
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:58
 msgid "enabled"
-msgstr ""
+msgstr "habilitado"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:64
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:69
 msgid "reachable"
-msgstr ""
+msgstr "alcançável"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:55
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:60
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:66
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:71
 msgid "unknown"
-msgstr ""
+msgstr "desconhecido"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:64
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:69
 msgid "unreachable"
-msgstr ""
+msgstr "inalcançável"
 
 #~ msgid "SIMET Results"
 #~ msgstr "Resultados do SIMET"
