@@ -8,17 +8,23 @@
 	local simetma_agentid = fs.readfile("/etc/simet/agent-id-v2") or ""
 	local simet2_viewtok = fs.readfile("/var/run/simet/agent-vtk") or ""
 	local sbx_uilang = uci:get("luci", "main", "lang") or ""
-
-	function is_online()
-		return true
-	end
 %>
 
 <h2 name="content"><%:SIMET Measurement Results%></h2>
 
+<div class="alert-message notice ma-noinet" style="display:none">
+	<p><%:ATTENTION%></p>
+	<p><%:The SIMETBox is not connected to the Internet.  Some functions on this page will not work at this time.%></p>
+	<p><%:For details on the connection problem, please go to the%>
+	<a href='<%=url("admin/simet/status")%>'><%:SIMETBox status page%></a>.</p>
+</div>
+
 <div class="cbi-section">
 	<h3><%:SIMET2 Measurement Results%></h3>
-	<table class="table" width="100%"><tr class="tr">
+	<div class="notice ma-loading">
+		<p style="text-align:center"><img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /></p>
+	</div>
+	<table class="table ma-inet" width="100%" style="display:none"><tr class="tr">
 		<td class="td left">
 			<p><%:Should the report system below complain of invalid credentials, please use the button to renew them.%></p>
 			<p><%:Note: the device must be connected to the Internet to be able to show reports and to renew access credentials.%></p>
@@ -43,8 +49,12 @@
 			</div>
 		</td>
 	</tr></table>
-
-	<iframe src="https://dashboard.simet.nic.br/simet2/results/?matype=simetbox;agentid=<%=pcdata(simetma_agentid)%>;authtoken=<%=pcdata(simet2_viewtok)%>;lang=<%=pcdata(sbx_uilang)%>" width="100%" height="800px" frameborder="0"></iframe>
+	<div class="ma-noinet" style="display:none">
+		<p><%:This SIMETBox is currently offline, but you can try to access past measurement results through the following link:%><br />
+		<a href="https://dashboard.simet.nic.br/simet2/results/?matype=simetbox;agentid=<%=pcdata(simetma_agentid)%>;authtoken=<%=pcdata(simet2_viewtok)%>;lang=<%=pcdata(sbx_uilang)%>"><%:SIMET2 results page for this device (temporary link)%></a></p>
+		<p><%:Note: for privacy reasons, the link will be invalidated the next time the SIMETBox renews its access credentials, typically once a day as well as when it boots.%></p>
+	</div>
+	<iframe class="ma-inet" style="display:none" src="https://dashboard.simet.nic.br/simet2/results/?matype=simetbox;agentid=<%=pcdata(simetma_agentid)%>;authtoken=<%=pcdata(simet2_viewtok)%>;lang=<%=pcdata(sbx_uilang)%>" width="100%" height="800px" frameborder="0"></iframe>
 </div>
 
 <div class="cbi-section">
@@ -110,7 +120,28 @@
 		(new XHR()).get('<%=url("admin/simet/simet_register")%>', null, ok);
 	}
 
+	function simet_wan_status_xhr_cb(xhr, data, time_elapsed) {
+		var willhide = ".ma-loading,.ma-noinet", willshow = ".ma-inet";
+		if (xhr == null || data == null || (data.ip4_gateway_ping != "true" && data.ip6_gateway_ping != "true")) {
+			willhide = ".ma-loading,.ma-inet";
+			willshow = ".ma-noinet";
+		}
+		for (let i of document.querySelectorAll(willhide)) {
+			i.style.display = 'none';
+		}
+		for (let i of document.querySelectorAll(willshow)) {
+			i.style.display = '';
+		}
+	}
+	function simet_trigger_wan_status() {
+		(new XHR()).get('<%=url("admin/simet/simet_wan_status")%>', null, simet_wan_status_xhr_cb);
+	}
+
+	for (let i of document.querySelectorAll(".ma-inet,.ma-noinet")) {
+		i.style.display = 'none'
+	}
 	simet_trigger_engine_status_update();
+	simet_trigger_wan_status();
 //]]></script>
 
 <%+footer%>

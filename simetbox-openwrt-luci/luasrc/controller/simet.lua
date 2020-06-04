@@ -9,11 +9,15 @@ function index()
 
 	page = entry({"admin", "simet"}, firstchild(), _("SIMET"), 10)
 
-	page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET Results"), 10)
+	page = entry({"admin", "simet", "simet2"}, template("simet/simet2"), translate("SIMET2 Results"), 10)
 	page.dependent = false
 	page.leaf = true
 
-	page = entry({"admin", "simet", "simet2"}, template("simet/simet2"), translate("SIMET2 Results"), 15)
+	page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET1 Results"), 15)
+	page.dependent = false
+	page.leaf = true
+
+	page = entry({"admin", "simet", "status"}, template("simet/status"), translate("SIMETBox status"), 20)
 	page.dependent = false
 	page.leaf = true
 
@@ -47,6 +51,9 @@ function index()
 	page.leaf = true
 
 	page = entry({"admin", "simet", "simet_start_measurement_run"}, call("simet_ma_start_measuring"), nil)
+	page.leaf = true
+
+	page = entry({"admin", "simet", "simet_wan_status"}, call("simet_wan_status"), nil)
 	page.leaf = true
 end
 
@@ -115,6 +122,16 @@ function simet_ma_get_engine_status()
 		luci.http.write_json(result)
 	else
 		luci.http.status(503, "failed to retrieve SIMET engine status")
+	end
+end
+
+function simet_wan_status()
+	local result = luci.util.ubus("simet_ma", "wan_status") or {}
+	if result ~= nil then
+		luci.http.prepare_content("application/json")
+		luci.http.write_json(result)
+	else
+		luci.http.status(503, "failed to retrieve wan status")
 	end
 end
 
