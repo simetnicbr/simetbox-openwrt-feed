@@ -27,6 +27,8 @@ boot() {
 	# used for the geolocation cache and ephemeral tokens
 	[ -n "$SIMET_RUNSTATE_DIR" ] && mkdir -m 0770 -p "$SIMET_RUNSTATE_DIR" && chgrp nicbr-simet "$SIMET_RUNSTATE_DIR"
 	[ -n "$SIMET_LOCK_DIR" ] && mkdir -m 0770 -p "$SIMET_LOCK_DIR" && chgrp nicbr-simet "$SIMET_LOCK_DIR"
+	find "$AGENT_ID_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
+	find "$AGENT_TOKEN_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
 
 	# warning: try to keep RAM load down for 32MiB devices!
 	( simet_register_ma.sh <&- 2>&- >&- && {
