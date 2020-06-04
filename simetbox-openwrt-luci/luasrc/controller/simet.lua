@@ -5,18 +5,12 @@ require('simet.simet_utils')
 
 function index()
 	require('simet.simet_utils')
-
-	local env = luci.http.getenv()
-	local user_data = read_uci_section('personal_data', 'user_data')
 	local page
 
 	page = entry({"admin", "simet"}, firstchild(), _("SIMET"), 10)
 
 	page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET Results"), 10)
 	page.dependent = false
-	if not user_data then
-		page.sysauth = false
-	end
 	page.leaf = true
 
 	page = entry({"admin", "simet", "simet2"}, template("simet/simet2"), translate("SIMET2 Results"), 15)
