@@ -23,6 +23,7 @@ init_lmapd_fs() {
 		      /var/run/lmapd/lmap-schedule.json 2>/dev/null || true
 	chown nicbr-simet:nicbr-simet /var/run/lmapd/*json \
 		&& chmod +r /var/run/lmapd/*json
+	find /etc/simet/lmap -type f \! -perm -0644 -exec chmod +r {} \;
 }
 
 # FIXME: refuse to start the lmapd if the engine is disabled
