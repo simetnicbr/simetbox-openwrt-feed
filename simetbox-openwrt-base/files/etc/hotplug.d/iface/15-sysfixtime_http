@@ -23,9 +23,13 @@ sysfixtime_http_settime() {
 	}
 }
 
-[ "$ACTION" = "ifup" ] && case $INTERFACE in
-	wan*)
+[ "$ACTION" = "ifup" ] && (
+	. /lib/functions/network.sh
+	if network_find_wan WAN4 true && [ "$INTERFACE" = "$WAN4" ] ; then
 		sysfixtime_http_settime
-		;;
-esac
+	elif network_find_wan6 WAN6 true && [ "$INTERFACE" = "$WAN6" ] ; then
+		sysfixtime_http_settime
+	fi
+	:
+)
 :
