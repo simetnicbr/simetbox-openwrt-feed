@@ -21,11 +21,28 @@ simet_config() {
 	BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
 }
 
+simet_netconfig() {
+	WANDEVS=
+	. /lib/functions/network.sh && {
+		network_find_wan WAN4 false \
+			&& [ -n "$WAN4" ] && network_get_physdev WDEV4 "$WAN4" || :
+		network_find_wan6 WAN6 false \
+			&& [ -n "$WAN6" ] && network_get_physdev WDEV6 "$WAN6" || :
+		# FIXME: monitor multiple in inetup
+		[ -n "$WDEV4" ] && WANDEVS="$WDEV4"
+		[ -z "$WANDEVS" ] && WANDEVS="$WDEV6"
+	}
+	[ -n "$SIMET_RUNSTATE_DIR" ] && {
+		printf "%s" "$WANDEVS" > "$SIMET_RUNSTATE_DIR/inetup-wan-dev"
+		chmod 0664 "$SIMET_RUNSTATE_DIR/inetup-wan-dev"
+	}
+}
+
 boot() {
 	simet_config
 
 	# used for the geolocation cache and ephemeral tokens
-	[ -n "$SIMET_RUNSTATE_DIR" ] && mkdir -m 0770 -p "$SIMET_RUNSTATE_DIR" && chgrp nicbr-simet "$SIMET_RUNSTATE_DIR"
+	[ -n "$SIMET_RUNSTATE_DIR" ] && mkdir -m 02770 -p "$SIMET_RUNSTATE_DIR" && chgrp nicbr-simet "$SIMET_RUNSTATE_DIR"
 	[ -n "$SIMET_LOCK_DIR" ] && mkdir -m 0770 -p "$SIMET_LOCK_DIR" && chgrp nicbr-simet "$SIMET_LOCK_DIR"
 	find "$AGENT_ID_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
 	find "$AGENT_TOKEN_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
@@ -40,6 +57,7 @@ boot() {
 
 start_service() {
 	simet_config
+	simet_netconfig
 
 	procd_open_instance simet-inetuptime
 	procd_set_param file "$AGENT_ID_FILE" "$AGENT_TOKEN_FILE" /usr/lib/simet/simet-ma.conf /etc/simet/simet-ma.conf /usr/lib/simet/conf.d/*
@@ -53,12 +71,12 @@ start_service() {
 	[ -n "$AGENT_ID_FILE" ] && procd_append_param command -d "$AGENT_ID_FILE"
 	[ -n "$BOOTID" ] && procd_append_param command -b "$BOOTID"
 	[ -n "$BOXID" ] && procd_append_param command -m "$BOXID"
+	procd_append_param command -i "$SIMET_RUNSTATE_DIR/inetup-wan-dev"
 	procd_append_param command "$SIMET_INETUP_SERVER"
 	procd_close_instance
 }
 
-# openwrt-CC doesn't handle procd_send_signal or reload_signal, but
-# just in case we manage to backport either...
 reload_service() {
+	simet_netconfig
 	procd_send_signal simet-ma '*' HUP || killall -HUP inetupc
 }

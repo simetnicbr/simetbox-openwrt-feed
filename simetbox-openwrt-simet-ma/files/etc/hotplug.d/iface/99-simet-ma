@@ -1,0 +1,10 @@
+[ "$ACTION" = "ifup" ] && (
+	. /lib/functions/network.sh
+	if network_find_wan WAN4 true && [ "$INTERFACE" = "$WAN4" ] ; then
+		/etc/init.d/simet-ma reload || :
+	elif network_find_wan6 WAN6 true && [ "$INTERFACE" = "$WAN6" ] ; then
+		/etc/init.d/simet-ma reload || :
+	fi
+	:
+)
+:
