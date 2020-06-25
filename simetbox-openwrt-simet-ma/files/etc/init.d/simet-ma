@@ -47,6 +47,9 @@ boot() {
 	find "$AGENT_ID_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
 	find "$AGENT_TOKEN_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
 
+	# restoring config backups from other units is a problem we must check for on boot
+	simet_create_vlabel.sh >/dev/null 2>&1 || :
+
 	# warning: try to keep RAM load down for 32MiB devices!
 	( simet_register_ma.sh <&- 2>&- >&- && {
 		simet_geolocation.sh <&- 2>&- >&- || true
