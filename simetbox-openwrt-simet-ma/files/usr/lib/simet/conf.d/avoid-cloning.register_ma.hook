@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Ensure the registration is changed when the MAC changed since last registration
+# This works around measurement loss or misatribution caused by config cloning
+# from one unit to another resulting in multiple units with the same agent-id
+
+AGENT_CRED_METADATA_FILE="${AGENT_ID_FILE}.creator"
+SIMETBOX_VERSION=$(get_simet_box_version.sh 2>/dev/null) || SIMETBOX_VERSION="unknown"
+[ -r "$AGENT_VERSION_FILE" ] && AGENT_VERSION=$(cat "$AGENT_VERSION_FILE") || AGENT_VERSION=
+[ -z "$AGENT_VERSION" ] && AGENT_VERSION="simet-ma/unknown"
+
+write_agent_creds_override() {
+	write_agent_creds "$@" || return $?
+	if [ -z "$AID" ] || [ -z "$AT" ] ; then
+		rm -f "$AGENT_CRED_METADATA_FILE"
+	elif [ "$AID" != "$OLDAID" ] || [ "$AT" != "$OLDAT" ] || [ ! -s "$AGENT_CRED_METADATA_FILE" ] ; then
+		printf '%s "%s" "%s"\n' \
+			"$SIMET_MAC_LABEL" "$AGENT_VERSION" "$SIMETBOX_VERSION" \
+			> "$AGENT_CRED_METADATA_FILE"
+	fi
+}
+
+# $1 will be 0 if vlabel was detected as foreign, 1 otherwise
+# return 0 if we need to invalidate creds
+simet_detect_cloned_id_override() {
+	[ -z "$AID" ] && return 1
+	[ -z "$AT" ]  && return 1
+
+	# use vlabel hint if we lack the tracking metadata
+	[ -s "$AGENT_CRED_METADATA_FILE" ] || return "$1"
+
+	# FIXME: is this the safest?
+	[ -z "$SIMET_MAC_LABEL" ] && RC=3 abend "MA failed to retrieve its main MAC address"
+
+	# invalidate if MAC has changed
+	grep -q "^${SIMET_MAC_LABEL}[[:blank:]]" "$AGENT_CRED_METADATA_FILE" \
+		|| return 0
+
+	return 1
+}
+
+# better name for backup files
+backup_invalid_id_override() {
+	backup_invalid_id "mac_${SIMET_MAC_LABEL}.sbx_${SIMETBOX_VERSION}.$1" || return $?
+	:
+}
