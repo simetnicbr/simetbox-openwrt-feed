@@ -14,9 +14,9 @@ write_agent_creds_override() {
 	if [ -z "$AID" ] || [ -z "$AT" ] ; then
 		rm -f "$AGENT_CRED_METADATA_FILE"
 	elif [ "$AID" != "$OLDAID" ] || [ "$AT" != "$OLDAT" ] || [ ! -s "$AGENT_CRED_METADATA_FILE" ] ; then
-		printf '%s "%s" "%s"\n' \
-			"$SIMET_MAC_LABEL" "$AGENT_VERSION" "$SIMETBOX_VERSION" \
-			> "$AGENT_CRED_METADATA_FILE"
+		for i in $(simet_get_persistent_macs) ; do
+			printf 'MAC %s "%s" "%s"\n' "$i" "$AGENT_VERSION" "$SIMETBOX_VERSION"
+		done > "$AGENT_CRED_METADATA_FILE"
 	fi
 }
 
@@ -33,7 +33,7 @@ simet_detect_cloned_id_override() {
 	[ -z "$SIMET_MAC_LABEL" ] && RC=3 abend "MA failed to retrieve its main MAC address"
 
 	# invalidate if MAC has changed
-	grep -q "^${SIMET_MAC_LABEL}[[:blank:]]" "$AGENT_CRED_METADATA_FILE" \
+	grep -q "^MAC[[:blank:]]${SIMET_MAC_LABEL}[[:blank:]]" "$AGENT_CRED_METADATA_FILE" \
 		|| return 0
 
 	return 1
