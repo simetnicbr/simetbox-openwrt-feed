@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 #
-# Copyright (C) 2017 NIC.br
+# Copyright (C) 2017-2020 NIC.br
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 PKG_BRANCH:=branches/master
 
 PKG_NAME:=simetbox-openwrt-base
-PKG_RELEASE:=2
+PKG_RELEASE:=4
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
