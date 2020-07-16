@@ -34,10 +34,12 @@ include $(INCLUDE_DIR)/package.mk
 ifeq ($(CONFIG_SIMETBOX_COMMON),y)
 	LN_SIMET_CLIENT:=$(LN)
 	CP_SIMET_CLIENT:=$(CP)
+	INSTALL_BIN_SIMET_CLIENT:=$(INSTALL_BIN)
 	TOUCH_SIMET_CLIENT:=touch 
 else
 	LN_SIMET_CLIENT:=echo Not configured -\> $(LN) 
 	CP_SIMET_CLIENT:=echo Not configured -\> $(CP)
+	INSTALL_BIN_SIMET_CLIENT:=echo Not configured -\> $(INSTALL_BIN)
 	TOUCH_SIMET_CLIENT:=echo Not configured -\> touch
 endif
 
@@ -137,16 +139,16 @@ define Package/simetbox-openwrt-base/install
 	$(INSTALL_DIR) $(1)/lib/upgrade
 	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
 	$(CP) files/* $(1)/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
+	$(INSTALL_BIN_SIMET_CLIENT) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_client
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_ws
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_hash_measure
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simetbox_config  $(1)/etc/init.d
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_mac_address.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_model.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/get_mac_address.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/get_model.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_lat_long.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_simet_box_version.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet.conf  $(1)/etc/config
+	$(CP) $(PKG_BUILD_DIR)/files/get_simet_box_version.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/simet.conf  $(1)/etc/config
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_utils.lua  $(1)/usr/lib/lua/simet
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_uci.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/set_uci.sh  $(1)/usr/bin
