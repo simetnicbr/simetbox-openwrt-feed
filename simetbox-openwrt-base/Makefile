@@ -27,6 +27,8 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
 
+PKG_BUILD_DEPENDS+=openssl libpthread simetbox-openwrt-config
+
 include $(INCLUDE_DIR)/package.mk
 
 # CONFIGURE_ARGS += --with-ssl-dir="$(STAGING_DIR)/usr"
@@ -36,11 +38,13 @@ ifeq ($(CONFIG_SIMETBOX_COMMON),y)
 	CP_SIMET_CLIENT:=$(CP)
 	INSTALL_BIN_SIMET_CLIENT:=$(INSTALL_BIN)
 	TOUCH_SIMET_CLIENT:=touch 
+	SIMET1_DEPS:=+libopenssl +libpthread +simetbox-openwrt-config
 else
 	LN_SIMET_CLIENT:=echo Not configured -\> $(LN) 
 	CP_SIMET_CLIENT:=echo Not configured -\> $(CP)
 	INSTALL_BIN_SIMET_CLIENT:=echo Not configured -\> $(INSTALL_BIN)
 	TOUCH_SIMET_CLIENT:=echo Not configured -\> touch
+	SIMET1_DEPS:=
 endif
 
 ifeq ($(CONFIG_SIMETBOX_PORT25),y)
@@ -118,7 +122,7 @@ define Package/simetbox-openwrt-base
   SECTION:=net
   CATEGORY:=Network
   TITLE:=SIMETBox
-  DEPENDS:=+libjson-c +simetbox-openwrt-config +libopenssl +libpthread +luci-lib-jsonc +luci-lib-json +libuci-lua +curl +ca-bundle
+  DEPENDS:=+libjson-c +luci-lib-jsonc +luci-lib-json +libuci-lua +curl +ca-bundle $(SIMET1_DEPS)
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
