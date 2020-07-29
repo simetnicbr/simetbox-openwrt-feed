@@ -1,12 +1,10 @@
 #!/bin/sh
-# Copyright (C) 2018-2019 NIC.br
+# Copyright (C) 2018-2020 NIC.br
 # Released under the public domain or GPLv2+ at your option
 #
 # cleanup history for upgrades:
 #  previous: simetbox_register_ma.sh
 #  current : simetbox_refresh_cron.sh simet_geolocation.sh
-
-crontab -l >/dev/null 2>&1 || exit 0
 
 seed=$(printf %u "0x$(get_mac_address.sh | tail -c 5)") || seed=
 
