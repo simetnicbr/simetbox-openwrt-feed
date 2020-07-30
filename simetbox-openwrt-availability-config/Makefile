@@ -18,7 +18,7 @@ define Package/simetbox-openwrt-availability-config
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Availability analysis and remote configuration using PAS (https://pas.nic.br)
-  DEPENDS:=+simetbox-openwrt-base +easycwmp
+  DEPENDS:=+simetbox-openwrt-base @SIMETBOX_COMMON +easycwmp
   URL:=http://simet.nic.br
 #  MENU:=1
 endef

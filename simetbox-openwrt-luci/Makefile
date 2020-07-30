@@ -17,7 +17,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-luci
-PKG_VERSION:=1.4
+PKG_VERSION:=1.5
 PKG_RELEASE:=1
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_I18N_DIR:=$(PKG_BUILD_DIR)/luci-i18n
@@ -45,8 +45,10 @@ endef
 define Package/simetbox-openwrt-luci/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
 	$(CP) luasrc/* $(1)/usr/lib/lua/luci
+ifeq ($(CONFIG_SIMETBOX_COMMON),y)
 	$(INSTALL_DIR) $(1)/www
-	$(CP) htdocs/* $(1)/www
+	$(CP) htdocs-simet1/* $(1)/www
+endif
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 	$(CP) $(PKG_I18N_DIR)/* $(1)/usr/lib/lua/luci/i18n
 	-chmod -R og-w files/ && $(CP) files/. $(1)/

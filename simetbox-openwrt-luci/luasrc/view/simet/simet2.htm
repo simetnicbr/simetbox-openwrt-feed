@@ -8,6 +8,8 @@
 	local simetma_agentid = fs.readfile("/etc/simet/agent-id-v2") or ""
 	local simet2_viewtok = fs.readfile("/var/run/simet/agent-vtk") or ""
 	local sbx_uilang = uci:get("luci", "main", "lang") or ""
+
+	local simet1_enabled = fs.stat("/usr/bin/simet_client") or nil
 %>
 
 <h2 name="content"><%:SIMET Measurement Results%></h2>
@@ -57,11 +59,13 @@
 	<iframe class="ma-inet" style="display:none" src="https://dashboard.simet.nic.br/simet2/results/?matype=simetbox;agentid=<%=pcdata(simetma_agentid)%>;authtoken=<%=pcdata(simet2_viewtok)%>;lang=<%=pcdata(sbx_uilang)%>" width="100%" height="800px" frameborder="0"></iframe>
 </div>
 
+<% if simet1_enabled ~= nil then %>
 <div class="cbi-section">
 	<h3><%:SIMET1 Measurement Results%></h3>
 	<p><%:To access the historical data measured by the older measurement engine (SIMET1), please refer to the%>
 	<a href="simet"><%:SIMET1 measurement results page%></a>.</p>
 </div>
+<% end %>
 
 <div class="cbi-section">
 	<h3><%:Contact information%></h3>

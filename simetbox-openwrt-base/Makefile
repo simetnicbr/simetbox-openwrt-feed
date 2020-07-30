@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 #
-# Copyright (C) 2017 NIC.br
+# Copyright (C) 2017-2020 NIC.br
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 PKG_BRANCH:=branches/master
 
 PKG_NAME:=simetbox-openwrt-base
-PKG_RELEASE:=2
+PKG_RELEASE:=4
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -27,6 +27,8 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
 
+PKG_BUILD_DEPENDS+=openssl libpthread simetbox-openwrt-config
+
 include $(INCLUDE_DIR)/package.mk
 
 # CONFIGURE_ARGS += --with-ssl-dir="$(STAGING_DIR)/usr"
@@ -34,11 +36,15 @@ include $(INCLUDE_DIR)/package.mk
 ifeq ($(CONFIG_SIMETBOX_COMMON),y)
 	LN_SIMET_CLIENT:=$(LN)
 	CP_SIMET_CLIENT:=$(CP)
+	INSTALL_BIN_SIMET_CLIENT:=$(INSTALL_BIN)
 	TOUCH_SIMET_CLIENT:=touch 
+	SIMET1_DEPS:=+libopenssl +libpthread +simetbox-openwrt-config
 else
 	LN_SIMET_CLIENT:=echo Not configured -\> $(LN) 
 	CP_SIMET_CLIENT:=echo Not configured -\> $(CP)
+	INSTALL_BIN_SIMET_CLIENT:=echo Not configured -\> $(INSTALL_BIN)
 	TOUCH_SIMET_CLIENT:=echo Not configured -\> touch
+	SIMET1_DEPS:=
 endif
 
 ifeq ($(CONFIG_SIMETBOX_PORT25),y)
@@ -116,7 +122,7 @@ define Package/simetbox-openwrt-base
   SECTION:=net
   CATEGORY:=Network
   TITLE:=SIMETBox
-  DEPENDS:=+libjson-c +simetbox-openwrt-config +libopenssl +libpthread +luci-lib-jsonc +luci-lib-json +libuci-lua +curl +ca-bundle
+  DEPENDS:=+libjson-c +luci-lib-jsonc +luci-lib-json +libuci-lua +curl +ca-bundle $(SIMET1_DEPS)
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
@@ -137,16 +143,16 @@ define Package/simetbox-openwrt-base/install
 	$(INSTALL_DIR) $(1)/lib/upgrade
 	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
 	$(CP) files/* $(1)/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
+	$(INSTALL_BIN_SIMET_CLIENT) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_client
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_ws
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_hash_measure
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simetbox_config  $(1)/etc/init.d
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_mac_address.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_model.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/get_mac_address.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/get_model.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_lat_long.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_simet_box_version.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet.conf  $(1)/etc/config
+	$(CP) $(PKG_BUILD_DIR)/files/get_simet_box_version.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/simet.conf  $(1)/etc/config
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_utils.lua  $(1)/usr/lib/lua/simet
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_uci.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/set_uci.sh  $(1)/usr/bin
