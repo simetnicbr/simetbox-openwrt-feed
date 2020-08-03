@@ -58,14 +58,14 @@ function index()
 end
 
 function get_crontab_options()
-	local su = require "simet.simet_utils"
+	require "simet.simet_utils"
 	local options = luci.http.formvalue('options',true)
 
-	options = su.json_decode(options)
+	options = json_decode(options)
 
 	for key, value in pairs(options) do
 		for key2, value2 in pairs(value) do
-			options[key][key2] = su.read_uci_option('simet_cron', key, key2)
+			options[key][key2] = read_uci_option('simet_cron', key, key2)
 		end
 	end
 
@@ -74,28 +74,28 @@ function get_crontab_options()
 end
 
 function set_crontab_options()
-	local cw = require "simet.crontab_writer"
-	local su = require "simet.simet_utils"
+	require "simet.crontab_writer"
+	require "simet.simet_utils"
 	local options = luci.http.formvalue('options',false)
 
-	options = su.json_decode(options)
+	options = json_decode(options)
 
 	for key, value in pairs(options) do
 		for key2, value2 in pairs(value) do
-			su.write_uci_option('simet_cron', key, key2, value2)
+			write_uci_option('simet_cron', key, key2, value2)
 		end
 	end
 
-	su.commit_uci_config('simet_cron')
+	commit_uci_config('simet_cron')
 
-	cw.generate_crontab()
+	generate_crontab()
 	luci.http.status(200)
 
 end
 
 function run_simet_client()
-	local su = require "simet.simet_utils"
-	local result = su.read_from_bash('run_simet.sh')
+	require "simet.simet_utils"
+	local result = read_from_bash('run_simet.sh')
 	luci.http.write(result)
 end
 
