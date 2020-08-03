@@ -1,15 +1,10 @@
 <%+header%>
 
 <%
-local fs   = require "nixio.fs"
-local simet = require "luci.controller.simet"
-local has_ping6 = fs.access("/bin/ping6") or fs.access("/usr/bin/ping6")
-local has_traceroute6 = fs.access("/usr/bin/traceroute6")
+require('luci.controller.simet')
+require('simet.simet_utils')
 local hash = get_device_hash()
 local mac_address = get_mac_address()
-
-require('simet.simet_utils')
-
 %>
 
 <script type="text/javascript" src="<%=resource%>/cbi.js"></script>
