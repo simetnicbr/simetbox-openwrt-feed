@@ -1,0 +1,23 @@
+{
+	"user":"nicbr-simet",
+	"access":{
+		"system":{
+			"methods":["board","info"]
+		},
+		"simet_ma":{
+			"methods":[
+				"simet_engine_status",
+				"renew_registration",
+				"wan_status",
+				"geolocate",
+				"start_measurement_run"
+			]
+		},
+		"auto_upgrade":{
+			"methods":["trigger","status"]
+		},
+		"network.interface":{
+			"methods":["dump"]
+		}
+	}
+}
