@@ -15,7 +15,6 @@ PKG_INSTALL:=1
 
 PKG_VERSION:=0.16.12
 PKG_REV:=v$(PKG_VERSION)
-PKG_REV:=master
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simet-ma.git
 PKG_SOURCE_PROTO:=git

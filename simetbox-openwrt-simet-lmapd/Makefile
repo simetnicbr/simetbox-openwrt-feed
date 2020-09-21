@@ -15,7 +15,6 @@ PKG_INSTALL:=1
 
 PKG_VERSION:=0.13.3
 PKG_REV:=v$(PKG_VERSION)
-PKG_REV:=master
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simet-lmapd.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
