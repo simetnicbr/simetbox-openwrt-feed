@@ -41,6 +41,10 @@ define Package/simetbox-openwrt-simet-ma
 #  MENU:=1
 endef
 
+define Package/simetbox-openwrt-simet-ma/conffiles
+/etc/config/simet_ma
+endef
+
 define Package/simetbox-openwrt-simet-ma/description
  SIMETBox is a suite of tools to measure the quality of the internet. It's designed to be used mainly in Brazil measuring the internet from users home to Internet Exchange Points.
 endef
@@ -59,6 +63,8 @@ define Package/simetbox-openwrt-simet-ma/install
 	# this one can fail, we often have it empty
 	-$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/simet/* $(1)/etc/simet
 	chmod -R og-w files/ && $(CP) files/. $(1)/
+	# "uci commit" since LEDE is broken and will force mode 0600 anyway
+	-chmod 0600 $(1)/etc/config/*
 endef
 
 define Package/simetbox-openwrt-simet-ma/postinst
