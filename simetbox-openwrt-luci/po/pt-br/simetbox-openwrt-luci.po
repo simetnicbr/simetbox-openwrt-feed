@@ -201,7 +201,7 @@ msgstr "Resultados do SIMET1"
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:31
 msgid "SIMET1 Settings"
-msgstr ""
+msgstr "Configurações do SIMET1"
 
 # fragmento de frase, começar em minúsculas
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:66
@@ -219,7 +219,7 @@ msgstr "Resultados do SIMET2"
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:22
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2_cfg.htm:63
 msgid "SIMET2 Settings"
-msgstr ""
+msgstr "Configurações do SIMET2"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:56
 msgid "SIMET2 results page for this device (temporary link)"
@@ -334,6 +334,9 @@ msgid ""
 "Please note that the measurement-fleet coordination and orchestration "
 "servers might override the local configuration."
 msgstr ""
+"Você pode ajustar as configurações de alguns parâmetros de medição do SIMET2 "
+"nesta página.  Nota: os servidores de coordenação e orquestração da frota de "
+"medidores SIMET podem ajustar ou sobrepor estas configurações ."
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:53
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:58
