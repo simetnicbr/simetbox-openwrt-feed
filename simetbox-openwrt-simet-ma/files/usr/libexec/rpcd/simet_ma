@@ -36,7 +36,7 @@ is_measurement_running() {
 
 case "$1" in
   list)
-    echo '{ "simet_engine_status":{}, "renew_registration":{}, '\
+    echo '{ "simet_engine_status":{}, "renew_registration":{}, "refresh_schedule":{}, '\
            '"wan_status":{}, '\
            '"geolocate":{"force":false,"fast":true}, '\
            '"start_measurement_run":{} }'
@@ -47,6 +47,12 @@ case "$1" in
         # FIXME: run as root or as nicbr-simet ?
         RC=0
         simet_register_ma.sh >/dev/null 2>&1 || RC=$?
+        echo "{ \"status\":$RC }"
+        ;;
+      refresh_schedule)
+        # FIXME: run as root or as nicbr-simet ?
+        RC=0
+        simetbox_lmap-fetch-schedule.sh >/dev/null 2>&1 || RC=$?
         echo "{ \"status\":$RC }"
         ;;
       geolocate)
