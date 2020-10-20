@@ -27,6 +27,9 @@ PKG_BUILD_DEPENDS:=curl
 include $(INCLUDE_DIR)/package.mk
 
 CONFIGURE_ARGS += --enable-simetbox
+ifdef CONFIG_SIMET2_SPOOFER
+	CONFIGURE_ARGS += --enable-simet-spoofer
+endif
 
 # FIXME: sha256sum dependency below changes do md5sum in simet-ma 0.14.5 and later
 define Package/simetbox-openwrt-simet-ma
@@ -34,7 +37,10 @@ define Package/simetbox-openwrt-simet-ma
   SECTION:=net
   CATEGORY:=Network
   TITLE:=SIMETBox SIMET-2 measurement engine
-  DEPENDS:=+simetbox-openwrt-base +simetbox-openwrt-simet-lmapd +libcurl +curl +ca-bundle +!BUSYBOX_CONFIG_FLOCK:flock
+  DEPENDS:=+simetbox-openwrt-base
+  DEPENDS+=+libcurl +curl +ca-bundle +!BUSYBOX_CONFIG_FLOCK:flock
+  DEPENDS+=+simetbox-openwrt-simet-lmapd
+  DEPENDS+=+SIMET2_SPOOFER:simet-nping
   DEPENDS+=+!BUSYBOX_CONFIG_SHA256SUM:coreutils-sha256sum
   URL:=https://simet.nic.br
   USERID:=nicbr-simet:nicbr-simet
@@ -43,6 +49,10 @@ endef
 
 define Package/simetbox-openwrt-simet-ma/description
  SIMETBox is a suite of tools to measure the quality of the internet. It's designed to be used mainly in Brazil measuring the internet from users home to Internet Exchange Points.
+endef
+
+define Package/simetbox-openwrt-simet-ma/config
+	source "$(SOURCE)/Config.in"
 endef
 
 # default target gratuitously overrides CC, etc and undoes the work

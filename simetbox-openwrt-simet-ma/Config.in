@@ -1,0 +1,14 @@
+# SIMETBox configuration
+menu "Configuration"
+	depends on PACKAGE_simetbox-openwrt-simet-ma
+
+	config SIMET2_SPOOFER
+		bool "SIMET2: anti-spoofing validation"
+		help
+			EXPERIMENTAL MEASUREMENT, not yet for production use.
+			Attempts to measure whether BCP38 anti-spoofing defenses are deployed.
+			Note: this measurement sends packets with spoofed origin address to NIC.br
+			servers.
+			Warning: requires OpenSSL, which takes a large amount of FLASH space.
+		default n
+endmenu
