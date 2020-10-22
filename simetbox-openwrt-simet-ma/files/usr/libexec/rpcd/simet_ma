@@ -105,12 +105,14 @@ case "$1" in
         au_version=$(cat /usr/lib/simet/agent-version.txt) || au_version=
         au_smain_period=$(uci -q get simet_ma.basic.time_step) || au_smain_period=
         au_sgwp_period=$(uci -q get simet_ma.gw_ping.time_step) || au_sgwp_period=
+        au_sixbrp_period=$(uci -q get simet_ma.ixbr_ping.time_step) || au_sixbrp_period=
         [ "$au_enabled" = "true" ] && is_measurement_running && au_measurement_running=true
         printf "{ \"enabled\":%s, \"version\":\"%s\", \"main_measurement_running\":\"%s\", \"local_measurement_config\":{ " \
                "$au_enabled" "$au_version" "$au_measurement_running"
           vf2=0
           _jsonify_obj_unquoted $vf2 "basic"   "period_minutes" "$au_smain_period" && vf2=1
           _jsonify_obj_unquoted $vf2 "gw_ping" "period_minutes" "$au_sgwp_period" && vf2=1
+          _jsonify_obj_unquoted $vf2 "ixbr_ping" "period_minutes" "$au_sixbrp_period" && vf2=1
         printf ' } }\n'
         ;;
       wan_status)
