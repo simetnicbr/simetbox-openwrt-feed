@@ -3,18 +3,36 @@
 # Copyright (C) 2020 by NIC.br <medicoes@simet.nic.br>
 # Distributed under the GPLv3+ license
 
-_jsonify_unquoted() {
+_jsonify_pairs() {
   local vf1
   vf1=
-  printf "{ "
   while [ $# -ge 2 ] ; do
     [ -n "$1" ] && [ -n "$2" ] && {
       printf "$vf1\"%s\":\"%s\"" "$1" "$2"
-      vf1=","
+      vf1=", "
     }
     shift 2
   done
-  printf " }\n"
+  [ -z "$vf1" ] && return 1
+  :
+}
+
+_jsonify_unquoted() {
+  printf '{ '
+  _jsonify_pairs "$@" || :
+  printf ' }\n'
+}
+
+_jsonify_obj_unquoted() {
+  local cf1 vf1 s sn
+  vf1=
+  cf1=1
+  [ "$1" -eq 1 ] && { vf1=", " ; cf1=0 ; }
+  sn="$2"
+  shift 2
+  s=$(_jsonify_pairs "$@") && \
+    printf "%s\"%s\":{ %s }" "$vf1" "$sn" "$s" && cf1=0
+  return $cf1
 }
 
 geolocate() {
@@ -36,7 +54,7 @@ is_measurement_running() {
 
 case "$1" in
   list)
-    echo '{ "simet_engine_status":{}, "renew_registration":{}, '\
+    echo '{ "simet_engine_status":{}, "renew_registration":{}, "refresh_schedule":{}, '\
            '"wan_status":{}, '\
            '"geolocate":{"force":false,"fast":true}, '\
            '"start_measurement_run":{} }'
@@ -47,6 +65,12 @@ case "$1" in
         # FIXME: run as root or as nicbr-simet ?
         RC=0
         simet_register_ma.sh >/dev/null 2>&1 || RC=$?
+        echo "{ \"status\":$RC }"
+        ;;
+      refresh_schedule)
+        # FIXME: run as root or as nicbr-simet ?
+        RC=0
+        simetbox_lmap-fetch-schedule.sh >/dev/null 2>&1 || RC=$?
         echo "{ \"status\":$RC }"
         ;;
       geolocate)
@@ -79,8 +103,17 @@ case "$1" in
         au_enabled=true
         au_measurement_running=false
         au_version=$(cat /usr/lib/simet/agent-version.txt) || au_version=
+        au_smain_period=$(uci -q get simet_ma.basic.time_step) || au_smain_period=
+        au_sgwp_period=$(uci -q get simet_ma.gw_ping.time_step) || au_sgwp_period=
+        au_sixbrp_period=$(uci -q get simet_ma.ixbr_ping.time_step) || au_sixbrp_period=
         [ "$au_enabled" = "true" ] && is_measurement_running && au_measurement_running=true
-        echo "{ \"enabled\":$au_enabled, \"version\":\"$au_version\", \"main_measurement_running\":\"$au_measurement_running\" }"
+        printf "{ \"enabled\":%s, \"version\":\"%s\", \"main_measurement_running\":\"%s\", \"local_measurement_config\":{ " \
+               "$au_enabled" "$au_version" "$au_measurement_running"
+          vf2=0
+          _jsonify_obj_unquoted $vf2 "basic"   "period_minutes" "$au_smain_period" && vf2=1
+          _jsonify_obj_unquoted $vf2 "gw_ping" "period_minutes" "$au_sgwp_period" && vf2=1
+          _jsonify_obj_unquoted $vf2 "ixbr_ping" "period_minutes" "$au_sixbrp_period" && vf2=1
+        printf ' } }\n'
         ;;
       wan_status)
         wan_s="false"
@@ -109,4 +142,3 @@ case "$1" in
     ;;
 esac
 :
-

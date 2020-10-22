@@ -19,12 +19,16 @@ function index()
 	page.dependent = false
 	page.leaf = true
 
+	page = entry({"admin", "simet", "simet2_config"}, template("simet/simet2_cfg"), translate("SIMET2 Settings"), 30)
+	page.dependent = false
+	page.leaf = true
+
 	if simet1_enabled ~= nil then
 		page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET1 Results"), 15)
 		page.dependent = false
 		page.leaf = true
 
-		page = entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), translate("Settings"), 30)
+		page = entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), translate("SIMET1 Settings"), 30)
 		page.dependent = false
 		page.leaf = true
 
@@ -55,6 +59,61 @@ function index()
 
 	page = entry({"admin", "simet", "simet_wan_status"}, call("simet_wan_status"), nil)
 	page.leaf = true
+
+	page = entry({"admin", "simet", "simet_get_config"}, call("simet_get_simetma_config"), nil)
+	page.leaf = true
+
+	page = entry({"admin", "simet", "simet_set_config"}, call("simet_set_simetma_config"), nil)
+	page.leaf = true
+end
+
+function simet_get_simetma_config()
+	local json = require "luci.json"
+	local uci  = require("luci.model.uci").cursor()
+	local options = luci.http.formvalue('options',true)
+
+	options = json.decode(options)
+
+	-- FIXME: only for type simet_measurement?
+	-- FIXME: what to do when uci:get fails? or "" ?
+	for key, value in pairs(options) do
+		for key2, value2 in pairs(value) do
+			options[key][key2] = uci:get('simet_ma', key, key2)
+		end
+	end
+
+	luci.http.prepare_content("application/json")
+	luci.http.write_json(options)
+end
+
+function simet_set_simetma_config()
+	local json = require "luci.json"
+	local uci  = require("luci.model.uci").cursor()
+	local options = luci.http.formvalue('options',false)
+	local all_ok = true
+
+	options = json.decode(options)
+
+	-- FIXME: only for type simet_measurement?
+	for key, value in pairs(options) do
+		for key2, value2 in pairs(value) do
+			if not uci:set('simet_ma', key, key2, value2) then
+				all_ok = false
+			end
+		end
+	end
+
+	-- FIMXE: split into standard "save" "apply" "cancel" ?
+	if all_ok and uci:save("simet_ma") and uci:commit("simet_ma") then
+		local result = luci.util.ubus("simet_ma", "refresh_schedule") or {}
+		if result ~= nil and result.status == 0 then
+			luci.http.status(200)
+		else
+			luci.http.status(503, "simet engine reports an internal error")
+		end
+	else
+		luci.http.status(503, "configuration update not applied")
+	end
 end
 
 function get_crontab_options()
@@ -90,7 +149,6 @@ function set_crontab_options()
 
 	generate_crontab()
 	luci.http.status(200)
-
 end
 
 function run_simet_client()

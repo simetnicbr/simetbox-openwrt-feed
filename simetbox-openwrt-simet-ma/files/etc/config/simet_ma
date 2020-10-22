@@ -1,0 +1,10 @@
+package simet_ma
+
+config simet_measurement 'basic'
+	option time_step '240'
+
+config simet_measurement 'gw_ping'
+	option time_step '60'
+
+config simet_measurement 'ixbr_ping'
+	option time_step '720'

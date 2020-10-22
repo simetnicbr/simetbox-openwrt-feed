@@ -1,0 +1,106 @@
+<%+header%>
+
+<script type="text/javascript" src="<%=resource%>/cbi.js"></script>
+<script type="text/javascript">//<![CDATA[
+
+	var stxhr = new XHR();
+
+	window.onload = function()
+	{
+		data = {
+			basic: {time_step: undefined},
+			gw_ping: {time_step: undefined},
+		};
+
+		var form = document.getElementById('simetConfigForm');
+
+		for (var key in data) {
+			for(var option in data[key]) {
+				data[key][option] = '';
+			}
+		}
+
+		stxhr.get('<%=luci.dispatcher.build_url("admin", "simet", "simet_get_config")%>', { options: JSON.stringify(data)  },
+			function(x)
+			{
+				var options = JSON.parse(x.responseText);
+				var keys = Object.keys(options);
+
+				keys.forEach(function(key) {
+					var keys2 = Object.keys(options[key]);
+
+					keys2.forEach(function(key2) {
+						form[key+'_' + key2].value = parseInt(options[key][key2]);
+					});
+				});
+			}
+		);
+	}
+
+	function saveConfiguration(form)
+	{
+		for (var key in data) {
+			for(var option in data[key]) {
+				data[key][option] = form[key+'_'+option].value;
+			}
+		}
+
+		stxhr.post('<%=luci.dispatcher.build_url("admin", "simet", "simet_set_config")%>', {
+			options: JSON.stringify(data) },
+			function(x)
+			{
+				alert("<%:Successfully saved%>");
+			}
+		);
+	};
+//]]></script>
+
+<style>
+	h5 {}
+	em {  width:120px; display: inline-block; padding-left:15px;}
+	select, input {width:80px; height:25px; }
+</style>
+	<h2><%:SIMET2 Settings%></h2>
+	<div>
+		<p><%:You can configure some of the local defaults for the SIMET2 measurements.  Please note that the measurement-fleet coordination and orchestration servers might override the local configuration.%></p>
+		<hr/>
+	</div>
+	<div><form id="simetConfigForm" onsubmit="saveConfiguration(this); return false;">
+		<div>
+			<h5><%:Throughput, Latency, Jitter and Packet Loss%></h5>
+			<p><em><%:Periodicity%></em>
+				<select name="basic_time_step">
+					<option value="60">1h</option>
+					<option value="120">2h</option>
+					<option value="180">3h</option>
+					<option value="240">4h</option>
+					<option value="360">6h</option>
+					<option value="480">8h</option>
+					<option value="720">12h</option>
+				</select>
+			</p>
+		</div>
+		<hr/>
+		<div>
+			<h5><%:Ping to Gateway Tests%></h5>
+			<p><em><%:Periodicity%></em>
+				<select name="gw_ping_time_step">
+					<option value="5">5min</option>
+					<option value="10">10min</option>
+					<option value="15">15min</option>
+					<option value="20">20min</option>
+					<option value="30">30min</option>
+					<option value="60">1h</option>
+					<option value="120">2h</option>
+					<option value="180">3h</option>
+					<option value="240">4h</option>
+					<option value="360">6h</option>
+					<option value="480">8h</option>
+					<option value="720">12h</option>
+				</select>
+			</p>
+		</div>
+		<hr/>
+		<input type="submit" value="<%:Save%>"></input>
+	</form></div>
+<%+footer%>
