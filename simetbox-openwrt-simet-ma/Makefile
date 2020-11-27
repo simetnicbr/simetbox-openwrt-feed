@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
-PKG_VERSION:=0.16.16
+PKG_VERSION:=0.16.16.1
 PKG_REV:=v$(PKG_VERSION)
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simet-ma.git
