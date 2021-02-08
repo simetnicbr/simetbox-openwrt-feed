@@ -1,13 +1,12 @@
 {
-  "api_version": { "major": 0, "minor": 1, "rev": 0 },
+  "api_version": { "major": 0, "minor": 1, "rev": 1 },
   "measurement_device_class": "simetbox",
   "measurement_device_type": "embedded",
   "measurement_device_capabilities": [
     { "capability": "ubus-json-rpc", "path": "/ubus" },
+    { "capability": "initial-setup-ubus" },
     { "capability": "twamp-client",
       "api_version": { "major": 0, "minor": 1, "rev": 0 }
     }
-  ],
-  "device_configured": false,
-  "config_boot_key": null
+  ]
 }

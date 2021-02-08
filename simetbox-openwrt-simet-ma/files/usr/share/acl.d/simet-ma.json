@@ -17,6 +17,9 @@
 				"start_measurement_run"
 			]
 		},
+		"simetbox":{
+			"methods":["public_info"]
+		},
 		"auto_upgrade":{
 			"methods":["trigger","status"]
 		},

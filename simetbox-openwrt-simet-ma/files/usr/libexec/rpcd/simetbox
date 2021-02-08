@@ -1,0 +1,23 @@
+#!/bin/sh
+# SIMETBox rpcd module for OpenWRT
+# Copyright (C) 2021 by NIC.br <medicoes@simet.nic.br>
+# Distributed under the GPLv3+ license
+
+case "$1" in
+  list)
+    cat <<- EOFLIST
+	{
+	  "public_info":{}
+	}
+EOFLIST
+    ;;
+  call)
+    case "$2" in
+      public_info)
+	check_dfl_passwd.lua >/dev/null 2>&1 && dev_cfgd=false || dev_cfgd=true
+	printf '{ "api_version":{"major":0,"minor":1,"rev":1}, "device_configured": %s }' "$dev_cfgd"
+	;;
+    esac
+    ;;
+esac
+:

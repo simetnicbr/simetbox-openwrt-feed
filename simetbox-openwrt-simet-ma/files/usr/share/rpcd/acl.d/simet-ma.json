@@ -27,6 +27,7 @@
 	"read":{
 		"ubus":{
 			"system":[ "board", "info" ],
+			"simetbox":[ "public_info" ],
 			"auto_upgrade":[ "status" ],
 			"uci":[ "changes", "get" ]
 		},
@@ -39,6 +40,13 @@
 			"uci":[ "add", "delete", "set", "commit", "revert", "apply", "confirm", "rollback" ]
 		},
 		"uci":[ "system", "network", "wireless", "dhcp" ]
+	}
+  },
+  "unauthenticated":{
+	"read":{
+		"ubus":{
+			"simetbox":[ "public_info" ]
+		}
 	}
   }
 }
