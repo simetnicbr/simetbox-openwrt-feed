@@ -1,0 +1,44 @@
+{ "simet_ma":{
+	"description":"ACL for the SIMET2 engine, used by the Mobile APPs",
+	"read":{
+		"ubus":{
+			"simet_ma":[
+				"simet_engine_status",
+				"results_credentials",
+				"wan_status",
+				"geolocate"
+			]
+		}
+	},
+	"write":{
+		"ubus":{
+			"simet_ma":[
+				"renew_registration",
+				"twamp_start_measurement",
+				"twamp_stop_measurement",
+				"twamp_get_results",
+				"start_measurement_run"
+			]
+		}
+	}
+  },
+  "simet_app":{
+	"description":"ACL with extras for the SIMET Mobile APP",
+	"read":{
+		"ubus":{
+			"system":[ "board", "info" ],
+			"auto_upgrade":[ "status" ],
+			"uci":[ "changes", "get" ]
+		},
+		"uci":[ "system", "network", "wireless", "dhcp" ]
+	},
+	"write":{
+		"ubus":{
+			"auto_upgrade":[ "trigger" ],
+			"session":[ "destroy" ],
+			"uci":[ "add", "delete", "set", "commit", "revert", "apply", "confirm", "rollback" ]
+		},
+		"uci":[ "system", "network", "wireless", "dhcp" ]
+	}
+  }
+}
