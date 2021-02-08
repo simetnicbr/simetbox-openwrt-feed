@@ -77,6 +77,9 @@ define Package/simetbox-openwrt-simet-ma/install
 	chmod -R og-w files/ && $(CP) files/. $(1)/
 	# "uci commit" since LEDE is broken and will force mode 0600 anyway
 	-chmod 0600 $(1)/etc/config/*
+	# simet-app link
+	$(INSTALL_DIR) $(1)/www/simet
+	$(INSTALL_DATA) htdocs/* $(1)/www/simet/
 endef
 
 define Package/simetbox-openwrt-simet-ma/postinst
