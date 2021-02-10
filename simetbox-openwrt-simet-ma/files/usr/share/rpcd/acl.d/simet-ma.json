@@ -1,5 +1,5 @@
 { "simet_ma":{
-	"description":"ACL for the SIMET2 engine, used by the Mobile APPs",
+	"description":"ACLs for the SIMET2 engine (LuCI, internal)",
 	"read":{
 		"ubus":{
 			"simet_ma":[
@@ -14,38 +14,8 @@
 		"ubus":{
 			"simet_ma":[
 				"renew_registration",
-				"twamp_start_measurement",
-				"twamp_stop_measurement",
-				"twamp_get_results",
 				"start_measurement_run"
 			]
-		}
-	}
-  },
-  "simet_app":{
-	"description":"ACL with extras for the SIMET Mobile APP",
-	"read":{
-		"ubus":{
-			"system":[ "board", "info" ],
-			"simetbox":[ "public_info" ],
-			"auto_upgrade":[ "status" ],
-			"uci":[ "changes", "get" ]
-		},
-		"uci":[ "system", "network", "wireless", "dhcp" ]
-	},
-	"write":{
-		"ubus":{
-			"auto_upgrade":[ "trigger" ],
-			"session":[ "destroy" ],
-			"uci":[ "add", "delete", "set", "commit", "revert", "apply", "confirm", "rollback" ]
-		},
-		"uci":[ "system", "network", "wireless", "dhcp" ]
-	}
-  },
-  "unauthenticated":{
-	"read":{
-		"ubus":{
-			"simetbox":[ "public_info" ]
 		}
 	}
   }
