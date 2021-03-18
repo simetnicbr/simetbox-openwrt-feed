@@ -3,9 +3,37 @@
 # Copyright (C) 2020 by NIC.br <medicoes@simet.nic.br>
 # Distributed under the GPLv3+ license
 
+status() {
+  s="$1"
+  shift
+  d=
+  [ $# -gt 0 ] && {
+	  [ "$s" -ne 0 ] && d=",\"error\":\"$*\"" || d=",\"description\":\"$*\""
+  }
+  printf '{"status":%s%s}' "$s" "$d"
+}
+
+invalid_param() {
+  e="$*"
+  status 2 "invalid argument${e:+: $e}"
+  exit 2
+}
+
+_input() {
+  input=$(cat) || input=
+  :
+}
+_gi() {
+  [ -z "$input" ] && return 0
+  jsonfilter -s "$input" -e "@.$1" || return $?
+  :
+}
+
 _jsonify_pairs() {
   local vf1
   vf1=
+  [ "$1" -eq 1 ] && vf1=", "
+  shift
   while [ $# -ge 2 ] ; do
     [ -n "$1" ] && [ -n "$2" ] && {
       printf "$vf1\"%s\":\"%s\"" "$1" "$2"
@@ -19,7 +47,7 @@ _jsonify_pairs() {
 
 _jsonify_unquoted() {
   printf '{ '
-  _jsonify_pairs "$@" || :
+  _jsonify_pairs 0 "$@" || :
   printf ' }\n'
 }
 
@@ -30,7 +58,7 @@ _jsonify_obj_unquoted() {
   [ "$1" -eq 1 ] && { vf1=", " ; cf1=0 ; }
   sn="$2"
   shift 2
-  s=$(_jsonify_pairs "$@") && \
+  s=$(_jsonify_pairs 0 "$@") && \
     printf "%s\"%s\":{ %s }" "$vf1" "$sn" "$s" && cf1=0
   return $cf1
 }
@@ -52,12 +80,63 @@ is_measurement_running() {
   :
 }
 
+TWAMP_PID=/var/run/simet/rpc_twamp.pid
+TWAMP_OUT=/var/run/simet/rpc_twamp.stdout
+start_twamp() {
+  [ -d /var/run/simet ] || return 1
+  start-stop-daemon -S -b -c nicbr-simet -u nicbr-simet -p "$TWAMP_PID" -m -x /usr/bin/twampc -- -r1 -q -o "$TWAMP_OUT" "$@" || return 1
+  :
+}
+is_twamp_running() {
+  start-stop-daemon -K -t -q -u nicbr-simet -p "$TWAMP_PID" -x /usr/bin/twampc || return $?
+  :
+}
+stop_twamp() {
+  rm -f /var/run/simet/rpc_twamp.stdout || :
+  start-stop-daemon -K -q -u nicbr-simet -p "$TWAMP_PID" -x /usr/bin/twampc || return 1
+  is_twamp_running && sleep 3 && \
+    start-stop-daemon -K -s KILL -q -u nicbr-simet -p "$TWAMP_PID" -x /usr/bin/twampc || :
+  :
+}
+are_twamp_results_ready() {
+  is_twamp_running && return 1
+  [ -r "$TWAMP_OUT" ] || return 1
+  :
+}
+twamp_output_results() {
+  if [ -r "$TWAMP_OUT" ] && jsonfilter -i "$TWAMP_OUT" -t '@' >/dev/null ; then
+    cat "$TWAMP_OUT" || :
+  else
+    echo '[]'
+  fi
+  rm -f "$TWAMP_OUT" || :
+}
+
 case "$1" in
   list)
-    echo '{ "simet_engine_status":{}, "renew_registration":{}, "refresh_schedule":{}, '\
-           '"wan_status":{}, '\
-           '"geolocate":{"force":false,"fast":true}, '\
-           '"start_measurement_run":{} }'
+    cat <<- EOFLIST
+	{
+	  "simet_engine_status":{},
+	  "results_credentials":{},
+	  "renew_registration":{},
+	  "refresh_schedule":{},
+	  "wan_status":{},
+	  "geolocate":{
+	    "force":false,
+	    "fast":true},
+	  "twamp_start_measurement":{
+	    "server:":"",
+	    "server_port":"",
+	    "ip_family":"",
+	    "conn_timeout_s":"",
+	    "number_of_packets":16,
+	    "interpacket_delay_us":64,
+	    "last_packet_window_us":64 },
+	  "twamp_stop_measurement":{},
+	  "twamp_get_results":{},
+	  "start_measurement_run":{}
+	}
+EOFLIST
     ;;
   call)
     case "$2" in
@@ -65,22 +144,28 @@ case "$1" in
         # FIXME: run as root or as nicbr-simet ?
         RC=0
         simet_register_ma.sh >/dev/null 2>&1 || RC=$?
-        echo "{ \"status\":$RC }"
+	status "$RC"
         ;;
+      results_credentials)
+	AID=
+	VTK=
+	[ -r /var/run/simet_public/view-credentials ] && read -r AID VTK nouse < /var/run/simet_public/view-credentials || AID=
+	if [ -n "$AID" ] && [ -n "$VTK" ] ; then
+	  _jsonify_unquoted "agent-id" "$AID" "results_token" "$VTK"
+	else
+	  status 4 "ma not registered yet, or credentials are missing"
+	fi
+	;;
       refresh_schedule)
         # FIXME: run as root or as nicbr-simet ?
         RC=0
         simetbox_lmap-fetch-schedule.sh >/dev/null 2>&1 || RC=$?
-        echo "{ \"status\":$RC }"
+	status "$RC"
         ;;
       geolocate)
-        fast=true
-        force=false
-        input=$(cat) || input=
-        [ -n "$input" ] && {
-          fast=$(jsonfilter -s "$input" -e '@.fast') || fast=true
-          force=$(jsonfilter -s "$input" -e '@.force') || force=false
-        }
+	_input
+	fast=$(_gi fast) || fast=true
+	force=$(_gi force) || force=false
         if [ "$force" = "true" ] ; then
           # simple rate limit...
           geolocate --max-age 3600
@@ -92,10 +177,13 @@ case "$1" in
         ;;
       start_measurement_run)
         if is_measurement_running ; then
+	  #status 5 "measurement is already running"
           echo '{ "status": "already running" }'
         elif start-stop-daemon -S -b -c nicbr-simet -x /usr/bin/simet-ma_run.sh && sleep 1 && is_measurement_running ; then
+	  #status 0 "started measurement"
           echo '{ "status": "started" }'
         else
+	  #status 9 "failed to start measurement"
           echo '{ "status": "failed" }'
         fi
         ;;
@@ -103,6 +191,8 @@ case "$1" in
         au_enabled=true
         au_measurement_running=false
         au_version=$(cat /usr/lib/simet/agent-version.txt) || au_version=
+        au_mac=$(get_mac_address.sh 2>/dev/null) || au_mac=
+        au_agentid=$(sed -n -e '1 {p;q}' /etc/simet/agent-id-v2 2>/dev/null) || au_agentid=
         au_smain_period=$(uci -q get simet_ma.basic.time_step) || au_smain_period=
         au_sgwp_period=$(uci -q get simet_ma.gw_ping.time_step) || au_sgwp_period=
         au_sixbrp_period=$(uci -q get simet_ma.ixbr_ping.time_step) || au_sixbrp_period=
@@ -113,7 +203,9 @@ case "$1" in
           _jsonify_obj_unquoted $vf2 "basic"   "period_minutes" "$au_smain_period" && vf2=1
           _jsonify_obj_unquoted $vf2 "gw_ping" "period_minutes" "$au_sgwp_period" && vf2=1
           _jsonify_obj_unquoted $vf2 "ixbr_ping" "period_minutes" "$au_sixbrp_period" && vf2=1
-        printf ' } }\n'
+        printf ' }'
+        _jsonify_pairs 1 "agent-id" "$au_agentid" "simetbox-id" "$au_mac" || :
+        printf ' }\n'
         ;;
       wan_status)
         wan_s="false"
@@ -138,6 +230,52 @@ case "$1" in
 
         _jsonify_unquoted ip4_wan_status "$wan_s" ip4_gateway_ping "$gw_s" ip6_wan_status "$wan6_s" ip6_gateway_ping "$gw6_s"
         ;;
+      twamp_start_measurement)
+	_input
+	sa=$(_gi server) && [ -n "$sa" ] || invalid_param "\"server\" is mandatory"
+	p_sp= ; sp=$(_gi server_port) && p_sp="-p" || sp=
+	p_ct= ; ct=$(_gi conn_timeout_s) && p_ct="-t" || ct=
+	p_np= ; np=$(_gi number_of_packets) && p_np="-c" || np=
+	p_pd= ; pd=$(_gi interpacket_delay_us) && p_pd="-i" || pd=
+	p_pw= ; pw=$(_gi last_packet_window_us) && p_pw="-T" || pw=
+	ipf=$(_gi ip_family) && {
+	  case "$ipf" in
+	    4|ip4|ipv4|IPv4)
+	      ipf="-4"
+	      ;;
+	    6|ip6|ipv6|IPv6)
+	      ipf="-6"
+	      ;;
+	    *) invalid_param "\"ip_family\" must be \"ip4\" or \"ip6\""
+	      ;;
+	  esac
+	}
+	if is_measurement_running ; then
+	  status 6 "other measurements are running right now, cannot start"
+	elif is_twamp_running ; then
+	  status 5 "measurement is already running"
+	elif start_twamp $ipf $p_sp $sp $p_ct $ct $p_np $np $p_pd $pd $p_pw $pw "$sa" ; then
+	  status 0 "started measurement"
+	else
+	  status 9 "failed to start measurement"
+	fi
+	;;
+      twamp_stop_measurement)
+	stop_twamp || :
+	status 0 "measurement stopped, results lost"
+	;;
+      twamp_get_results)
+	if is_twamp_running ; then
+	  status 5 "measurement still running"
+	elif are_twamp_results_ready ; then
+	  printf '{"status":0,"results":'
+	  twamp_output_results 2>/dev/null || :
+	  printf '}'
+	else
+	  # someone erased them (racing new twamp start?) or never run
+	  status 4 "no results available"
+	fi
+	;;
     esac
     ;;
 esac

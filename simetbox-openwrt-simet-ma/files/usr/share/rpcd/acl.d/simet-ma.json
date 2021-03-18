@@ -1,0 +1,22 @@
+{ "simet_ma":{
+	"description":"ACLs for the SIMET2 engine (LuCI, internal)",
+	"read":{
+		"ubus":{
+			"simet_ma":[
+				"simet_engine_status",
+				"results_credentials",
+				"wan_status",
+				"geolocate"
+			]
+		}
+	},
+	"write":{
+		"ubus":{
+			"simet_ma":[
+				"renew_registration",
+				"start_measurement_run"
+			]
+		}
+	}
+  }
+}

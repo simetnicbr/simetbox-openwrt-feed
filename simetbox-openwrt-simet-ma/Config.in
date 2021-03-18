@@ -11,4 +11,12 @@ menu "Configuration"
 			servers.
 			Warning: requires OpenSSL, which takes a large amount of FLASH space.
 		default n
+
+	config SIMETBOX_APPLINK
+		bool "SIMETBox: mobile app access"
+		help
+			Enables functionality related to configuration and joint-testing
+			through mobile apps.
+			Warning: do not enable on Chaos Calmer, rpcd will crash.
+		default n
 endmenu

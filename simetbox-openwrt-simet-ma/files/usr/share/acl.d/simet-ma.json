@@ -7,11 +7,18 @@
 		"simet_ma":{
 			"methods":[
 				"simet_engine_status",
+				"results_credentials",
 				"renew_registration",
 				"wan_status",
 				"geolocate",
+				"twamp_start_measurement",
+				"twamp_stop_measurement",
+				"twamp_get_results",
 				"start_measurement_run"
 			]
+		},
+		"simetbox":{
+			"methods":["public_info"]
 		},
 		"auto_upgrade":{
 			"methods":["trigger","status"]
