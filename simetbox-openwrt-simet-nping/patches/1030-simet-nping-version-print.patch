@@ -1,0 +1,28 @@
+commit 6c6999bb8bf3fdaafed817dc6f7426ef044697a1
+Author: Henrique de Moraes Holschuh <henrique@nic.br>
+Date:   Wed Apr 21 17:33:24 2021 -0300
+
+    [MDC-654] nping: identify itself as patched by SIMET
+    
+    Change nping's identification to make it clear it is patched:
+    
+    * Name changes from Nping to nping-simet.
+    * Version gets "+simet#" appended to it with the SIMET changes
+      API level.
+
+diff --git a/nping/nping.h b/nping/nping.h
+index d9cffed30..0693a778c 100644
+--- a/nping/nping.h
++++ b/nping/nping.h
+@@ -340,9 +340,9 @@
+ #define MAC_KEY_LEN (128/8)
+ 
+ /* General tunable defines  **************************************************/
+-#define NPING_NAME "Nping"
++#define NPING_NAME "simet-nping"
+ #define NPING_URL "https://nmap.org/nping"
+-#define NPING_VERSION "0.7.70"
++#define NPING_VERSION "0.7.70+simet0"
+ 
+ 
+ #define DEFAULT_VERBOSITY VB_0

@@ -17,7 +17,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nmap
 PKG_VERSION:=7.70
-PKG_RELEASE:=101
+PKG_RELEASE:=102
 PKG_MAINTAINER:=SIMET <medicoes@simet.nic.br>
 
 PKG_SOURCE:=nmap-$(PKG_VERSION).tar.bz2
