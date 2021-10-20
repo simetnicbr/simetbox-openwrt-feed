@@ -4,6 +4,7 @@
 		"ubus":{
 			"simet_ma":[
 				"simet_engine_status",
+				"simet_pairing_status",
 				"results_credentials",
 				"wan_status",
 				"geolocate"

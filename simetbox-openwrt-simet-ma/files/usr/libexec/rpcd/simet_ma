@@ -124,6 +124,7 @@ case "$1" in
     cat <<- EOFLIST
 	{
 	  "simet_engine_status":{},
+	  "simet_pairing_status":{},
 	  "results_credentials":{},
 	  "renew_registration":{},
 	  "refresh_schedule":{},
@@ -216,6 +217,24 @@ EOFLIST
         printf ' }'
         _jsonify_pairs 1 "agent-id" "$au_agentid" "simetbox-id" "$au_mac" || :
         printf ' }\n'
+        ;;
+      simet_pairing_status)
+        [ -r /var/run/simet/agent-owner-info ] || [ -s /etc/simet/pairing-id ] || {
+          status 4 "information unknown at this time, MA not registered yet, or credentials are missing"
+          return 0
+	}
+        au_paired=false
+        au_name=
+        au_shortname=
+        [ -s /var/run/simet/agent-owner-info ] && {
+          au_paired=true
+          au_name=$(jsonfilter -i /var/run/simet/agent-owner-info -e "@.name" 2>/dev/null) || au_name=
+          au_shortname=$(jsonfilter -i /var/run/simet/agent-owner-info -e "@.short_name" 2>/dev/null) || au_shortname=
+        }
+	[ -s /etc/simet/pairing-id ] && APAIRID=$(tr -d ' \n\r\t' < /etc/simet/pairing-id) && [ -n "$APAIRID" ] && au_paired=true
+        printf '{"status":0,"result":{"paired":%s' "$au_paired"
+        _jsonify_pairs 1 "name" "$au_name" "short_name" "$au_shortname"
+        printf '}}\n'
         ;;
       wan_status)
         wan_s="false"
