@@ -3,10 +3,10 @@ menu "Configuration"
 	depends on PACKAGE_simetbox-openwrt-base
 
 	config SIMETBOX_COMMON
-		bool "SIMET1: Standard measurements"
+		bool "SIMET1: Standard measurements (legacy)"
 		help
 			Common files and structure to measure thoughput, latency, jitter and packet loss.
-		default y
+		default n
 
 	config SIMETBOX_PORT25
 		bool "SIMET1: Port 25 management"
