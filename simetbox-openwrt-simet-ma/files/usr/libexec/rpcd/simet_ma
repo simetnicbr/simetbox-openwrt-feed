@@ -157,8 +157,11 @@ EOFLIST
 	AID=
 	VTK=
 	[ -r /var/run/simet_public/view-credentials ] && read -r AID VTK nouse < /var/run/simet_public/view-credentials || AID=
+	uilang=$(uci get luci.main.lang 2>/dev/null) || uilang=
+	[ -z "$uilang" ] && uilang="none"
+	uiurl=$(simet_view_results.sh --url --lang "$uilang") || uiurl=
 	if [ -n "$AID" ] && [ -n "$VTK" ] ; then
-	  _jsonify_unquoted "agent-id" "$AID" "results_token" "$VTK"
+	  _jsonify_unquoted "agent-id" "$AID" "results_token" "$VTK" "results_interactive_url" "$uiurl"
 	else
 	  status 4 "ma not registered yet, or credentials are missing"
 	fi
