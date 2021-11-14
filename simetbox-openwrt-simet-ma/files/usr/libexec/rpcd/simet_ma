@@ -28,15 +28,22 @@ _gi() {
   jsonfilter -s "$input" -e "@.$1" || return $?
   :
 }
+_jq() {
+  sed -e 's#\\#\\\\#g' -e 's#"#\\"#g' "$@"
+}
+_jo() {
+  printf '%s' "$*" | _jq
+}
 
 _jsonify_pairs() {
-  local vf1
+  local vf1 jo
   vf1=
   [ "$1" -eq 1 ] && vf1=", "
   shift
   while [ $# -ge 2 ] ; do
     [ -n "$1" ] && [ -n "$2" ] && {
-      printf "$vf1\"%s\":\"%s\"" "$1" "$2"
+      jo=$(_jo "$2")
+      printf "$vf1\"%s\":\"%s\"" "$1" "$jo"
       vf1=", "
     }
     shift 2
@@ -190,7 +197,7 @@ EOFLIST
       simet_engine_status)
         au_enabled=true
         au_measurement_running=false
-        au_version=$(cat /usr/lib/simet/agent-version.txt) || au_version=
+        au_version=$(_jq /usr/lib/simet/agent-version.txt) || au_version=
         au_mac=$(get_mac_address.sh 2>/dev/null) || au_mac=
         au_agentid=$(sed -n -e '1 {p;q}' /etc/simet/agent-id-v2 2>/dev/null) || au_agentid=
         au_smain_period=$(uci -q get simet_ma.basic.time_step) || au_smain_period=
