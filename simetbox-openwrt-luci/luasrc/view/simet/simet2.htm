@@ -5,10 +5,6 @@
 	local ver  = require "luci.version"
 	local uci  = require("luci.model.uci").cursor()
 
-	local simetma_agentid = fs.readfile("/etc/simet/agent-id-v2") or ""
-	local simet2_viewtok = fs.readfile("/var/run/simet/agent-vtk") or ""
-	local sbx_uilang = uci:get("luci", "main", "lang") or ""
-
 	local simet1_enabled = fs.stat("/usr/bin/simet_client") or nil
 %>
 
@@ -53,10 +49,10 @@
 	</tr></table>
 	<div class="ma-noinet" style="display:none">
 		<p><%:This SIMETBox is currently offline, but you can try to access past measurement results through the following link:%><br />
-		<a href="https://dashboard.simet.nic.br/simet2/results/?matype=simetbox;agentid=<%=pcdata(simetma_agentid)%>;authtoken=<%=pcdata(simet2_viewtok)%>;lang=<%=pcdata(sbx_uilang)%>"><%:SIMET2 results page for this device (temporary link)%></a></p>
+		<a id="uiframe_nonet_a"><%:SIMET2 results page for this device (temporary link)%></a></p>
 		<p><%:Note: for privacy reasons, the link will be invalidated the next time the SIMETBox renews its access credentials, typically once a day as well as when it boots.%></p>
 	</div>
-	<iframe class="ma-inet" style="display:none" src="https://dashboard.simet.nic.br/simet2/results/?matype=simetbox;agentid=<%=pcdata(simetma_agentid)%>;authtoken=<%=pcdata(simet2_viewtok)%>;lang=<%=pcdata(sbx_uilang)%>" width="100%" height="800px" frameborder="0"></iframe>
+	<iframe id="uiframe_iframe" class="ma-inet" style="display:none" width="100%" height="800px" frameborder="0"></iframe>
 </div>
 
 <% if simet1_enabled ~= nil then %>
@@ -76,6 +72,8 @@
 <script type="text/javascript">//<![CDATA[
 	var mrun_message = document.querySelector('div.ma-measuring-message'),
 	    mrun_button  = document.querySelector('input.ma-measure-now');
+	    uiframe_url = null;
+	    uiframe_nonet = null;
 
 	function mrun_running() {
 		mrun_message.style.display = '';
@@ -124,26 +122,49 @@
 		(new XHR()).get('<%=url("admin/simet/simet_register")%>', null, ok);
 	}
 
-	function simet_wan_status_xhr_cb(xhr, data, time_elapsed) {
+	function simet_update_results_frame() {
 		var willhide = ".ma-loading,.ma-noinet", willshow = ".ma-inet";
+		if (uiframe_nonet != null && uiframe_url != null) {
+			if (uiframe_nonet) {
+				willhide = ".ma-loading,.ma-inet";
+				willshow = ".ma-noinet";
+			}
+			for (let i of document.querySelectorAll(willhide)) {
+				i.style.display = 'none';
+			}
+			for (let i of document.querySelectorAll(willshow)) {
+				i.style.display = '';
+			}
+		}
+	}
+	function simet_wan_status_xhr_cb(xhr, data, time_elapsed) {
 		if (xhr == null || data == null || (data.ip4_gateway_ping != "true" && data.ip6_gateway_ping != "true")) {
-			willhide = ".ma-loading,.ma-inet";
-			willshow = ".ma-noinet";
+			uiframe_nonet = true;
+		} else {
+			uiframe_nonet = false;
 		}
-		for (let i of document.querySelectorAll(willhide)) {
-			i.style.display = 'none';
-		}
-		for (let i of document.querySelectorAll(willshow)) {
-			i.style.display = '';
-		}
+		simet_update_results_frame();
 	}
 	function simet_trigger_wan_status() {
 		(new XHR()).get('<%=url("admin/simet/simet_wan_status")%>', null, simet_wan_status_xhr_cb);
 	}
 
+	function simet_results_url_xhr_cb(xhr, data, time_elapsed) {
+		if (xhr == null || xhr.status != 200) {
+			window.setTimeout(function(){window.location.reload(false);}, 5000);
+		} else if (data.results_interactive_url != "") {
+			uiframe_url = data.results_interactive_url;
+			document.getElementById('uiframe_nonet_a').setAttribute('href', uiframe_url);
+			document.getElementById('uiframe_iframe').setAttribute('src', uiframe_url);
+			simet_update_results_frame();
+		}
+	}
+
 	for (let i of document.querySelectorAll(".ma-inet,.ma-noinet")) {
 		i.style.display = 'none'
 	}
+
+	(new XHR()).get('<%=url("admin/simet/simet_ma_results_url")%>', null, simet_results_url_xhr_cb);
 	simet_trigger_engine_status_update();
 	simet_trigger_wan_status();
 //]]></script>
