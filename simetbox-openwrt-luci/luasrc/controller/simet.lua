@@ -57,6 +57,9 @@ function index()
 	page = entry({"admin", "simet", "simet_start_measurement_run"}, call("simet_ma_start_measuring"), nil)
 	page.leaf = true
 
+	page = entry({"admin", "simet", "simet_ma_results_url"}, call("simet_ma_get_results_url"), nil)
+	page.leaf = true
+
 	page = entry({"admin", "simet", "simet_wan_status"}, call("simet_wan_status"), nil)
 	page.leaf = true
 
@@ -203,6 +206,18 @@ function simet_ma_start_measuring()
 		luci.http.write_json(result)
 	else
 		luci.http.status(503, "failed to contact SIMET2 engine")
+	end
+end
+
+function simet_ma_get_results_url()
+	local result = luci.util.ubus("simet_ma", "results_credentials") or {}
+	if result ~= nil and result.results_interactive_url ~= nil then
+		filtered_result = {}
+		filtered_result["results_interactive_url"] = result.results_interactive_url
+		luci.http.prepare_content("application/json")
+		luci.http.write_json(filtered_result)
+	else
+		luci.http.status(503, "failed to retrieve interactive web UI URL to view measurement results")
 	end
 end
 
