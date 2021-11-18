@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-simet-ma
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
-PKG_VERSION:=0.17.7
+PKG_VERSION:=0.17.7.1
 PKG_REV:=v$(PKG_VERSION)
 PKG_MIRROR_HASH:=36cb7f7475105d40f73eea9e22ebf9fc12dce6e0707d7ad43bde7c719d5a49d2
 
