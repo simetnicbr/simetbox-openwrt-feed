@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-simet-lmapd
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 #PKG_FIXUP:=
 PKG_INSTALL:=1
