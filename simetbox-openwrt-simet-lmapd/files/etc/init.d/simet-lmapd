@@ -9,19 +9,20 @@ USE_PROCD=1
 
 LMAP_OPTS="-j"
 
+#note: also sourced by cronjob to self-heal permissions
 init_lmapd_fs() {
 	mkdir -p /var/run/lmapd
 	chown nicbr-simet:nicbr-simet /var/run/lmapd \
-		&& chmod 0775 /var/run/lmapd
+		&& chmod 02775 /var/run/lmapd
 	mkdir -p /var/spool/lmapd/queue
 	chown -R nicbr-simet:nicbr-simet /var/spool/lmapd \
 		&& chmod 02770 /var/spool/lmapd /var/spool/lmapd/queue
 	# might race a fetch script, and we don't want to clobber the
 	# downloaded schedule, so ln -s (not -sf), which might fail
-	[ -r /var/run/lmapd/lmap-schedule.json ] || \
-		ln -s /usr/lib/simet/lmap-default-schedule.json \
+	[ -e /var/run/lmapd/lmap-schedule.json ] || \
+		ln -s /usr/lib/simet/lmap-emergency-schedule.json \
 		      /var/run/lmapd/lmap-schedule.json 2>/dev/null || true
-	chown nicbr-simet:nicbr-simet /var/run/lmapd/*json \
+	chown -h nicbr-simet:nicbr-simet /var/run/lmapd/*json \
 		&& chmod +r /var/run/lmapd/*json
 	find /etc/simet/lmap -type f \! -perm -0644 -exec chmod +r {} \;
 }
@@ -38,6 +39,7 @@ boot() {
 }
 
 reload_service() {
+	chown -h nicbr-simet:nicbr-simet /var/run/lmapd/*json 2>/dev/null || true
 	if lmapctl $LMAP_OPTS validate ; then
 		lmapctl $LMAP_OPTS reload
 		return 0

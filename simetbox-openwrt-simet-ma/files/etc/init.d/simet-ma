@@ -53,7 +53,9 @@ boot() {
 	# warning: try to keep RAM load down for 32MiB devices!
 	( simet_register_ma.sh <&- 2>&- >&- && {
 		simet_geolocation.sh <&- 2>&- >&- || true
-		simetbox_lmap-fetch-schedule.sh <&- 2>&- &
+		( simetbox_lmap-fetch-schedule.sh \
+			&& chown -h nicbr-simet:nicbr-simet "$LMAP_SCHEDULE_FILE" || true
+		) <&- 2>/dev/null >/dev/null &
 	} ) <&- 2>&- >&- &
 	start "$@"
 }
