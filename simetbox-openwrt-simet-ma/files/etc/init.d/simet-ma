@@ -44,8 +44,8 @@ boot() {
 	# used for the geolocation cache and ephemeral tokens
 	[ -n "$SIMET_RUNSTATE_DIR" ] && mkdir -m 02770 -p "$SIMET_RUNSTATE_DIR" && chgrp nicbr-simet "$SIMET_RUNSTATE_DIR"
 	[ -n "$SIMET_LOCK_DIR" ] && mkdir -m 0770 -p "$SIMET_LOCK_DIR" && chgrp nicbr-simet "$SIMET_LOCK_DIR"
-	find "$AGENT_ID_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
-	find "$AGENT_TOKEN_FILE" -type f \! -perm -0644 -exec chmod +r {} \;
+	find "$AGENT_ID_FILE" -type f \! -perm -0644 -exec chmod +r {} \; 2>/dev/null
+	find "$AGENT_TOKEN_FILE" -type f \! -perm -0644 -exec chmod +r {} \; 2>/dev/null
 
 	# restoring config backups from other units is a problem we must check for on boot
 	simet_create_vlabel.sh >/dev/null 2>&1 || :
