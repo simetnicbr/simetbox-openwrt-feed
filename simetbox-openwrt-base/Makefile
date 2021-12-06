@@ -39,84 +39,78 @@ ifeq ($(CONFIG_SIMETBOX_COMMON),y)
 	LN_SIMET_CLIENT:=$(LN)
 	CP_SIMET_CLIENT:=$(CP)
 	INSTALL_BIN_SIMET_CLIENT:=$(INSTALL_BIN)
-	TOUCH_SIMET_CLIENT:=touch 
+	TOUCH_SIMET_CLIENT:=touch
 	SIMET1_DEPS:=+libopenssl +libpthread +simetbox-openwrt-config
+
+  ifeq ($(CONFIG_SIMETBOX_PORT25),y)
+	LN_PORT25:=$(LN)
+	CP_PORT25:=$(CP)
+	TOUCH_PORT25:=touch
+  else
+	LN_PORT25:=echo Not configured -\> $(LN)
+	CP_PORT25:=echo Not configured -\> $(CP)
+	TOUCH_PORT25:=echo Not configured -\> touch
+  endif
+  ifeq ($(CONFIG_SIMETBOX_BCP38),y)
+	LN_BCP38:=$(LN)
+	CP_BCP38:=$(CP)
+	TOUCH_BCP38:=touch
+  else
+	LN_BCP38:=echo Not configured -\> $(LN)
+	CP_BCP38:=echo Not configured -\> $(CP)
+	TOUCH_BCP38:=echo Not configured -\> touch
+  endif
+  ifeq ($(CONFIG_SIMETBOX_CONTENT_PROVIDER),y)
+	LN_SIMETBOX_CONTENT_PROVIDER:=$(LN)
+	CP_SIMETBOX_CONTENT_PROVIDER:=$(CP)
+	TOUCH_SIMETBOX_CONTENT_PROVIDER:=touch
+  else
+	LN_SIMETBOX_CONTENT_PROVIDER:=echo Not configured -\> $(LN)
+	CP_SIMETBOX_CONTENT_PROVIDER:=echo Not configured -\> $(CP)
+	TOUCH_SIMETBOX_CONTENT_PROVIDER:=echo Not configured -\> touch
+  endif
+  ifeq ($(CONFIG_SIMETBOX_TOP10),y)
+	LN_SIMETBOX_TOP10:=$(LN)
+	CP_SIMETBOX_TOP10:=$(CP)
+	TOUCH_SIMETBOX_TOP10:=touch
+  else
+	LN_SIMETBOX_TOP10:=echo Not configured -\> $(LN)
+	CP_SIMETBOX_TOP10:=echo Not configured -\> $(CP)
+	TOUCH_SIMETBOX_TOP10:=echo Not configured -\> touch
+  endif
+  ifeq ($(CONFIG_SIMETBOX_TRAFFIC),y)
+	LN_SIMETBOX_TRAFFIC:=$(LN)
+	CP_SIMETBOX_TRAFFIC:=$(CP)
+	TOUCH_SIMETBOX_TRAFFIC:=touch
+  else
+	LN_SIMETBOX_TRAFFIC:=echo Not configured -\> $(LN)
+	CP_SIMETBOX_TRAFFIC:=echo Not configured -\> $(CP)
+	TOUCH_SIMETBOX_TRAFFIC:=echo Not configured -\> touch
+  endif
+  ifeq ($(CONFIG_SIMETBOX_DNS),y)
+	LN_SIMETBOX_DNS:=$(LN)
+	CP_SIMETBOX_DNS:=$(CP)
+	TOUCH_SIMETBOX_DNS:=touch
+  else
+	LN_SIMETBOX_DNS:=echo Not configured -\> $(LN)
+	CP_SIMETBOX_DNS:=echo Not configured -\> $(CP)
+	TOUCH_SIMETBOX_DNS:=echo Not configured -\> touch
+  endif
+  ifeq ($(CONFIG_SIMETBOX_PING),y)
+	LN_SIMETBOX_PING:=$(LN)
+	CP_SIMETBOX_PING:=$(CP)
+	TOUCH_SIMETBOX_PING:=touch
+  else
+	LN_SIMETBOX_PING:=echo Not configured -\> $(LN)
+	CP_SIMETBOX_PING:=echo Not configured -\> $(CP)
+	TOUCH_SIMETBOX_PING:=echo Not configured -\> touch
+  endif
 else
-	LN_SIMET_CLIENT:=echo Not configured -\> $(LN) 
+	LN_SIMET_CLIENT:=echo Not configured -\> $(LN)
 	CP_SIMET_CLIENT:=echo Not configured -\> $(CP)
 	INSTALL_BIN_SIMET_CLIENT:=echo Not configured -\> $(INSTALL_BIN)
 	TOUCH_SIMET_CLIENT:=echo Not configured -\> touch
 	SIMET1_DEPS:=
-endif
-
-ifeq ($(CONFIG_SIMETBOX_PORT25),y)
-	LN_PORT25:=$(LN)
-	CP_PORT25:=$(CP)
-	TOUCH_PORT25:=touch 
-else
-	LN_PORT25:=echo Not configured -\> $(LN) 
-	CP_PORT25:=echo Not configured -\> $(CP)
-	TOUCH_PORT25:=echo Not configured -\> touch
-endif
-
-ifeq ($(CONFIG_SIMETBOX_BCP38),y)
-	LN_BCP38:=$(LN)
-	CP_BCP38:=$(CP)
-	TOUCH_BCP38:=touch 
-else
-	LN_BCP38:=echo Not configured -\> $(LN) 
-	CP_BCP38:=echo Not configured -\> $(CP)
-	TOUCH_BCP38:=echo Not configured -\> touch
-endif
-
-ifeq ($(CONFIG_SIMETBOX_CONTENT_PROVIDER),y)
-	LN_SIMETBOX_CONTENT_PROVIDER:=$(LN)
-	CP_SIMETBOX_CONTENT_PROVIDER:=$(CP)
-	TOUCH_SIMETBOX_CONTENT_PROVIDER:=touch 
-else
-	LN_SIMETBOX_CONTENT_PROVIDER:=echo Not configured -\> $(LN) 
-	CP_SIMETBOX_CONTENT_PROVIDER:=echo Not configured -\> $(CP)
-	TOUCH_SIMETBOX_CONTENT_PROVIDER:=echo Not configured -\> touch
-endif
-
-ifeq ($(CONFIG_SIMETBOX_TOP10),y)
-	LN_SIMETBOX_TOP10:=$(LN)
-	CP_SIMETBOX_TOP10:=$(CP)
-	TOUCH_SIMETBOX_TOP10:=touch 
-else
-	LN_SIMETBOX_TOP10:=echo Not configured -\> $(LN) 
-	CP_SIMETBOX_TOP10:=echo Not configured -\> $(CP)
-	TOUCH_SIMETBOX_TOP10:=echo Not configured -\> touch
-endif
-
-ifeq ($(CONFIG_SIMETBOX_TRAFFIC),y)
-	LN_SIMETBOX_TRAFFIC:=$(LN)
-	CP_SIMETBOX_TRAFFIC:=$(CP)
-	TOUCH_SIMETBOX_TRAFFIC:=touch 
-else
-	LN_SIMETBOX_TRAFFIC:=echo Not configured -\> $(LN) 
-	CP_SIMETBOX_TRAFFIC:=echo Not configured -\> $(CP)
-	TOUCH_SIMETBOX_TRAFFIC:=echo Not configured -\> touch
-endif
-
-ifeq ($(CONFIG_SIMETBOX_DNS),y)
-	LN_SIMETBOX_DNS:=$(LN)
-	CP_SIMETBOX_DNS:=$(CP)
-	TOUCH_SIMETBOX_DNS:=touch 
-else
-	LN_SIMETBOX_DNS:=echo Not configured -\> $(LN) 
-	CP_SIMETBOX_DNS:=echo Not configured -\> $(CP)
-	TOUCH_SIMETBOX_DNS:=echo Not configured -\> touch
-endif
-
-ifeq ($(CONFIG_SIMETBOX_PING),y)
-	LN_SIMETBOX_PING:=$(LN)
-	CP_SIMETBOX_PING:=$(CP)
-	TOUCH_SIMETBOX_PING:=touch 
-else
-	LN_SIMETBOX_PING:=echo Not configured -\> $(LN) 
-	CP_SIMETBOX_PING:=echo Not configured -\> $(CP)
-	TOUCH_SIMETBOX_PING:=echo Not configured -\> touch
 endif
 
 define Package/simetbox-openwrt-base
@@ -124,7 +118,8 @@ define Package/simetbox-openwrt-base
   SECTION:=net
   CATEGORY:=Network
   TITLE:=SIMETBox
-  DEPENDS:=+libjson-c +luci-lib-jsonc +luci-lib-json +libuci-lua +curl +ca-bundle $(SIMET1_DEPS)
+  DEPENDS:=+libjson-c +luci-lib-jsonc +luci-lib-json +libuci-lua +curl +ca-bundle
+  DEPENDS+=+SIMETBOX_COMMON:libopenssl +SIMETBOX_COMMON:libpthread +SIMETBOX_COMMON:simetbox-openwrt-config
   URL:=http://simet.nic.br
 #  MENU:=1
 endef
@@ -136,35 +131,24 @@ endef
 define Package/simetbox-openwrt-base/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/etc/config
+ifeq ($(CONFIG_SIMETBOX_COMMON),y)
 	$(INSTALL_DIR) $(1)/etc/config/simet_installed
+	$(INSTALL_DIR) $(1)/etc/factory_config
+endif
 	$(INSTALL_DIR) $(1)/usr/lib/lua/simet
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_DIR) $(1)/etc/factory_config
 	$(INSTALL_DIR) $(1)/lib/upgrade
 	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
 	$(CP) files/* $(1)/
+ifeq ($(CONFIG_SIMETBOX_COMMON),y)
 	$(INSTALL_BIN_SIMET_CLIENT) $(PKG_BUILD_DIR)/src/simet_tools $(1)/usr/bin/
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_client
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_ws
 	$(LN_SIMET_CLIENT) /usr/bin/simet_tools $(1)/usr/bin/simet_hash_measure
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simetbox_config  $(1)/etc/init.d
-	$(CP) $(PKG_BUILD_DIR)/files/get_mac_address.sh  $(1)/usr/bin
-	$(CP) $(PKG_BUILD_DIR)/files/get_model.sh  $(1)/usr/bin
 	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_lat_long.sh  $(1)/usr/bin
-	$(CP) $(PKG_BUILD_DIR)/files/get_simet_box_version.sh  $(1)/usr/bin
-	$(CP) $(PKG_BUILD_DIR)/files/simet.conf  $(1)/etc/config
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_utils.lua  $(1)/usr/lib/lua/simet
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_uci.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/set_uci.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_geolocation_legado.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/run_simet.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simetbox_register.sh  $(1)/usr/bin
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/uci-defaults/99-simet-cron  $(1)/etc/uci-defaults
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/uci-defaults/01-simet1-cleanup  $(1)/etc/uci-defaults
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/crontab_writer.lua  $(1)/usr/lib/lua/simet
-	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/personal_data.lua  $(1)/usr/lib/lua/simet
 	$(TOUCH_SIMET_CLIENT) $(1)/etc/config/simet_installed/simetbox_base_installed
 
 	$(LN_PORT25) /usr/bin/simet_tools $(1)/usr/bin/simet_porta25
@@ -188,6 +172,22 @@ define Package/simetbox-openwrt-base/install
 	$(CP_SIMETBOX_DNS) $(PKG_BUILD_DIR)/files/simet_ping.sh $(1)/usr/bin
 	$(TOUCH_SIMETBOX_DNS) $(1)/etc/config/simet_installed/simetbox_dns_installed
 	$(TOUCH_SIMETBOX_DNS) $(1)/etc/config/simet_installed/simetbox_ping_installed
+
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_geolocation_legado.sh  $(1)/usr/bin
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/personal_data.lua  $(1)/usr/lib/lua/simet
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/run_simet.sh  $(1)/usr/bin
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/get_uci.sh  $(1)/usr/bin
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/set_uci.sh  $(1)/usr/bin
+endif
+	$(CP) $(PKG_BUILD_DIR)/files/get_mac_address.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/get_model.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/get_simet_box_version.sh  $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/files/simet.conf  $(1)/etc/config
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simet_utils.lua  $(1)/usr/lib/lua/simet
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/simetbox_register.sh  $(1)/usr/bin
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/uci-defaults/99-simet-cron  $(1)/etc/uci-defaults
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/uci-defaults/01-simet1-cleanup  $(1)/etc/uci-defaults
+	$(CP_SIMET_CLIENT) $(PKG_BUILD_DIR)/files/crontab_writer.lua  $(1)/usr/lib/lua/simet
 endef
 
 define Package/simetbox-openwrt-base/config
