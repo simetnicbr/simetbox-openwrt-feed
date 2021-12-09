@@ -91,7 +91,7 @@ require('simet.simet_utils')
 
 	<!-- Reescrever opcoes em Lua num loop para manter codigo organizado	-->
 
-		<% if file_exists('/etc/config/simet_installed/simetbox_base_installed') then %>
+		<% if file_exists('/usr/lib/simet/simet_installed/simetbox_base_installed') then %>
 			<div> 
 				<h5><%:Throughput, Latency, Jitter and Packet Loss%></h5>
 				<p><em><%:Periodicity%></em> 
@@ -109,7 +109,7 @@ require('simet.simet_utils')
 			<hr/>
 		<% end %>
 
-		<% if file_exists('/etc/config/simet_installed/simetbox_dns_installed') then %>
+		<% if file_exists('/usr/lib/simet/simet_installed/simetbox_dns_installed') then %>
 			<div> 
 				<h5><%:DNS Tests%></h5> 
 				<p><em><%:Periodicity%></em> 
@@ -127,7 +127,7 @@ require('simet.simet_utils')
 			<hr/>
 		<% end %>
 
-		<% if file_exists('/etc/config/simet_installed/simetbox_port25_installed') then %>
+		<% if file_exists('/usr/lib/simet/simet_installed/simetbox_port25_installed') then %>
 			<div> 
 				<h5><%:Port 25 Management Test%></h5> 
 				<p><em><%:Periodicity%></em> 
@@ -145,7 +145,7 @@ require('simet.simet_utils')
 			<hr/>
 		<% end %>
 
-		<% if file_exists('/etc/config/simet_installed/simetbox_bcp38_installed') then %>
+		<% if file_exists('/usr/lib/simet/simet_installed/simetbox_bcp38_installed') then %>
 			<div> 
 				<h5><%:BCP38 Respect Tests%></h5> 
 				<p ><em><%:Periodicity%></em> 
@@ -163,7 +163,7 @@ require('simet.simet_utils')
 			<hr/>
 		<% end %>
 
-		<% if file_exists('/etc/config/simet_installed/simetbox_ping_installed') then %>
+		<% if file_exists('/usr/lib/simet/simet_installed/simetbox_ping_installed') then %>
 			<div> 
 				<h5><%:Ping to Gateway Tests%></h5> 
 				<p><em><%:Periodicity%></em>  
@@ -187,7 +187,7 @@ require('simet.simet_utils')
 		<% end %>
 
 
-		<% if file_exists('/etc/config/simet_installed/simetbox_top10alexa_installed') then %>
+		<% if file_exists('/usr/lib/simet/simet_installed/simetbox_top10alexa_installed') then %>
 			<div> 
 				<h5><%:Top 10 Sites Brazil%></h5> 
 				<p><em><%:Periodicity%></em>  
@@ -206,7 +206,7 @@ require('simet.simet_utils')
 		<% end %>
 
 
-		<% if file_exists('/etc/config/simet_installed/simetbox_contentprovider_installed') then %>
+		<% if file_exists('/usr/lib/simet/simet_installed/simetbox_contentprovider_installed') then %>
 			<div> 
 				<h5><%:Content Provider Test%></h5> 
 				<p><em><%:Periodicity%></em>  

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 
 PKG_NAME:=simetbox-openwrt-availability-config
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -31,12 +31,12 @@ define Package/simetbox-openwrt-availability-config/description
 endef
 
 define Package/simetbox-openwrt-availability-config/install
-	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_DIR) $(1)/etc/config/simet_installed
+	$(INSTALL_DIR) $(1)/etc/simet
+	$(INSTALL_DIR) $(1)/usr/lib/simet/simet_installed
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/sbin
-	echo $(CONFIG_SIMETBOX_TR069) >> $(1)/etc/config/tr069_server
-	touch $(1)/etc/config/simet_installed/simetbox_network_and_config_installed
+	echo $(CONFIG_SIMETBOX_TR069) >> $(1)/etc/simet/tr069_server
+	touch $(1)/usr/lib/simet/simet_installed/simetbox_network_and_config_installed
 endef
 
 define Package/simetbox-openwrt-availability-config/config

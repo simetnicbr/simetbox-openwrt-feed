@@ -154,8 +154,8 @@ O SIMETBox já deixa o sistema configurado para utilizar o servidor desejado.  C
 
 Arquivo | Descrição
 --------|----------
-/etc/config/tr069_server | Endereço do servidor TR-069 (ACS) utilizado
-/etc/config/simet\_installed/simetbox\_network\_and\_config\_installed | Indica se foi instalado o pacote de gerência de disponibilide
+/etc/simet/tr069_server | Endereço do servidor TR-069 (ACS) utilizado
+/usr/lib/simet/simet\_installed/simetbox\_network\_and\_config\_installed | Indica se foi instalado o pacote de gerência de disponibilide
 /usr/bin/simet_client \*\* | Cliente para realização de teste de latência, jitter, perda de pacotes e vazão
 /usr/bin/simet_ws \*\* | Cliente WEB (CLI) com suporte a https
 /usr/bin/simet\_hash\_measure | Busca um identificador único para uma sessão de testes
@@ -164,7 +164,7 @@ Arquivo | Descrição
 /usr/bin/get\_model.sh | Retorna o modelo do equipamento
 /usr/bin/get\_lat\_long.sh | Retorna latitude e longitude do equipamento com precisão máxima de 150 metros
 /usr/bin/get\_simet\_box\_version.sh | Retorna a versão do sistema ("Release version number" da compilação)
-/etc/config/simet.conf | Arquivo de configuração do SIMETBox
+/etc/simet/simet1.conf | Arquivo de configuração do SIMETBox
 /usr/lib/lua/simet/simet\_utils.lua | Biblioteca LUA com várias funções utilizadas pelo SIMETBox
 /usr/bin/get_uci.sh | Retorna valor da chave UCI solitada
 /usr/bin/set_uci.sh | Configura valor da chave UCI fornecida
@@ -174,26 +174,26 @@ Arquivo | Descrição
 /etc/uci-defaults/99-simet-cron | Configura crontab para os testes do SIMET
 /usr/lib/lua/simet/crontab_writer.lua | Biblioteca LUA usada para gerar a crontab
 /usr/lib/lua/simet/personal_data.lua | Biblioteca LUA usada para gravar os dados cadastrados pelo usuário (nome, velocidade contratada e outros)
-/etc/config/simet\_installed/simetbox\_base\_installed | Indica que o pacote básico do SIMETBox foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_base\_installed | Indica que o pacote básico do SIMETBox foi instalado
 /usr/bin/simet_porta25 \*\* | Realiza testes de gerência de porta 25
-/etc/config/simet\_installed/simetbox\_port25\_installed | Indica que o pacote para testes de gerência de porta 25 foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_port25\_installed | Indica que o pacote para testes de gerência de porta 25 foi instalado
 /usr/bin/simet_bcp38 \*\* | Realiza testes de BCP-38
-/etc/config/simet\_installed/simetbox\_bcp38\_installed | Indica que o pacote para testes de conformidade com BCP-38 foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_bcp38\_installed | Indica que o pacote para testes de conformidade com BCP-38 foi instalado
 /usr/bin/sendcontentprovider.sh | Envia localização dos servidores de conteúdo 
 /usr/bin/simet_alexa \*\* | Realiza testes referentes a qualidade no acesso aos sites mais acessados no Brasil
-/etc/config/simet\_installed/simetbox\_top10alexa\_installed | Indica que o pacote para testes de qualidade dos sites mais acessados no Brasil foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_top10alexa\_installed | Indica que o pacote para testes de qualidade dos sites mais acessados no Brasil foi instalado
 /usr/bin/simet\_send\_if\_traffic.sh | Envia o consumo de tráfego por interface 
-/etc/config/simet\_installed/simetbox\_iftraffic\_installed | Indica que o pacote para envio do total de tráfego por interface foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_iftraffic\_installed | Indica que o pacote para envio do total de tráfego por interface foi instalado
 /usr/bin/simet\_dns \*\* | Realiza testes de DNS
 /usr/bin/simet\_dns\_ping\_traceroute.sh | Realiza testes de ping e traceroute até os servidores DNS raiz
 /usr/bin/simet\_traceroute.sh | Realiza testes de traceroute
 /usr/bin/simet\_ping.sh | Realiza testes de ping
-/etc/config/simet\_installed/simetbox\_dns\_installed | Indica que o pacote para realização de testes de DNS foi instalado
-/etc/config/simet\_installed/simetbox\_ping\_installed | Indica que o pacote para realização de testes de ping foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_dns\_installed | Indica que o pacote para realização de testes de DNS foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_ping\_installed | Indica que o pacote para realização de testes de ping foi instalado
 /usr/lib/libsimetconfig.so | Shared Object para leitura dos arquivos de configuração do SIMETBox
 /etc/ntp.conf\_simetbox | Arquivo de configuração do servidor ntpd já com os servidores do ntp.br configurados
 /usr/bin/simet\_ntpq \*\* | Envia o escorregamento de tempo obtido via NTP para os servidores do NIC.br
-/etc/config/simet\_installed/simetbox\_ntpd\_installed | Indica que o pacote com suporte ao ntp foi instalado
+/usr/lib/simet/simet\_installed/simetbox\_ntpd\_installed | Indica que o pacote com suporte ao ntp foi instalado
 /etc/zabbix\_agentd\_v2\_simetbox.conf | Configuração para o agente Zabbix 2.x (geralmente OpenWRT)
 /etc/zabbix\_agentd\_v3\_simetbox.conf | Configuração para o agente Zabbix 3.x (geralmente LEDE)
 

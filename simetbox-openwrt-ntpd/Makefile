@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 
 PKG_NAME:=simetbox-openwrt-ntpd
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -33,10 +33,10 @@ endef
 define Package/simetbox-openwrt-ntpd/install
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_BIN) files/ntp.conf $(1)/etc/ntp.conf_simetbox
-	$(INSTALL_DIR) $(1)/etc/config/simet_installed
+	$(INSTALL_DIR) $(1)/usr/lib/simet/simet_installed
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(LN) /usr/bin/simet_tools $(1)/usr/bin/simet_ntpq
-	touch $(1)/etc/config/simet_installed/simetbox_ntpd_installed
+	touch $(1)/usr/lib/simet/simet_installed/simetbox_ntpd_installed
 endef
 
 $(eval $(call BuildPackage,simetbox-openwrt-ntpd))
