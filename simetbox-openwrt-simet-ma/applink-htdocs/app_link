@@ -1,5 +1,5 @@
 {
-  "api_version": { "major": 0, "minor": 1, "rev": 1 },
+  "api_version": { "major": 0, "minor": 2, "rev": 0 },
   "measurement_device_class": "simetbox",
   "measurement_device_type": "embedded",
   "measurement_device_capabilities": [
