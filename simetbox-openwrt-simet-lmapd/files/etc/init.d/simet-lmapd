@@ -35,7 +35,7 @@ boot() {
 	# delay start of the measurement engine to lessen the RAM+CPU
 	# load during boot.  We might switch to a lmap-suppression-based
 	# scheme eventually.
-	( sleep 120 ; start "$@" ) <&- 2>&- >&- &
+	( sleep 120 ; start "$@" ) </dev/null >/dev/null 2>&1 &
 }
 
 reload_service() {

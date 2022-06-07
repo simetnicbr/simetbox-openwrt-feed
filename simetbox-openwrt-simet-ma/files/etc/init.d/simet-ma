@@ -17,8 +17,8 @@ simet_config() {
 		exit 1
 	fi
 
-	BOXID=$(get_mac_address.sh 2>/dev/null | tr A-F a-f | tr -d ': -') || true
-	BOOTID=$(cat /proc/sys/kernel/random/boot_id) || true
+	BOXID=$(get_mac_address.sh 2>/dev/null | tr A-F a-f | tr -d ': -') || :
+	BOOTID=$(cat /proc/sys/kernel/random/boot_id) || :
 }
 
 simet_netconfig() {
@@ -56,12 +56,12 @@ boot() {
 	simet_create_vlabel.sh >/dev/null 2>&1 || :
 
 	# warning: try to keep RAM load down for 32MiB devices!
-	( simet_register_ma.sh <&- 2>&- >&- && {
-		simet_geolocation.sh <&- 2>&- >&- || true
+	( simet_register_ma.sh && {
+		simet_geolocation.sh || :
 		( simetbox_lmap-fetch-schedule.sh \
-			&& chown -h nicbr-simet:nicbr-simet "$LMAP_SCHEDULE_FILE" || true
-		) <&- 2>/dev/null >/dev/null &
-	} ) <&- 2>&- >&- &
+			&& chown -h nicbr-simet:nicbr-simet "$LMAP_SCHEDULE_FILE" || :
+		) &
+	} ) </dev/null >/dev/null 2>&1 &
 	start "$@"
 }
 
