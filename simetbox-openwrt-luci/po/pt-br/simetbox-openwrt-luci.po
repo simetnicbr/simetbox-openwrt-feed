@@ -11,7 +11,7 @@ msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:143
 msgid "(information missing, try to renew credentials)"
-msgstr ""
+msgstr "(informações faltando, tente renovar credenciais)"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:14
 msgid "ATTENTION"
@@ -41,7 +41,7 @@ msgstr "Procure por atualizações"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:83
 msgid "Connected (paired) to:"
-msgstr ""
+msgstr "Atrelado a:"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:15
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:29
@@ -176,7 +176,7 @@ msgstr "Testes de Gerência da Porta 25"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:80
 msgid "Portal information"
-msgstr ""
+msgstr "Informação do portal SIMET"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:31
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:66
@@ -352,7 +352,7 @@ msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:137
 msgid "device is not paired"
-msgstr ""
+msgstr "dispositivo não está atrelado"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:53
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:58
