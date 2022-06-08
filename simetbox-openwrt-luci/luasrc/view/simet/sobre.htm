@@ -17,8 +17,10 @@
 		has_autoupgrade = true
 	end
 
-	local sbx_geo = luci.util.ubus("simet_ma", "geolocate", [[{"fast":true}]]) or
-		{ latitude="?", longitude="?", timestamp=0 }
+	local sbx_geo = luci.util.ubus("simet_ma", "geolocate", [[{"fast":true}]]) or nil
+	if sbx_geo == nil or sbx_geo.timestamp == nil then
+		sbx_geo = { latitude="...", longitude="...", timestamp=0 }
+	end
 	local simetma_vlabel = luci.sys.exec("simet_read_vlabel.sh") or ""
 	local simetma_agentid = fs.readfile("/etc/simet/agent-id-v2") or ""
 	local simetma_engine = fs.readfile("/usr/lib/simet/agent-version.txt") or ""
