@@ -54,6 +54,9 @@ function index()
 	page = entry({"admin", "simet", "simet_engine_status"}, call("simet_ma_get_engine_status"), nil)
 	page.leaf = true
 
+	page = entry({"admin", "simet", "simet_pairing_status"}, call("simet_ma_get_simet_pairing_status"), nil)
+	page.leaf = true
+
 	page = entry({"admin", "simet", "simet_start_measurement_run"}, call("simet_ma_start_measuring"), nil)
 	page.leaf = true
 
@@ -186,6 +189,16 @@ function simet_ma_get_engine_status()
 		luci.http.write_json(result)
 	else
 		luci.http.status(503, "failed to retrieve SIMET engine status")
+	end
+end
+
+function simet_ma_get_simet_pairing_status()
+	local result = luci.util.ubus("simet_ma", "simet_pairing_status") or {}
+	if result ~= nil and result.status == 0 then
+		luci.http.prepare_content("application/json")
+		luci.http.write_json(result)
+	else
+		luci.http.status(503, "failed to retrieve simet pairing status")
 	end
 end
 

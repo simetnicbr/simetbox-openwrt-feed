@@ -77,6 +77,14 @@
 	</table>
 </div>
 <div class="cbi-section">
+	<h3><%:Portal information%></h3>
+	<table class="table" width="100%">
+		<tr class="tr">
+			<td class="td left" width="33%"><%:Connected (paired) to:%></td><td class="td left" colspan="2"><p class="pairing">...</p></td>
+		</tr>
+	</table>
+</div>
+<div class="cbi-section">
 	<h3><%:Security information%></h3>
 	<p><%:Security contact%>: security@simet.nic.br</p>
 	<p><%:More information%>: <a href="https://simet.nic.br/simetbox">https://simet.nic.br/simetbox</a></p>
@@ -89,6 +97,7 @@
 	    upd_label = upd_message.querySelector('span'),
 	    reg_message = document.querySelector('p.ma-register-message'),
 	    reg_label = reg_message.querySelector('span');
+	    pair_p = document.querySelector('p.pairing');
 
 	function ok() { location.reload(true); }
 	function check() { window.setTimeout(ping, 5000); }
@@ -122,6 +131,21 @@
 		label = reg_label;
 		(new XHR()).get('<%=url("admin/simet/simet_register")%>', null, check);
 	}
+	function simet_pairing_update(xhr, data, duration) {
+		if (data && data.status == 0 && data.result ) {
+			if (data.result.paired != true) {
+				pair_p.innerText = '<%:device is not paired%>';
+			} else if (data.result.name || data.result.short_name) {
+				pair_p.innerText = (data.result.name ? data.result.name : "" ) +
+						   (data.result.name && data.result.short_name ? " " : "") +
+						   (data.result.short_name ? "(" + data.result.short_name + ")" : "");
+			} else {
+				pair_p.innerText = '<%:(information missing, try to renew credentials)%>';
+			}
+		}
+	}
+
+	(new XHR()).get('<%=url("admin/simet/simet_pairing_status")%>', null, simet_pairing_update);
 //]]></script>
 
 <%+footer%>
