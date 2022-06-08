@@ -1,17 +1,21 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:18
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:143
+msgid "(information missing, try to renew credentials)"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:14
 msgid "ATTENTION"
 msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:18
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:27
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:29
 msgid "About SIMETBox"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:38
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:68
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:34
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:70
 msgid "Attempting to renew credentials..."
 msgstr ""
 
@@ -19,12 +23,16 @@ msgstr ""
 msgid "BCP38 Respect Tests"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:45
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:47
 msgid "Base firmware"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:36
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:38
 msgid "Check for firmware updates"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:83
+msgid "Connected (paired) to:"
 msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:15
@@ -32,7 +40,7 @@ msgstr ""
 msgid "Connection"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:71
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:67
 msgid "Contact information"
 msgstr ""
 
@@ -44,29 +52,29 @@ msgstr ""
 msgid "DNS Tests"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:72
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:68
 msgid "Device information and contacts page"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:103
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:114
 msgid "Device unreachable! Still waiting for device..."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:50
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:52
 msgid "Equipment information"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:42
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:44
 msgid ""
 "Firmware update requested. If one is found, the device will apply it in a "
 "few minutes. DO NOT POWER OFF THE DEVICE"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:20
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:16
 msgid "For details on the connection problem, please go to the"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:73
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:75
 msgid "Geolocation"
 msgstr ""
 
@@ -88,38 +96,38 @@ msgstr ""
 msgid "Internet connection status"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:27
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:37
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:41
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:67
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:23
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:33
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:43
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:69
 msgid "Loading"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:80
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:90
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:40
 msgid "More information"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:44
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:40
 msgid ""
 "Note: It takes some time for results of a recent measurement run to be "
 "available. Please reload this page to check for new results."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:57
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:53
 msgid ""
 "Note: for privacy reasons, the link will be invalidated the next time the "
 "SIMETBox renews its access credentials, typically once a day as well as when "
 "it boots."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:32
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:28
 msgid ""
 "Note: the device must be connected to the Internet to be able to show "
 "reports and to renew access credentials."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:43
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:39
 msgid ""
 "Periodic measurement runs are carried out automatically. You may trigger an "
 "immediate measurement run using the button."
@@ -146,8 +154,12 @@ msgstr ""
 msgid "Port 25 Management Test"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:35
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:64
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:80
+msgid "Portal information"
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:31
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:66
 msgid "Renew Credentials"
 msgstr ""
 
@@ -155,23 +167,23 @@ msgstr ""
 msgid "SIMET"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:46
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:48
 msgid "SIMET Engine"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:15
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:11
 msgid "SIMET Measurement Results"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:62
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:64
 msgid "SIMET agent id"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:59
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:61
 msgid "SIMET agent label"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:64
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:60
 msgid "SIMET1 Measurement Results"
 msgstr ""
 
@@ -183,11 +195,11 @@ msgstr ""
 msgid "SIMET1 Settings"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:66
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:62
 msgid "SIMET1 measurement results page"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:25
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:21
 msgid "SIMET2 Measurement Results"
 msgstr ""
 
@@ -200,19 +212,19 @@ msgstr ""
 msgid "SIMET2 Settings"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:56
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:52
 msgid "SIMET2 results page for this device (temporary link)"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:56
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:58
 msgid "SIMETBox device id"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:53
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:55
 msgid "SIMETBox device model"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:73
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:69
 msgid "SIMETBox project pages:"
 msgstr ""
 
@@ -221,11 +233,11 @@ msgstr ""
 msgid "SIMETBox status"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:21
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:17
 msgid "SIMETBox status page"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:34
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:36
 msgid "SIMETBox version"
 msgstr ""
 
@@ -234,23 +246,23 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:79
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:89
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:39
 msgid "Security contact"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:78
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:88
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:38
 msgid "Security information"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:31
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:27
 msgid ""
 "Should the report system below complain of invalid credentials, please use "
 "the button to renew them."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:47
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:43
 msgid "Start a measurement run"
 msgstr ""
 
@@ -259,22 +271,22 @@ msgstr ""
 msgid "Successfully saved"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:29
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:31
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:5
 msgid "Support contact"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:19
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:15
 msgid ""
 "The SIMETBox is not connected to the Internet. Some functions on this page "
 "will not work at this time."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:50
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:46
 msgid "The device is doing a measurement run..."
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:55
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:51
 msgid ""
 "This SIMETBox is currently offline, but you can try to access past "
 "measurement results through the following link:"
@@ -285,7 +297,7 @@ msgstr ""
 msgid "Throughput, Latency, Jitter and Packet Loss"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:65
+#: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:61
 msgid ""
 "To access the historical data measured by the older measurement engine "
 "(SIMET1), please refer to the"
@@ -295,7 +307,7 @@ msgstr ""
 msgid "Top 10 Sites Brazil"
 msgstr ""
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:32
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:34
 msgid "Version information"
 msgstr ""
 
@@ -304,6 +316,10 @@ msgid ""
 "You can configure some of the local defaults for the SIMET2 measurements. "
 "Please note that the measurement-fleet coordination and orchestration "
 "servers might override the local configuration."
+msgstr ""
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:137
+msgid "device is not paired"
 msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:53
