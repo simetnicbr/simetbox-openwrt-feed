@@ -17,8 +17,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-luci
-PKG_VERSION:=1.8
-PKG_RELEASE:=2
+PKG_VERSION:=1.9
+PKG_RELEASE:=1
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_I18N_DIR:=$(PKG_BUILD_DIR)/luci-i18n
 PKG_BUILD_DEPENDS:=luci-base
