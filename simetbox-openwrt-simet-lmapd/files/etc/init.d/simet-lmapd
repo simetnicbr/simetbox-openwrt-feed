@@ -22,8 +22,8 @@ init_lmapd_fs() {
 	[ -e /var/run/lmapd/lmap-schedule.json ] || \
 		ln -s /usr/lib/simet/lmap-emergency-schedule.json \
 		      /var/run/lmapd/lmap-schedule.json 2>/dev/null || true
-	chown -h nicbr-simet:nicbr-simet /var/run/lmapd/*json \
-		&& chmod +r /var/run/lmapd/*json
+	chown -h nicbr-simet:nicbr-simet /var/run/lmapd/*json || true
+	find /var/run/lmapd -type f -name '*json' \! -perm -0644 -exec chmod +r {} \;
 	find /etc/simet/lmap -type f \! -perm -0644 -exec chmod +r {} \;
 }
 
@@ -53,7 +53,7 @@ start_service() {
 	init_lmapd_fs
 	procd_open_instance simet-lmapd
 	procd_set_param user nicbr-simet
-	procd_set_param respawn 180 5 10
+	procd_set_param respawn 1800 60 10
 	procd_set_param stderr 1
 	procd_set_param stdout 1
 	procd_set_param command /usr/bin/lmapd $LMAP_OPTS
