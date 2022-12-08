@@ -11,17 +11,18 @@ include $(TOPDIR)/rules.mk
 PKG_BRANCH:=branches/master
 
 PKG_NAME:=simetbox-openwrt-base
-PKG_RELEASE:=3
+PKG_RELEASE:=1
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
 PKG_BUILD_PARALLEL:=0
 
-PKG_VERSION:=109
+PKG_VERSION:=111
 PKG_REV:=v$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_HASH:=828534142e684df99eed1f3f321cf55d07468c763cf7cb0e4931840c2ca5090a
+PKG_HASH:=skip
 PKG_MIRROR_HASH:=$(PKG_HASH)
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simetbox-openwrt-base.git
