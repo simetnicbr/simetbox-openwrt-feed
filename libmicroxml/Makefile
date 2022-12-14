@@ -8,17 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libmicroxml
-PKG_VERSION:=2015-03-18
+PKG_VERSION:=2022-12-14
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/pivasoftware/microxml.git
+#PKG_SOURCE_URL:=https://github.com/pivasoftware/microxml.git
+PKG_SOURCE_URL:=https://github.com/simetnicbr/microxml.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=caa8d3e6887f5c70e54df555dd78e4e45cfa74cc
+PKG_SOURCE_VERSION:=03313f51ca680c285d5315a4086e02404bd05d3c
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_FIXUP:=autoreconf
-PKG_HASH:=4255c67885062c0e745a3648239bb04bb23608c4aff7fcbd1172a4629269aabb
+PKG_HASH:=bdd3dcdb8a261aa2b4bdd2a0168f5965c20dd9cf1c20307fca2a5203b76fd36d
 PKG_MIRROR_HASH:=$(PKG_HASH)
 
 include $(INCLUDE_DIR)/package.mk
