@@ -22,7 +22,7 @@ Upstream-report: http://support.easycwmp.org/view.php?id=138
  DOWNLOAD_DIR="/tmp/easycwmp_download"
  EASYCWMP_PROMPT="easycwmp>"
  set_fault_tmp_file="/tmp/.easycwmp_set_fault_tmp"
-@@ -264,21 +265,23 @@ handle_action() {
+@@ -279,21 +280,23 @@ handle_action() {
  	fi
  	
  	if [ "$action" = "download" ]; then
