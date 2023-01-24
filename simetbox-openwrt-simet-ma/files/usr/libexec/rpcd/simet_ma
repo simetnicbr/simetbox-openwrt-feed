@@ -149,7 +149,8 @@ EOFLIST
   call)
     case "$2" in
       renew_registration)
-        # FIXME: run as root or as nicbr-simet ?
+	# can be run as root or nicbr-simet, but $SIMETMA_RECONFIG
+	# must run "/etc/init.d/simet-ma reload" as *root*.
         RC=0
         simet_register_ma.sh >/dev/null 2>&1 || RC=$?
 	status "$RC"
@@ -168,7 +169,8 @@ EOFLIST
 	fi
 	;;
       refresh_schedule)
-        # FIXME: run as root or as nicbr-simet ?
+	# can run as root or nicbr-simet, $LMAP_RECONFIG must be something
+	# that will work as nicbr-simet *anyway*.
         RC=0
         simetbox_lmap-fetch-schedule.sh >/dev/null 2>&1 || RC=$?
 	status "$RC"
