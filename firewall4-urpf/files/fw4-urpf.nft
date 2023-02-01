@@ -1,0 +1,39 @@
+#
+# fw4 - strict uRPF for single-homed routers
+#
+# This helps implementing proper BCP38, discarding most source-address-forged
+# packets at the subscriber CPE.
+#
+# strict uRPF is not compatible with assimetric routing.  This is not a problem
+# with, e.g. wan3, but it can be a problem on multi-link L3 topologies.
+#
+# Due to kernel limitations, the uRPF filter will not work when policy-based
+# routing that uses "ip rule iif ..." is in use, as that breaks expectations of
+# the prerouting hook (iif will not be correct) and would require the use of
+# the input and forward hooks with the "fib" match, which is a feature that was
+# not backported to Linux 5.10 or 5.14.
+#
+# Several exceptions (accepts in chain urpf) were added to minimize the chances
+# an important packet being dropped during interface address setup.  Also,
+# link-local source addresses are exempt to avoid potential issues (we'd have
+# to exempt ICMP/ICMPv6 anyway).  The same goes for multicast traffic.
+#
+
+chain urpf {
+    type filter hook prerouting priority raw; policy drop;
+
+    meta iiftype loopback accept
+
+    ip daddr 224.0.0.0/4 accept
+    ip6 daddr ff00::/8 accept
+
+    ip6 saddr fe80::/10 accept
+    ip saddr 169.254.0.0/16 accept
+
+    ip saddr 0.0.0.0 ip daddr 255.255.255.255 udp sport 68 udp dport 67 accept
+    meta nfproto ipv4 udp sport 67 udp dport 68 accept
+
+    fib saddr . iif oif exists accept
+
+    counter log prefix "uRPF discard: "
+}

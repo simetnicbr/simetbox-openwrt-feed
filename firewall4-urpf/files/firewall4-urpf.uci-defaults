@@ -1,0 +1,13 @@
+#!/bin/sh
+
+uci -q get firewall.urpf.enabled >/dev/null || uci -q batch <<-EOT
+	delete firewall.urpf
+	set firewall.urpf=include
+	set firewall.urpf.type='nftables'
+	set firewall.urpf.path='/usr/lib/firewall-urpf/fw4-urpf.nft'
+	set firewall.urpf.position='table-pre'
+	set firewall.urpf.enabled='1'
+	commit firewall
+EOT
+
+exit 0
