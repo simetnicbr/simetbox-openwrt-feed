@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=firewall-urpf
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENCE:=GPL-3.0-or-later
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_I18N_DIR:=$(PKG_BUILD_DIR)/luci-i18n
@@ -22,7 +22,7 @@ define Package/firewall-urpf
   TITLE:=source address anti-spoofing (BCP38 uRPF)
   URL:=https://github.com/simetnicbr
   MAINTAINER:=SIMET <medicoes@simet.nic.br>
-  DEPENDS:=+kmod-ipt-rpfilter +iptables-mod-rpfilter
+  DEPENDS:=firewall +kmod-ipt-rpfilter +iptables-mod-rpfilter
   PKGARCH:=all
 endef
 
