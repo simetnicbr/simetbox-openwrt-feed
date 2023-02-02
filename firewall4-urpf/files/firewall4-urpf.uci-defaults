@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# firewall-urpf to firewall4-urpf sysupgrade path
+FW_URPF_ENABLED=$(uci -q get firewall.urpf.active) || FW_URPF_ENABLED=
+[ -n "$FW_URPF_ENABLED" ] && {
+	uci -q delete firewall.urpf
+}
+
 uci -q get firewall.urpf.enabled >/dev/null || uci -q batch <<-EOT
 	delete firewall.urpf
 	set firewall.urpf=include
@@ -9,5 +15,7 @@ uci -q get firewall.urpf.enabled >/dev/null || uci -q batch <<-EOT
 	set firewall.urpf.enabled='1'
 	commit firewall
 EOT
+
+[ -n "$FW_URPF_ENABLED" ] && uci -q set firewall.urpf.enabled="$FW_URPF_ENABLED" && uci -q commit firewall
 
 exit 0
