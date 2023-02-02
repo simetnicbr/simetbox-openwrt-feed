@@ -60,14 +60,13 @@ define Package/firewall-urpf/install
 endef
 
 #define Package/firewall-urpf/postinst
-#!/bin/sh
-#[ -x /etc/uci-defaults/firewall-urpf ] && /etc/uci-defaults/firewall-urpf || exit 0
+##!/bin/sh
+#[ -z "$$IPKG_INSTROOT" ] && [ -x /etc/uci-defaults/firewall-urpf ] && /etc/uci-defaults/firewall-urpf || exit 0
 #endef
 
 #define Package/firewall-urpf/postrm
 ##!/bin/sh
-#uci delete firewall.firewall-urpf
-#uci commit
+#[ -z "$IPKG_INSTROOT" ] && uci delete firewall.urpf && uci commit firewall
 #endef
 
 $(eval $(call BuildPackage,firewall-urpf))
