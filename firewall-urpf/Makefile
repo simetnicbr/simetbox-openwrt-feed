@@ -19,7 +19,7 @@ define Package/firewall-urpf
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=Firewall
-  TITLE:=source address anti-spoofing (BCP38 uRPF)
+  TITLE:=source address anti-spoofing (BCP38 uRPF) for firewall3
   URL:=https://github.com/simetnicbr
   MAINTAINER:=SIMET <medicoes@simet.nic.br>
   DEPENDS:=firewall +kmod-ipt-rpfilter +iptables-mod-rpfilter
@@ -36,6 +36,10 @@ define Package/firewall-urpf/description
  at the cost of one extra route lookup per packet.
 
  This package includes integration with the LuCI firewall module.
+
+ This is the package for firewall3, used by default in OpenWRT 21.02 and
+ earlier.  For firewall4 (used by default in OpenWRT 22.03 and later),
+ you need the "firewall4-urpf" package.
 endef
 
 define Build/Prepare

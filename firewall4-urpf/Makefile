@@ -23,6 +23,7 @@ define Package/firewall4-urpf
   URL:=https://github.com/simetnicbr
   MAINTAINER:=SIMET <medicoes@simet.nic.br>
   DEPENDS:=firewall4
+  CONFLICTS:=firewall-urpf
   PKGARCH:=all
 endef
 
@@ -36,6 +37,10 @@ define Package/firewall4-urpf/description
  at the cost of one extra route lookup per packet.
 
  This package includes integration with the LuCI firewall module.
+
+ This is the package for firewall4, used by default in OpenWRT 22.03 and
+ later.  For firewall3 (used by default in OpenWRT 21.02 and earlier),
+ you need the "firewall-urpf" package.
 endef
 
 define Build/Prepare
