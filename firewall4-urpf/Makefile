@@ -6,7 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=firewall4-urpf
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_RELEASE:=1
 PKG_LICENCE:=GPL-3.0-or-later
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -55,7 +55,7 @@ endef
 
 define Package/firewall4-urpf/install
 	$(INSTALL_DIR) $(1)/usr/lib/firewall-urpf
-	$(INSTALL_BIN) ./files/fw4-urpf.nft $(1)/usr/lib/firewall-urpf/fw4-urpf.nft
+	$(INSTALL_DATA) ./files/fw4-urpf.nft $(1)/usr/lib/firewall-urpf/fw4-urpf.nft
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/firewall4-urpf.uci-defaults $(1)/etc/uci-defaults/firewall4-urpf
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
