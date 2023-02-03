@@ -20,7 +20,7 @@
 #
 
 chain urpf {
-    type filter hook prerouting priority raw; policy drop;
+    type filter hook prerouting priority raw; policy accept;
 
     meta iiftype loopback accept
 
@@ -35,5 +35,6 @@ chain urpf {
 
     fib saddr . iif oif exists accept
 
-    counter log prefix "uRPF discard: "
+    log prefix "uRPF discard: "
+    counter drop
 }
