@@ -82,4 +82,11 @@ define Package/simetbox-openwrt-simet-lmapd/install
 	-chmod -R og-w files/ && $(CP) files/. $(1)/
 endef
 
+define Package/simetbox-openwrt-simet-lmapd/postinst
+#!/bin/sh
+[ -z "$${IPKG_INSTROOT}" ] && {
+	/etc/init.d/simet-lmapd enable
+}
+:
+endef
 $(eval $(call BuildPackage,simetbox-openwrt-simet-lmapd))

@@ -87,11 +87,11 @@ endef
 
 define Package/simetbox-openwrt-simet-ma/postinst
 #!/bin/sh
-#check if we are on real system
-if [ -z "$${IPKG_INSTROOT}" ]; then
+[ -z "$${IPKG_INSTROOT}" ] && {
 	echo "Clearing previous non-hardcoded LMAP configuration"
 	rm -f /var/run/lmapd/*.json
-fi
+	/etc/init.d/simet-ma enable
+}
 :
 endef
 
