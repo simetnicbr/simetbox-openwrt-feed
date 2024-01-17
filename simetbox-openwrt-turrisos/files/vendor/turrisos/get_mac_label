@@ -1,0 +1,2 @@
+#!/bin/sh
+exec crypto-wrapper mac-address 2>/dev/null
