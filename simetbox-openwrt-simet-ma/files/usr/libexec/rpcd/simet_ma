@@ -8,7 +8,7 @@ status() {
   shift
   d=
   [ $# -gt 0 ] && {
-	  [ "$s" -ne 0 ] && d=",\"error\":\"$*\"" || d=",\"description\":\"$*\""
+          [ "$s" -ne 0 ] && d=",\"error\":\"$*\"" || d=",\"description\":\"$*\""
   }
   printf '{"status":%s%s}' "$s" "$d"
 }
@@ -122,63 +122,63 @@ twamp_output_results() {
 case "$1" in
   list)
     cat <<- EOFLIST
-	{
-	  "simet_engine_status":{},
-	  "simet_pairing_status":{},
-	  "results_credentials":{},
-	  "renew_registration":{},
-	  "refresh_schedule":{},
-	  "wan_status":{},
-	  "geolocate":{
-	    "force":false,
-	    "fast":true},
-	  "twamp_start_measurement":{
-	    "server:":"",
-	    "server_port":"",
-	    "ip_family":"",
-	    "conn_timeout_s":"",
-	    "number_of_packets":16,
-	    "interpacket_delay_us":64,
-	    "last_packet_window_us":64 },
-	  "twamp_stop_measurement":{},
-	  "twamp_get_results":{},
-	  "start_measurement_run":{}
-	}
+        {
+          "simet_engine_status":{},
+          "simet_pairing_status":{},
+          "results_credentials":{},
+          "renew_registration":{},
+          "refresh_schedule":{},
+          "wan_status":{},
+          "geolocate":{
+            "force":false,
+            "fast":true},
+          "twamp_start_measurement":{
+            "server:":"",
+            "server_port":"",
+            "ip_family":"",
+            "conn_timeout_s":"",
+            "number_of_packets":16,
+            "interpacket_delay_us":64,
+            "last_packet_window_us":64 },
+          "twamp_stop_measurement":{},
+          "twamp_get_results":{},
+          "start_measurement_run":{}
+        }
 EOFLIST
     ;;
   call)
     case "$2" in
       renew_registration)
-	# can be run as root or nicbr-simet, but $SIMETMA_RECONFIG
-	# must run "/etc/init.d/simet-ma reload" as *root*.
+        # can be run as root or nicbr-simet, but $SIMETMA_RECONFIG
+        # must run "/etc/init.d/simet-ma reload" as *root*.
         RC=0
         simet_register_ma.sh >/dev/null 2>&1 || RC=$?
-	status "$RC"
+        status "$RC"
         ;;
       results_credentials)
-	AID=
-	VTK=
-	[ -r /var/run/simet_public/view-credentials ] && read -r AID VTK nouse < /var/run/simet_public/view-credentials || AID=
-	uilang=$(uci get luci.main.lang 2>/dev/null) || uilang=
-	[ -z "$uilang" ] && uilang="none"
-	uiurl=$(simet_view_results.sh --url --lang "$uilang") || uiurl=
-	if [ -n "$AID" ] && [ -n "$VTK" ] ; then
-	  _jsonify_unquoted "agent-id" "$AID" "results_token" "$VTK" "results_interactive_url" "$uiurl"
-	else
-	  status 4 "ma not registered yet, or credentials are missing"
-	fi
-	;;
+        AID=
+        VTK=
+        [ -r /var/run/simet_public/view-credentials ] && read -r AID VTK nouse < /var/run/simet_public/view-credentials || AID=
+        uilang=$(uci get luci.main.lang 2>/dev/null) || uilang=
+        [ -z "$uilang" ] && uilang="none"
+        uiurl=$(simet_view_results.sh --url --lang "$uilang") || uiurl=
+        if [ -n "$AID" ] && [ -n "$VTK" ] ; then
+          _jsonify_unquoted "agent-id" "$AID" "results_token" "$VTK" "results_interactive_url" "$uiurl"
+        else
+          status 4 "ma not registered yet, or credentials are missing"
+        fi
+        ;;
       refresh_schedule)
-	# can run as root or nicbr-simet, $LMAP_RECONFIG must be something
-	# that will work as nicbr-simet *anyway*.
+        # can run as root or nicbr-simet, $LMAP_RECONFIG must be something
+        # that will work as nicbr-simet *anyway*.
         RC=0
         simetbox_lmap-fetch-schedule.sh >/dev/null 2>&1 || RC=$?
-	status "$RC"
+        status "$RC"
         ;;
       geolocate)
-	_input
-	fast=$(_gi fast) || fast=true
-	force=$(_gi force) || force=false
+        _input
+        fast=$(_gi fast) || fast=true
+        force=$(_gi force) || force=false
         if [ "$force" = "true" ] ; then
           # simple rate limit...
           geolocate --max-age 3600
@@ -190,13 +190,13 @@ EOFLIST
         ;;
       start_measurement_run)
         if is_measurement_running ; then
-	  #status 5 "measurement is already running"
+          #status 5 "measurement is already running"
           echo '{ "status": "already running" }'
         elif start-stop-daemon -S -b -c nicbr-simet -x /usr/bin/simet-ma_run.sh && sleep 1 && is_measurement_running ; then
-	  #status 0 "started measurement"
+          #status 0 "started measurement"
           echo '{ "status": "started" }'
         else
-	  #status 9 "failed to start measurement"
+          #status 9 "failed to start measurement"
           echo '{ "status": "failed" }'
         fi
         ;;
@@ -224,7 +224,7 @@ EOFLIST
         [ -r /var/run/simet/agent-owner-info ] || [ -s /etc/simet/pairing-id ] || {
           status 4 "information unknown at this time, MA not registered yet, or credentials are missing"
           return 0
-	}
+        }
         au_paired=false
         au_name=
         au_shortname=
@@ -233,7 +233,7 @@ EOFLIST
           au_name=$(jsonfilter -i /var/run/simet/agent-owner-info -e "@.name" 2>/dev/null) || au_name=
           au_shortname=$(jsonfilter -i /var/run/simet/agent-owner-info -e "@.short_name" 2>/dev/null) || au_shortname=
         }
-	[ -s /etc/simet/pairing-id ] && APAIRID=$(tr -d ' \n\r\t' < /etc/simet/pairing-id) && [ -n "$APAIRID" ] && au_paired=true
+        [ -s /etc/simet/pairing-id ] && APAIRID=$(tr -d ' \n\r\t' < /etc/simet/pairing-id) && [ -n "$APAIRID" ] && au_paired=true
         printf '{"status":0,"result":{"paired":%s' "$au_paired"
         _jsonify_pairs 1 "name" "$au_name" "short_name" "$au_shortname"
         printf '}}\n'
@@ -262,51 +262,51 @@ EOFLIST
         _jsonify_unquoted ip4_wan_status "$wan_s" ip4_gateway_ping "$gw_s" ip6_wan_status "$wan6_s" ip6_gateway_ping "$gw6_s"
         ;;
       twamp_start_measurement)
-	_input
-	sa=$(_gi server) && [ -n "$sa" ] || invalid_param "\"server\" is mandatory"
-	p_sp= ; sp=$(_gi server_port) && p_sp="-p" || sp=
-	p_ct= ; ct=$(_gi conn_timeout_s) && p_ct="-t" || ct=
-	p_np= ; np=$(_gi number_of_packets) && p_np="-c" || np=
-	p_pd= ; pd=$(_gi interpacket_delay_us) && p_pd="-i" || pd=
-	p_pw= ; pw=$(_gi last_packet_window_us) && p_pw="-T" || pw=
-	ipf=$(_gi ip_family) && {
-	  case "$ipf" in
-	    4|ip4|ipv4|IPv4)
-	      ipf="-4"
-	      ;;
-	    6|ip6|ipv6|IPv6)
-	      ipf="-6"
-	      ;;
-	    *) invalid_param "\"ip_family\" must be \"ip4\" or \"ip6\""
-	      ;;
-	  esac
-	}
-	if is_measurement_running ; then
-	  status 6 "other measurements are running right now, cannot start"
-	elif is_twamp_running ; then
-	  status 5 "measurement is already running"
-	elif start_twamp $ipf $p_sp $sp $p_ct $ct $p_np $np $p_pd $pd $p_pw $pw "$sa" ; then
-	  status 0 "started measurement"
-	else
-	  status 9 "failed to start measurement"
-	fi
-	;;
+        _input
+        sa=$(_gi server) && [ -n "$sa" ] || invalid_param "\"server\" is mandatory"
+        p_sp= ; sp=$(_gi server_port) && p_sp="-p" || sp=
+        p_ct= ; ct=$(_gi conn_timeout_s) && p_ct="-t" || ct=
+        p_np= ; np=$(_gi number_of_packets) && p_np="-c" || np=
+        p_pd= ; pd=$(_gi interpacket_delay_us) && p_pd="-i" || pd=
+        p_pw= ; pw=$(_gi last_packet_window_us) && p_pw="-T" || pw=
+        ipf=$(_gi ip_family) && {
+          case "$ipf" in
+            4|ip4|ipv4|IPv4)
+              ipf="-4"
+              ;;
+            6|ip6|ipv6|IPv6)
+              ipf="-6"
+              ;;
+            *) invalid_param "\"ip_family\" must be \"ip4\" or \"ip6\""
+              ;;
+          esac
+        }
+        if is_measurement_running ; then
+          status 6 "other measurements are running right now, cannot start"
+        elif is_twamp_running ; then
+          status 5 "measurement is already running"
+        elif start_twamp $ipf $p_sp $sp $p_ct $ct $p_np $np $p_pd $pd $p_pw $pw "$sa" ; then
+          status 0 "started measurement"
+        else
+          status 9 "failed to start measurement"
+        fi
+        ;;
       twamp_stop_measurement)
-	stop_twamp || :
-	status 0 "measurement stopped, results lost"
-	;;
+        stop_twamp || :
+        status 0 "measurement stopped, results lost"
+        ;;
       twamp_get_results)
-	if is_twamp_running ; then
-	  status 5 "measurement still running"
-	elif are_twamp_results_ready ; then
-	  printf '{"status":0,"results":'
-	  twamp_output_results 2>/dev/null || :
-	  printf '}'
-	else
-	  # someone erased them (racing new twamp start?) or never run
-	  status 4 "no results available"
-	fi
-	;;
+        if is_twamp_running ; then
+          status 5 "measurement still running"
+        elif are_twamp_results_ready ; then
+          printf '{"status":0,"results":'
+          twamp_output_results 2>/dev/null || :
+          printf '}'
+        else
+          # someone erased them (racing new twamp start?) or never run
+          status 4 "no results available"
+        fi
+        ;;
     esac
     ;;
 esac
