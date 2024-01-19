@@ -228,14 +228,23 @@ EOFLIST
         au_paired=false
         au_name=
         au_shortname=
+        au_pairing_url=
         [ -s /var/run/simet/agent-owner-info ] && {
           au_paired=true
           au_name=$(jsonfilter -i /var/run/simet/agent-owner-info -e "@.name" 2>/dev/null) || au_name=
           au_shortname=$(jsonfilter -i /var/run/simet/agent-owner-info -e "@.short_name" 2>/dev/null) || au_shortname=
         }
         [ -s /etc/simet/pairing-id ] && APAIRID=$(tr -d ' \n\r\t' < /etc/simet/pairing-id) && [ -n "$APAIRID" ] && au_paired=true
+        [ "$au_paired" != true ] && {
+          au_vlabel=$(simet_read_vlabel.sh 2>/dev/null) || au_vlabel=
+          [ -n "$au_vlabel" ] && {
+            . /usr/lib/simet/simet_lib_config.sh || URL_AGENT_INTERACTIVE_PAIRING=
+	    [ -n "$URL_AGENT_INTERACTIVE_PAIRING" ] && \
+              au_pairing_url=$(printf "%s?vl=%s" "$URL_AGENT_INTERACTIVE_PAIRING" "$au_vlabel")
+          }
+        }
         printf '{"status":0,"result":{"paired":%s' "$au_paired"
-        _jsonify_pairs 1 "name" "$au_name" "short_name" "$au_shortname"
+        _jsonify_pairs 1 "name" "$au_name" "short_name" "$au_shortname" "pairing_url" "$au_pairing_url"
         printf '}}\n'
         ;;
       wan_status)
