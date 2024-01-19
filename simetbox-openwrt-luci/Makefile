@@ -30,7 +30,7 @@ define Package/simetbox-openwrt-luci
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=SIMETBox Luci Files
-	DEPENDS:=+simetbox-openwrt-base +!PACKAGE_luci-ssl:luci-ssl-openssl
+	DEPENDS:=+simetbox-openwrt-base +!PACKAGE_luci-ssl:luci-ssl-openssl +qrencode
 	URL:=http://simet.nic.br
 endef
 

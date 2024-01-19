@@ -57,6 +57,9 @@ function index()
 	page = entry({"admin", "simet", "simet_pairing_status"}, call("simet_ma_get_simet_pairing_status"), nil)
 	page.leaf = true
 
+	page = entry({"admin", "simet", "simet_pairing_qrcode"}, call("simet_ma_get_simet_pairing_qrcode"), nil)
+	page.leaf = true
+
 	page = entry({"admin", "simet", "simet_start_measurement_run"}, call("simet_ma_start_measuring"), nil)
 	page.leaf = true
 
@@ -199,6 +202,16 @@ function simet_ma_get_simet_pairing_status()
 		luci.http.write_json(result)
 	else
 		luci.http.status(503, "failed to retrieve simet pairing status")
+	end
+end
+
+function simet_ma_get_simet_pairing_qrcode()
+	local result = luci.sys.exec("simet_qrcode.sh --url --svg -") or nil
+	if result ~= nil and result ~= "" then
+		luci.http.prepare_content("image/svg+xml")
+		luci.http.write(result)
+	else
+		luci.http.status(204)
 	end
 end
 

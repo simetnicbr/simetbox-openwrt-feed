@@ -80,7 +80,14 @@
 	<h3><%:Portal information%></h3>
 	<table class="table" width="100%">
 		<tr class="tr">
-			<td class="td left" width="33%"><%:Connected (paired) to:%></td><td class="td left" colspan="2"><p class="pairing">...</p></td>
+			<td class="td left" width="33%"><%:Linked to:%></td><td class="td left" colspan="2"><p class="pairing">...</p></td>
+		</tr>
+		<tr class="tr pairing_request" style="display: none">
+			<td class="td left" width="33%"><%:Request portal linking:%></td>
+			<td class="td left" colspan="2">
+				<p><a class="pairing_url">...</a></p>
+				<p><img class="pairing_qrcode" src="<%=resource%>/icons/loading.gif" style="vertical-align:middle" />
+			</td>
 		</tr>
 	</table>
 </div>
@@ -97,7 +104,10 @@
 	    upd_label = upd_message.querySelector('span'),
 	    reg_message = document.querySelector('p.ma-register-message'),
 	    reg_label = reg_message.querySelector('span');
-	    pair_p = document.querySelector('p.pairing');
+	    pair_status = document.querySelector('p.pairing');
+	    pair_request = document.querySelector('tr.pairing_request');
+	    pair_url = pair_request.querySelector('a.pairing_url');
+	    pair_qrcode = pair_request.querySelector('img.pairing_qrcode');
 
 	function ok() { location.reload(true); }
 	function check() { window.setTimeout(ping, 5000); }
@@ -134,13 +144,24 @@
 	function simet_pairing_update(xhr, data, duration) {
 		if (data && data.status == 0 && data.result ) {
 			if (data.result.paired != true) {
-				pair_p.innerText = '<%:device is not paired%>';
+				pair_status.innerText = '<%:device is not linked to an account or entity%>';
 			} else if (data.result.name || data.result.short_name) {
-				pair_p.innerText = (data.result.name ? data.result.name : "" ) +
+				pair_status.innerText = (data.result.name ? data.result.name : "" ) +
 						   (data.result.name && data.result.short_name ? " " : "") +
 						   (data.result.short_name ? "(" + data.result.short_name + ")" : "");
 			} else {
-				pair_p.innerText = '<%:(information missing, try to renew credentials)%>';
+				pair_status.innerText = '<%:(information missing, try to renew credentials)%>';
+			}
+			if (data.result.paired != true && data.result.pairing_url) {
+				pair_url.href = data.result.pairing_url;
+				pair_url.innerText = data.result.pairing_url;
+				pair_qrcode.src = '<%=url("admin/simet/simet_pairing_qrcode")%>';
+				pair_request.style.display = '';
+			} else {
+				pair_request.style.display = 'none';
+				pair_qrcode.src = "";
+				pair_url.href = ""
+				pair_url.innerText = ""
 			}
 		}
 	}
