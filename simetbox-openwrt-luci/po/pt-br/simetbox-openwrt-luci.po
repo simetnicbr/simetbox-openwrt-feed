@@ -104,7 +104,7 @@ msgstr "Estado da conexão com a Internet"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:83
 msgid "Linked to:"
-msgstr ""
+msgstr "Associado à:"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:23
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:33
@@ -185,7 +185,7 @@ msgstr "Renovar Credenciais"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:86
 msgid "Request portal linking:"
-msgstr ""
+msgstr "Associar medidor com instituição ou conta pessoal:"
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:8
 msgid "SIMET"
@@ -356,7 +356,7 @@ msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:147
 msgid "device is not linked to an account or entity"
-msgstr ""
+msgstr "medidor não está associado com uma entidade ou conta pessoal"
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:53
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:58
@@ -384,12 +384,6 @@ msgstr "desconhecido"
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:69
 msgid "unreachable"
 msgstr "inalcançável"
-
-#~ msgid "Connected (paired) to:"
-#~ msgstr "Atrelado a:"
-
-#~ msgid "device is not paired"
-#~ msgstr "dispositivo não está atrelado"
 
 #~ msgid "Settings"
 #~ msgstr "Configurações"
