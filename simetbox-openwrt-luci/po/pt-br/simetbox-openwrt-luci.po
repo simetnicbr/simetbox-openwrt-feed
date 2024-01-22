@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:143
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:153
 msgid "(information missing, try to renew credentials)"
 msgstr "(informações faltando, tente renovar credenciais)"
 
@@ -39,10 +39,6 @@ msgstr "Firmware base"
 msgid "Check for firmware updates"
 msgstr "Procure por atualizações"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:83
-msgid "Connected (paired) to:"
-msgstr "Atrelado a:"
-
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:15
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:29
 msgid "Connection"
@@ -64,7 +60,7 @@ msgstr "Testes de DNS"
 msgid "Device information and contacts page"
 msgstr "Página de informações de contato e do dispositivo"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:114
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:124
 msgid "Device unreachable! Still waiting for device..."
 msgstr "Ainda esperando pelo dispositivo..."
 
@@ -106,6 +102,10 @@ msgstr "Roteador do Provedor de Internet"
 msgid "Internet connection status"
 msgstr "Estado da conexão com a Internet"
 
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:83
+msgid "Linked to:"
+msgstr ""
+
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:23
 #: simetbox-openwrt-luci/luasrc/view/simet/simet2.htm:33
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:43
@@ -113,7 +113,7 @@ msgstr "Estado da conexão com a Internet"
 msgid "Loading"
 msgstr "Carregando"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:90
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:97
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:40
 msgid "More information"
 msgstr "Mais informações"
@@ -182,6 +182,10 @@ msgstr "Informação do portal SIMET"
 #: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:66
 msgid "Renew Credentials"
 msgstr "Renovar Credenciais"
+
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:86
+msgid "Request portal linking:"
+msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/controller/simet.lua:8
 msgid "SIMET"
@@ -267,12 +271,12 @@ msgstr "Versão da SIMETBox"
 msgid "Save"
 msgstr "Grava"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:89
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:96
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:39
 msgid "Security contact"
 msgstr "Contato para falhas de segurança"
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:88
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:95
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:38
 msgid "Security information"
 msgstr "Informações de segurança"
@@ -350,9 +354,9 @@ msgstr ""
 "nesta página.  Nota: os servidores de coordenação e orquestração da frota de "
 "medidores SIMET podem ajustar ou sobrepor estas configurações ."
 
-#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:137
-msgid "device is not paired"
-msgstr "dispositivo não está atrelado"
+#: simetbox-openwrt-luci/luasrc/view/simet/sobre.htm:147
+msgid "device is not linked to an account or entity"
+msgstr ""
 
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:53
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:58
@@ -380,6 +384,12 @@ msgstr "desconhecido"
 #: simetbox-openwrt-luci/luasrc/view/simet/status.htm:69
 msgid "unreachable"
 msgstr "inalcançável"
+
+#~ msgid "Connected (paired) to:"
+#~ msgstr "Atrelado a:"
+
+#~ msgid "device is not paired"
+#~ msgstr "dispositivo não está atrelado"
 
 #~ msgid "Settings"
 #~ msgstr "Configurações"
