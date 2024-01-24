@@ -34,6 +34,7 @@ define Package/simetbox-openwrt-turrisos/install
 	$(INSTALL_DIR) $(1)/usr/lib/simet/vendor/
 	$(INSTALL_BIN) files/vendor/turrisos/get_mac_label $(1)/usr/lib/simet/vendor/
 	$(INSTALL_BIN) files/vendor/turrisos/get_platform_simet_secret $(1)/usr/lib/simet/vendor/
+	$(INSTALL_BIN) files/vendor/turrisos/get_platform_simet_label  $(1)/usr/lib/simet/vendor/
 
 	$(INSTALL_DIR) $(1)/usr/lib/simet/conf.d/
 	$(INSTALL_DATA) files/vendor/turrisos/90-turrisos.simet-ma.conf $(1)/usr/lib/simet/conf.d/90-turrisos.simet-ma.conf

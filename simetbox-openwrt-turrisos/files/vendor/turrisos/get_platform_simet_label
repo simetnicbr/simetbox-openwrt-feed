@@ -1,0 +1,83 @@
+#!/bin/sh
+# SIMETBox vendor/get_platform_simet_vendor N0 adapter
+# Copyright (c) 2024 NIC.br
+# Distributed under the GPLv3+ license
+#
+# Changes VLABEL to the "N0" scheme while this is not yet the default
+# for SIMETBox.
+#
+
+# get_platform_simet_vendor API:
+#
+# This script should return in stdout the exact contents of the information
+# requested, as printed in the device's label.  In that case, it must return
+# exit status 0.
+#
+# If the requested information cannot be retrieved *at this time* (i.e. it is a
+# temporary error), and the system should retry sometime later, it must return
+# an exit status other than 0 or 1.  Any functionality that depends on the
+# requested information will be unavailable until the attempt is retried and
+# succeeds.
+#
+# NOTES:
+# Error messages must be sent to stderr, never to stdout.
+#
+# Returning DISABLED on stdout, or an empty stdout, and exit status 0 would
+# disable the SIMET virtual label functionality.  This is NOT usually wanted,
+# as it forces the device into a stand-alone mode that cannot meaningfully
+# interact with any of the SIMET web portals.
+#
+# It must return status 2 for requests of unknown resouces (see below).
+#
+#
+# Command line:
+# get_platform_simet_label <resource requested>
+#
+# resources:
+# vlabel   -   SIMET pairing secret ("etiqueta SIMET")
+#
+# example:
+# FOO=$(get_platform_simet_label vlabel) && echo "The SIMET label is: $FOO"
+
+RC=2
+abend() {
+  printf '%s: error: %s\n' "$0" "$*" >&2
+  exit $RC
+}
+
+# Turris-specific
+GENVLABEL_OPT="-n 500000 -l 128"
+
+#shellcheck disable=SC2015,SC2018,SC2019
+ST=$(printf '\n037\n' | tr -d '\000-\037') && \
+  SHA=$(printf "%s" "$ST" | sha256sum - | tr A-Z a-z | tr -dc 0-9a-z ) && \
+  [ "$SHA" = "48a212a91e6da95f10d71b05c789efddfb0bad9814be07f6f7a343189fb630e7" ] || RC=2 abend "self-test failed"
+
+simet_n0_vlabel() {
+	[ -x /usr/lib/simet/vendor/get_platform_simet_secret ] || RC=2 abend "vendor/get_platform_simet_secret missing"
+	[ -x /usr/lib/simet/vendor/get_mac_label ] || RC=2 abend "vendor/get_mac_label missing"
+	[ -x /usr/bin/simet_gen_vlabel ] || RC=2 abend "simet_gen_vlabel missing"
+	#shellcheck disable=SC2015
+	PIV=$(/usr/lib/simet/vendor/get_platform_simet_secret) && [ -n "$PIV" ] || RC=2 abend "vendor/get_platform_simet_secret failed"
+	#shellcheck disable=SC2015,SC2018,SC2019
+	PMAC=$(/usr/lib/simet/vendor/get_mac_label | sha256sum - | tr A-Z a-z | tr -dc 0-9a-z) \
+		&& [ -n "$PMAC" ] || RC=2 abend "vendor/get_mac_label or its post-processing failed"
+	#shellcheck disable=SC2015,SC2086
+	VL=$(printf "%s" "$PIV" | /usr/bin/simet_gen_vlabel $GENVLABEL_OPT N0 "$PMAC") && [ -n "$VL" ] || RC=2 abend "simet_gen_vlabel N0 failed"
+
+	printf "%s" "$VL"
+	:
+}
+
+case "$1" in
+  vlabel)
+    simet_n0_vlabel || return $?
+    exit 0
+    ;;
+  *)
+    exit 2
+    ;;
+esac
+
+#shellcheck disable=SC2317
+exit 2
