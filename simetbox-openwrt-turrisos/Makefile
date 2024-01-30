@@ -41,6 +41,9 @@ define Package/simetbox-openwrt-turrisos/install
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) files/etc/lighttpd/conf.d/85-simetbox.conf $(1)/etc/lighttpd/conf.d/85-simetbox.conf
+
+	$(INSTALL_DIR) $(1)/etc/sysctl.d
+	$(INSTALL_DATA) files/etc/sysctl.d/50-simet-tcpbuflen.conf $(1)/etc/sysctl.d/50-simet-tcpbuflen.conf
 endef
 
 $(eval $(call BuildPackage,simetbox-openwrt-turrisos))
