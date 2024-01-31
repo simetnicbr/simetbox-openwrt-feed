@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-turrisos
-PKG_RELEASE:=1
+PKG_RELEASE:=2.3
 
 include $(INCLUDE_DIR)/package.mk
 
