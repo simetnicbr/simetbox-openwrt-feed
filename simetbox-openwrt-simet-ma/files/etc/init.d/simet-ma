@@ -48,9 +48,10 @@ boot() {
 		mkdir -m 0770 -p "$SIMET_PUBRUNSTATE_DIR" && \
 		chgrp nicbr-simet "$SIMET_PUBRUNSTATE_DIR" && \
 		chmod 0775 "$SIMET_PUBRUNSTATE_DIR"
-	find "$AGENT_ID_FILE" -type f \! -perm -0644 -exec chmod +r {} \; 2>/dev/null
-	find "$AGENT_TOKEN_FILE" -type f \! -perm -0644 -exec chmod +r {} \; 2>/dev/null
-	find "$AGENT_VIEW_CREDENTIALS_FILE" -type f \! -perm -0644 -exec chmod +r {} \; 2>/dev/null
+	find "$AGENT_ID_FILE" -type f \! -perm -0660 -exec chmod ug+rw,o-w {} \; 2>/dev/null
+	find "$AGENT_TOKEN_FILE" -type f \! -perm -0660 -exec chmod ug+rw,o-w {} \; 2>/dev/null
+	find "$AGENT_VIEW_CREDENTIALS_FILE" -type f \! -perm -0664 -exec chmod ug+rw,o=r {} \; 2>/dev/null
+	find /etc/simet -perm -0002 -exec chmod o-w {} + 2>/dev/null
 
 	# restoring config backups from other units is a problem we must check for on boot
 	simet_create_vlabel.sh >/dev/null 2>&1 || :
