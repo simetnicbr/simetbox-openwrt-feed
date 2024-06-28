@@ -1,0 +1,62 @@
+From 9de52bf8039f736a6ec0912a3b7dbe63977b68f9 Mon Sep 17 00:00:00 2001
+From: Martin Schiller <ms@dev.tdt.de>
+Date: Wed, 13 Jan 2021 07:05:57 +0100
+Subject: Fix libcurl related memory leak
+
+Calling curl_global_init() and curl_global_cleanup() on every
+http_client_init() / http_client_exit() leads to memory leak (at least,
+if you use it with OpenSSL).
+
+The official documentation also says that curl_global_init() should only
+be called once:
+https://ec.haxx.se/libcurl/libcurl-globalinit
+
+So this patch changes the code to call the curl_global_init() and
+curl_global_cleanup() in the main() function only once.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+
+diff --git a/src/easycwmp.c b/src/easycwmp.c
+index e413eef..b306579 100644
+--- a/src/easycwmp.c
++++ b/src/easycwmp.c
+@@ -25,6 +25,7 @@
+ #include <fcntl.h>
+ #include <sys/stat.h>
+ #include <sys/file.h>
++#include <curl/curl.h>
+ 
+ #include "json.h"
+ #include "easycwmp.h"
+@@ -360,6 +361,8 @@ int main (int argc, char **argv)
+ 		free(buf);
+ 	}
+ 
++	curl_global_init( CURL_GLOBAL_ALL );
++
+ 	log_message(NAME, L_NOTICE, "entering main loop\n");
+ 	uloop_run();
+ 
+@@ -367,6 +370,7 @@ int main (int argc, char **argv)
+ 	uloop_done();
+ 
+ 	http_client_exit();
++	curl_global_cleanup();
+ 	xml_exit();
+ 	config_exit();
+ 	cwmp_free_deviceid();
+diff --git a/src/http.c b/src/http.c
+index ce548ec..f4cb776 100644
+--- a/src/http.c
++++ b/src/http.c
+@@ -90,7 +90,6 @@ http_client_exit(void)
+ 	curl_easy_cleanup(curl);
+ 		curl = NULL;
+ 	}
+-	curl_global_cleanup();
+ 
+ 	if(remove(fc_cookies) < 0)
+ 		log_message(NAME, L_NOTICE, "can't remove file %s\n", fc_cookies);
+-- 
+2.39.2
+

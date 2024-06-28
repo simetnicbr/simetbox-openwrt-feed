@@ -6,6 +6,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=easycwmp
 PKG_VERSION:=1.8.6
+PKG_RELEASE:=2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://easycwmp.org/download/
 PKG_HASH:=b15a28b9db65f6f511f8fadf968e6fdafa766d5fb1d09bd7d69f12e513126e4b

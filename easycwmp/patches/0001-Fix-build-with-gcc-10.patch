@@ -1,0 +1,26 @@
+From f6b0b0e31a7246cd9c398e1cfd2d7ec0d2c8c34a Mon Sep 17 00:00:00 2001
+From: Martin Schiller <ms@dev.tdt.de>
+Date: Wed, 25 Aug 2021 14:00:16 +0200
+Subject: Fix build with gcc 10
+
+As GCC 10 now defaults to -fno-common, we need to use 'extern' in header
+files when declaring global variables.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+
+diff --git a/src/cwmp.h b/src/cwmp.h
+index dcffea2..16afa9e 100644
+--- a/src/cwmp.h
++++ b/src/cwmp.h
+@@ -142,7 +142,7 @@ struct cwmp_internal {
+ };
+ 
+ extern struct cwmp_internal *cwmp;
+-struct event_code event_code_array[__EVENT_MAX];
++extern struct event_code event_code_array[__EVENT_MAX];
+ 
+ static void cwmp_periodic_inform(struct uloop_timeout *timeout);
+ static void cwmp_do_inform(struct uloop_timeout *timeout);
+-- 
+2.39.2
+

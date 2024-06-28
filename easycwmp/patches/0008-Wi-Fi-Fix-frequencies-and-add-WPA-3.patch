@@ -1,0 +1,123 @@
+From 05f55aaefed746993c8ad9ada2feebcf557cc763 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Tue, 31 Oct 2023 12:43:46 +0100
+Subject: Wi-Fi: Fix frequencies and add WPA-3
+
+diff --git a/ext/openwrt/scripts/functions/tr181/wifi b/ext/openwrt/scripts/functions/tr181/wifi
+index 7d80206..1e8047a 100755
+--- a/ext/openwrt/scripts/functions/tr181/wifi
++++ b/ext/openwrt/scripts/functions/tr181/wifi
+@@ -181,14 +181,27 @@ wifi_radio_get_Name() {
+ 	echo ${1#*.}
+ }
+ 
++radio2phy() {
++	local path="`$UCI_GET $1.path`"
++	ls "/sys/devices/platform/$path/ieee80211/"
++}
++
+ wifi_radio_get_FrequencyBands() {
+-	local phy="phy${1#*radio}"
+-	local freq=`iw phy $phy info | grep  "MHz.*dBm" | head -1 | awk '{print $2}'`
+-	[ "${freq#24}" = "$freq" ] && echo "5GHz" || echo "2.4GHz"
++	local phy="`radio2phy ${1}`"
++	local freq="`iw phy $phy info | grep  "MHz.*dBm" | awk '{print $2}'`"
++	local res=""
++	if echo "$freq" | grep -q "^5"; then
++		res="5GHz"
++	elif echo "$freq" | grep -q "^2"; then
++		[ -z "$res" ] || res="$res,"
++		res="${res}2.4GHz"
++	fi
++	echo "$res"
+ }
+ 
+ wifi_radio_get_ChannelsInUse() {
+-	local freq="`iw phy phy0 info | grep  MHz.*dBm | awk -F'[][]' '{print $2}' |  tr '\n' ','`"
++	local phy="`radio2phy ${1}`"
++	local freq="`iw phy $phy info | grep  "MHz.*dBm" | awk -F'[][]' '{print $2}' |  tr '\n' ','`"
+ 	echo ${freq%,}
+ }
+ 
+@@ -198,7 +211,7 @@ wifi_radio_get_Channel() {
+ 	channel=`$UCI_GET $1.channel`
+ 	[ "$channel" != "" -a "$channel" != "auto" ] && { echo $channel; return; }
+ 
+-	phy="phy${1#*radio}"
++	phy="`radio2phy ${1}`"
+ 	freq=`iw phy $phy info | grep  "MHz.*dBm" | head -1 | awk '{print $2}'`
+ 	if [ "${freq#24}" != "$freq" ]; then 
+ 		channel=`iw dev | grep "channel.*(24.*MHz)" | head -1 | awk '{print $2}'`
+@@ -228,12 +241,12 @@ wifi_radio_set_AutoChannelEnable() {
+ }
+ 
+ wifi_radio_get_OperatingStandards() {
+-	local val=`$UCI_GET $1.hwmode`
++	local val=`$UCI_GET $1.htmode`
+ 	echo ${val#11}
+ }
+ 
+ wifi_radio_set_OperatingStandards() {
+-	$UCI_SET $1.hwmode=11$2
++	$UCI_SET $1.htmode=11$2
+ }
+ 
+ wifi_ssid_get_Enable() {
+@@ -335,7 +348,7 @@ wifi_ap_get_Status() {
+ }
+ 
+ wifi_ap_get_ModesSupported() {
+-	echo "None,WEP-64,WEP-128,WPA-Personal,WPA2-Personal,WPA-WPA2-Personal,WPA-Enterprise,WPA2-Enterprise,WPA-WPA2-Enterprise"
++	echo "None,WEP-64,WEP-128,WPA-Personal,WPA2-Personal,WPA-WPA2-Personal,WPA3-Personal,WP2-WPA3-Personal,WPA-Enterprise,WPA2-Enterprise,WPA-WPA2-Enterprise,WPA3-Enterprise"
+ }
+ 
+ wifi_ap_get_ModeEnabled() {
+@@ -343,6 +356,12 @@ wifi_ap_get_ModeEnabled() {
+ 	local encryption=`$UCI_GET $1.encryption`
+ 	
+ 	case "$encryption" in
++		"sae-mixed"*)
++			echo "WPA3-Personal"
++			;;
++		"sae"*)
++			echo "WPA2-WPA3-Personal"
++			;;
+ 		"psk2"*)
+ 			echo "WPA2-Personal"
+ 			;;
+@@ -355,6 +374,9 @@ wifi_ap_get_ModeEnabled() {
+ 		"wpa2"*)
+ 			echo "WPA2-Enterprise"
+ 			;;
++		"wpa3"*)
++			echo "WPA3-Enterprise"
++			;;
+ 		"wpa-mixed"*)
+ 			echo "WPA-WPA2-Enterprise"
+ 			;;
+@@ -378,6 +400,12 @@ wifi_ap_set_ModeEnabled() {
+ 	[ "$encryption" = "$2" ] && return 0
+ 	
+ 	case "$2" in
++		"WPA3-Personal")
++			$UCI_SET $1.encryption="sae"
++			;;
++		"WPA2-WPA3-Personal")
++			$UCI_SET $1.encryption="sae-mixed"
++			;;
+ 		"WPA2-Personal")
+ 			$UCI_SET $1.encryption="psk2"
+ 			;;
+@@ -387,6 +415,9 @@ wifi_ap_set_ModeEnabled() {
+ 		"WPA-Personal")
+ 			$UCI_SET $1.encryption="psk"
+ 			;;
++		"WPA3-Enterprise")
++			$UCI_SET $1.encryption="wpa3"
++			;;
+ 		"WPA2-Enterprise")
+ 			$UCI_SET $1.encryption="wpa2"
+ 			;;
+-- 
+2.39.2
+

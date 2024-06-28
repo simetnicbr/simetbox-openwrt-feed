@@ -1,0 +1,59 @@
+From b1b47b524b498b9d910714934483b4c15a0b8223 Mon Sep 17 00:00:00 2001
+From: Maciej Hiller <mh@host24.pl>
+Date: Tue, 13 Aug 2019 14:06:08 +0200
+Subject: add OUI and MAC as SerialNumber
+
+diff --git a/ext/openwrt/init.d/easycwmpd b/ext/openwrt/init.d/easycwmpd
+index 38eac94..41ba6c2 100644
+--- a/ext/openwrt/init.d/easycwmpd
++++ b/ext/openwrt/init.d/easycwmpd
+@@ -13,29 +13,37 @@ init_device_info() {
+ 	local val oval
+ 	local change=0
+ 
+-	val=`cat "/etc/device_info" | grep "DEVICE_MANUFACTURER" | cut -f 2 -d '=' | sed -e "s/['\"]//g" -e "s'[]:@/?#[!$&()*+,;=]'_'g"`
+-	oval=`$UCI_GET easycwmp.@device[0].manufacturer`
++	val=$(< /etc/device_info grep "DEVICE_MANUFACTURER" | cut -f 2 -d '=' | sed -e "s/['\"]//g" -e "s'[]:@/?#[!$&()*+,;=]'_'g")
++	oval=$($UCI_GET easycwmp.@device[0].manufacturer)
+ 	[ -n "$val" -a "$val" != "$oval" ] && { $UCI_SET easycwmp.@device[0].manufacturer="$val"; change=1; }
+ 
+-	val=`cat "/etc/device_info" | grep "DEVICE_PRODUCT" | cut -f 2 -d '=' | sed -e "s/['\"]//g" -e "s'[]:@/?#[!$&()*+,;=]'_'g"`
+-	oval=`$UCI_GET easycwmp.@device[0].product_class`
++	val=$(< /etc/device_info grep "DEVICE_PRODUCT" | cut -f 2 -d '=' | sed -e "s/['\"]//g" -e "s'[]:@/?#[!$&()*+,;=]'_'g")
++	oval=$($UCI_GET easycwmp.@device[0].product_class)
+ 	[ -n "$val" -a "$val" != "$oval" ] && { $UCI_SET easycwmp.@device[0].product_class="$val"; change=1; }
+ 
+-	val=`cat "/etc/device_info" | grep "DEVICE_REVISION" | cut -f 2 -d '=' | sed -e "s/['\"]//g" -e "s'[]:@/?#[!$&()*+,;=]'_'g"`
+-	oval=`$UCI_GET easycwmp.@device[0].hardware_version`
++	val=$(< /etc/device_info grep "DEVICE_REVISION" | cut -f 2 -d '=' | sed -e "s/['\"]//g" -e "s'[]:@/?#[!$&()*+,;=]'_'g")
++	oval=$($UCI_GET easycwmp.@device[0].hardware_version)
+ 	[ -n "$val" -a "$val" != "$oval" ] && { $UCI_SET easycwmp.@device[0].hardware_version="$val"; change=1; }
+ 
+-	val=`cat "/etc/openwrt_version"`
+-	oval=`$UCI_GET easycwmp.@device[0].software_version`
++	val=$(cat /etc/openwrt_version)
++	oval=$($UCI_GET easycwmp.@device[0].software_version)
+ 	[ -n "$val" -a "$val" != "$oval" ] && { $UCI_SET easycwmp.@device[0].software_version="$val"; change=1; }
+ 	
+ 	#The same thing here for OUI and SerialNumber
+ 
++  val=$(< /sys/class/net/eth0/address sed 's/':'//g' | awk '{print substr(toupper($0),1,6)}')
++	oval=$($UCI_GET easycwmp.@device[0].oui)
++	[ -n "$val" -a "$val" != "$oval" ] && { $UCI_SET easycwmp.@device[0].oui="$val"; change=1; }
++
++  val=$(< /sys/class/net/eth0/address sed 's/':'//g' | awk '{print toupper($0)}')
++	oval=$($UCI_GET easycwmp.@device[0].serial_number)
++	[ -n "$val" -a "$val" != "$oval" ] && { $UCI_SET easycwmp.@device[0].serial_number="$val"; change=1; }
++
+ 	[ "$change" = "1" ] && $UCI_COMMIT easycwmp
+ }
+ 
+ start_service() {
+-	local enable=`uci -q get easycwmp.@local[0].enable`
++	local enable=$(uci -q get easycwmp.@local[0].enable)
+ 	if [ "$enable" == "1" ]; then
+ 		init_device_info
+ 		procd_open_instance
+-- 
+2.39.2
+

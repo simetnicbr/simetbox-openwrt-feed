@@ -1,0 +1,20 @@
+From 992767c8f862366ffcca254a3b39a9390963838e Mon Sep 17 00:00:00 2001
+From: Henrique de Moraes Holschuh <henrique@nic.br>
+Date: Thu, 27 Jun 2024 22:33:48 -0300
+Subject: easycwmp: fix configure.ac for recent autotools
+
+Do not call AM_INIT_AUTOMAKE twice.
+
+diff --git a/configure.ac b/configure.ac
+index 5d69afc..0e763ee 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,5 +1,4 @@
+ AC_INIT([easycwmpd], [1.8.6], [mohamed.kallel@pivasoftware.com])
+-AM_INIT_AUTOMAKE
+ AC_CONFIG_SRCDIR([src/easycwmp.c])
+ 
+ AM_INIT_AUTOMAKE([subdir-objects])
+-- 
+2.39.2
+

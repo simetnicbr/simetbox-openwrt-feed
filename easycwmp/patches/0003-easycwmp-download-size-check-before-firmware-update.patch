@@ -1,20 +1,23 @@
-easycwmp: download size check before firmware update v2
+From 5bd87d55ccdc070401017a6df866a3d7eb2069a1 Mon Sep 17 00:00:00 2001
+From: Henrique de Moraes Holschuh <henrique@nic.br>
+Date: Thu, 27 Jun 2024 22:28:03 -0300
+Subject: easycwmp: download size check before firmware update
 
-Ensure we abort any firmware update attempts when we detect that the received
-object is not exactly the same size we expected to receive.
+Ensure we abort any firmware update attempts when we detect that the
+received object is not exactly the same size we expected to receive.
 
-While at it, optimize and modernize this area of the shell code, and limit the
-download size to 90% of /tmp, instead of 100%: we don't want to starve the box
-before applying the firmware image (or worse, *during* the sysupgrade process).
-
-v2: do not allow busybox awk to switch to floating point notation
-    trust df to only output the proper partition info for /tmp
+While at it, optimize and modernize this area of the shell code, and
+limit the download size to 90% of /tmp, instead of 100%: we don't want
+to starve the box before applying the firmware image (or worse, *during*
+the sysupgrade process).
 
 Upstream-report: http://support.easycwmp.org/view.php?id=138
 
+diff --git a/ext/openwrt/scripts/easycwmp.sh b/ext/openwrt/scripts/easycwmp.sh
+index d6443ff..b4dce3c 100755
 --- a/ext/openwrt/scripts/easycwmp.sh
 +++ b/ext/openwrt/scripts/easycwmp.sh
-@@ -21,6 +21,7 @@ UCI_REVERT="/sbin/uci -q ${UCI_CONFIG_DI
+@@ -21,6 +21,7 @@ UCI_REVERT="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} revert"
  UCI_CHANGES="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} changes"
  UCI_BATCH="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} batch"
  
@@ -57,3 +60,6 @@ Upstream-report: http://support.easycwmp.org/view.php?id=138
  				let fault_code=9000+$E_DOWNLOAD_FAILURE
  				common_json_output_fault "" "$fault_code"
  			else
+-- 
+2.39.2
+

@@ -1,0 +1,115 @@
+From dce5c5551067c40c460302f62f19751d43bc8624 Mon Sep 17 00:00:00 2001
+From: Maciej Hiller <mh@host24.pl>
+Date: Mon, 12 Aug 2019 22:38:15 +0200
+Subject: fix $UCI_SHOW -X
+
+diff --git a/ext/openwrt/scripts/easycwmp.sh b/ext/openwrt/scripts/easycwmp.sh
+index b4dce3c..cf662e4 100755
+--- a/ext/openwrt/scripts/easycwmp.sh
++++ b/ext/openwrt/scripts/easycwmp.sh
+@@ -12,6 +12,7 @@
+ UCI_GET="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} get"
+ UCI_SET="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} set"
+ UCI_SHOW="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} show"
++UCI_SHOW_X="/sbin/uci -X -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} show"
+ UCI_COMMIT="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} commit"
+ UCI_ADD="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} add"
+ UCI_DELETE="/sbin/uci -q ${UCI_CONFIG_DIR:+-c $UCI_CONFIG_DIR} delete"
+diff --git a/ext/openwrt/scripts/functions/tr181/dhcpv4 b/ext/openwrt/scripts/functions/tr181/dhcpv4
+index c5831e4..798a39a 100755
+--- a/ext/openwrt/scripts/functions/tr181/dhcpv4
++++ b/ext/openwrt/scripts/functions/tr181/dhcpv4
+@@ -44,7 +44,7 @@ sub_entry_DHCPv4_Server_Pool() {
+ }
+ 
+ dhcp_pool_get_max_instance() {
+-	local max=`$UCI_SHOW -X dhcp | grep "dhcp_pool_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
++	local max=`$UCI_SHOW_X dhcp | grep "dhcp_pool_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+ 	echo ${max:-0}
+ }
+ 
+@@ -60,7 +60,7 @@ dhcp_pool_update_instance() {
+ }
+ 
+ dhcp_pool_browse_instances() {
+-	local pool pools=`$UCI_SHOW -X dhcp | grep "dhcp\..*=dhcp" | cut -d "=" -f 1`
++	local pool pools=`$UCI_SHOW_X dhcp | grep "dhcp\..*=dhcp" | cut -d "=" -f 1`
+ 	for pool in $pools; do
+ 		local j=`dhcp_pool_update_instance $pool`
+ 		sub_entry_DHCPv4_Server_Pool  "$1" "$j" "$pool"
+@@ -126,7 +126,7 @@ dhcpv4server_pool_set_Interface() {
+ 	[ "$tmp" = "$2" ] && return
+ 	local instance=${tmp%.}
+ 	[ "$tmp" = "$instance" ] && return
+-	local network=`$UCI_SHOW -X network | grep "ip_int_instance=$instance" | cut -d'.' -f2`
++	local network=`$UCI_SHOW_X network | grep "ip_int_instance=$instance" | cut -d'.' -f2`
+ 	$UCI_SET $1.interface=$network
+ 	return 0
+ }
+diff --git a/ext/openwrt/scripts/functions/tr181/wifi b/ext/openwrt/scripts/functions/tr181/wifi
+index 94b061f..7d80206 100755
+--- a/ext/openwrt/scripts/functions/tr181/wifi
++++ b/ext/openwrt/scripts/functions/tr181/wifi
+@@ -81,12 +81,12 @@ sub_entry_WiFi_AccessPoint() {
+ 
+ 
+ wifi_radio_get_max_instance() {
+-	local max=`$UCI_SHOW -X wireless | grep "wifi_radio_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
++	local max=`$UCI_SHOW_X wireless | grep "wifi_radio_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+ 	echo ${max:-0}
+ }
+ 
+ wifi_iface_get_max_instance() {
+-	local max=`$UCI_SHOW -X wireless | grep "wifi_iface_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
++	local max=`$UCI_SHOW_X wireless | grep "wifi_iface_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+ 	echo ${max:-0}
+ }
+ 
+@@ -113,7 +113,7 @@ wifi_iface_update_instance() {
+ }
+ 
+ wifi_radio_browse_instances() {
+-	local radio radios=`$UCI_SHOW -X wireless | grep "wireless\..*=wifi-device" | cut -d "=" -f 1`
++	local radio radios=`$UCI_SHOW_X wireless | grep "wireless\..*=wifi-device" | cut -d "=" -f 1`
+ 	for radio in $radios; do
+ 		local j=`wifi_radio_update_instance $radio`
+ 		sub_entry_WiFi_Radio  "$1" "$j" "$radio"
+@@ -121,7 +121,7 @@ wifi_radio_browse_instances() {
+ }
+ 
+ wifi_ssid_browse_instances() {
+-	local iface ifaces=`$UCI_SHOW -X wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
++	local iface ifaces=`$UCI_SHOW_X wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
+ 	for iface in $ifaces; do
+ 		local j=`wifi_iface_update_instance $iface`
+ 		sub_entry_WiFi_SSID  "$1" "$j" "$iface"
+@@ -129,7 +129,7 @@ wifi_ssid_browse_instances() {
+ }
+ 
+ wifi_ap_browse_instances() {
+-	local iface ifaces=`$UCI_SHOW -X wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
++	local iface ifaces=`$UCI_SHOW_X wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
+ 	for iface in $ifaces; do
+ 		local j=`wifi_iface_update_instance $iface`
+ 		sub_entry_WiFi_AccessPoint  "$1" "$j" "$iface"
+@@ -289,7 +289,7 @@ wifi_ssid_set_LowerLayers() {
+ 	[ "$tmp" = "$2" ] && return
+ 	local instance=${tmp%.}
+ 	[ "$tmp" = "$instance" ] && return
+-	local device=`$UCI_SHOW -X wireless | grep "wifi_radio_instance=$instance" | cut -d'.' -f2`
++	local device=`$UCI_SHOW_X wireless | grep "wifi_radio_instance=$instance" | cut -d'.' -f2`
+ 	$UCI_SET $1.device=$device
+ }
+ 
+@@ -313,7 +313,7 @@ wifi_ssid_set_X_IPInterface() {
+ 	[ "$tmp" = "$2" ] && return
+ 	local instance=${tmp%.}
+ 	[ "$tmp" = "$instance" ] && return
+-	local network=`$UCI_SHOW -X network | grep "ip_int_instance=$instance" | cut -d'.' -f2`
++	local network=`$UCI_SHOW_X network | grep "ip_int_instance=$instance" | cut -d'.' -f2`
+ 	$UCI_SET $1.network=$network
+ }
+ 
+-- 
+2.39.2
+

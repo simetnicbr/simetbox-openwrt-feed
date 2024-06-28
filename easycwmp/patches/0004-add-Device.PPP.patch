@@ -1,0 +1,89 @@
+From d359b85d57a5dea405bddec69f5790e0a21bd92e Mon Sep 17 00:00:00 2001
+From: Maciej Hiller <mh@host24.pl>
+Date: Fri, 23 Aug 2019 11:24:47 +0200
+Subject: add Device.PPP.
+
+diff --git a/ext/openwrt/scripts/functions/tr181/ppp b/ext/openwrt/scripts/functions/tr181/ppp
+new file mode 100644
+index 0000000..7f8cd25
+--- /dev/null
++++ b/ext/openwrt/scripts/functions/tr181/ppp
+@@ -0,0 +1,75 @@
++#!/bin/sh
++# Copyright (C) 2019 Maciej Hiller <maciejhpl@gmail.com>
++
++#############################
++#   Entry point functuons   #
++#############################
++
++prefix_list="$prefix_list $DMROOT.PPP."
++entry_execute_method_list="$entry_execute_method_list entry_execute_method_root_PPP"
++
++entry_execute_method_root_PPP() {
++	case "$1" in ""|"$DMROOT."|"$DMROOT.PPP."*)
++		common_execute_method_obj "$DMROOT.PPP." "0"
++		common_execute_method_obj "$DMROOT.PPP.Interface." "1" "" "" "ppp_interface_browse_instances $1"
++		return 0
++		;;
++	esac
++	return $E_INVALID_PARAMETER_NAME;
++}
++
++sub_entry_PPP_Interface() {
++	local j="$2"
++	local iface="$3"
++	case_param "$1" belongto "$DMROOT.PPP.Interface.$j." && {
++		common_execute_method_obj "$DMROOT.PPP.Interface.$j." "1" "" ""
++		common_execute_method_param  "$DMROOT.PPP.Interface.$j.Username" "1" "ppp_interface_get_Username $iface" "ppp_interface_set_Username $iface"
++		common_execute_method_param  "$DMROOT.PPP.Interface.$j.Password" "1" "ppp_interface_get_Password $iface" "ppp_interface_set_Password $iface"
++		return 0
++	}
++	return $E_INVALID_PARAMETER_NAME;
++}
++
++ppp_interface_get_max_instance() {
++	local max=$($UCI_SHOW_X network | grep "ip_int_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1)
++	echo ${max:-0}
++}
++
++ppp_interface_update_instance() {
++	local iface="$1"
++	local instance=$($UCI_GET $iface.ip_int_instance)
++	if [ -z "$instance" ]; then
++		instance=$(ppp_interface_get_max_instance)
++		$UCI_SET $iface.ip_int_instance=$((++instance))
++		$UCI_COMMIT
++	fi
++	echo $instance
++}
++
++ppp_interface_browse_instances() {
++	local iface ifaces=$($UCI_SHOW_X network | grep "network\..*='pppoe'" | cut -d "=" -f 1 | awk -F"." '{print $1"."$2}')
++	for iface in $ifaces; do
++		local j=$(ppp_interface_update_instance $iface)
++		sub_entry_PPP_Interface "$1" "$j" "$iface"
++	done
++}
++
++ppp_interface_get_Username() {
++  local username
++  username=$($UCI_GET $1.username)
++  echo $username
++}
++
++ppp_interface_set_Username() {
++  $UCI_SET $1.username=$2
++}
++
++ppp_interface_get_Password() {
++  local password
++  password=$($UCI_GET $1.password)
++  echo $password
++}
++
++ppp_interface_set_Password() {
++  $UCI_SET $1.password=$2
++}
+-- 
+2.39.2
+
