@@ -1,8 +1,8 @@
 # Feed do SIMETBox para o projeto OpenWRT
 
-Arquivos necessários para poder compilar e instalar o sistema SIMETBox nas distribuições OpenWRT (master, 19.07, 18.06, 17.01).
+Arquivos necessários para poder compilar e instalar o sistema SIMETBox nas distribuições OpenWRT (23.05, 22.03, 20.02).
 
-Há suporte muito limitado ao OpenWRT "Chaos Calmer" (15.05), mas requer alguns backports (do openwrt, luci e packages) disponíveis em simetnicbr/openwrt-openwrt, simetnicbr/openwrt-luci e simetnicbr/openwrt-packages.
+Há suporte limitado ao OpenWRT 19.07 e 18.06, e suporte *muito* limitado ao OpenWRT "Chaos Calmer" (15.05) e lede-17.01.  Nestes casos, é necessário que o openwrt seja atualizado com alguns backports (do openwrt, luci e packages) disponíveis em simetnicbr/openwrt-openwrt, simetnicbr/openwrt-luci e simetnicbr/openwrt-packages.
 
 # Sobre o SIMETBox
 
@@ -49,6 +49,13 @@ Não é recomendado utilizar o "openwrt-18.06" e posteriores (inclusive openwrt 
 
 Tenhamos como exemplo o roteador TP-Link Archer C7 v2. Veja como  fechar uma distribuição (imagem) para este roteador usando Ubuntu. Os passos são desde a instalação de dependências até o fechamento da imagem, baseando-se no OpenWRT versão lede-17.01:
 
+### problemas comuns de build
+
+O OpenWRT em versões mais recentes (20.02 e mais recentes, talvez 19.07) pode falhar o build de uma imagem de firmware por colisão ao tentar instalar um pacote "default" como ustream-mbedtls ou dnsmasq, *que o openwrt força a ser instalado na imagem mesmo se configurado para M*, com um outro pacote como ustream-opentls ou dnsmasq-full, que foi selecionado para ser instalado na imagem (configurado como "Y").  Neste caso, a solução é ter ambos selecionados como "M" para que o build complete (e a imagem normal *não vai incluir nenhum dos dois pacotes, portanto provavelmente não será funcional*, e utilizar o ImageBuilder para gerar uma imagem de firmware funcional, incluindo o(s) pacote(s) desejado(s) e removendo o(s) pacote(s) "default" indesejados (por exemplo: na lista de pacotes informadas ao imagebuilder, especificar "-dnsmasq" para remover o dnsmasq default, e especificar "dnsmasq-full" para instalar o dnsmasq-full na imagem).
+
+### Evitar build do postgresql
+
+Em versões recentes do OpenWRT, ao selecionar o pacote simetbox-openwrt-zabbix, ele vai selecionar o pacote zabbix-agentd.  Compilar o zabbix-agentd compila também (mesmo que desmarcados) o servidor Zabbix, que precisa (por padrão) do postgresql, e isso aumenta bastante o peso/tempo de build.  Configure o OpenWRT para que o banco do Zabbix seja o "embedsql", e o build vai ficar muito mais rápido.
 
 #### Atualiza e instala pré-requisitos
 ```bash
@@ -217,18 +224,14 @@ simet_client | Roda um conjunto de testes da resolução 574 da ANATEL de forma 
 
 ## Histórico
 
-2017-05-24 - Primeiro release público
-2018-05-29 - Atualização para adequação ao LEDE-17.01 e OpenWRT-18.06
-2018-06-12 - Revisado.
+* 2017-05-24 - Primeiro release público
+* 2018-05-29 - Atualização para adequação ao LEDE-17.01 e OpenWRT-18.06
+* 2018-06-12 - Revisado.
+* 2024-06-28 - Revisão mínima, este documento ainda está muito defasado.
 
 ## TODO
 
-* Adicionar testes para localização dos servidores do Netflix
-* Adicionar testes para detectar MITM contra instituições financeiras (*requer parceria com a instituição financeira*)
-* Integrar dados do servidor Zabbix usado pelo NIC.br na interface de visualização dos resultados
-* Integrar dados do servidor TR-069 usado pelo NIC.br na interface de visualização dos resultados
-* Apresentar resultados dos testes de DNS na interface
-* Apresentar resultados dos testes de gerência de porta 25 na interface
+* Apresentar resultados de medições auxiliares na interface (traceroutes, DNS, etc)
 
 ## Créditos
 
