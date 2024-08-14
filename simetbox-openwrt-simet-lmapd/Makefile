@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-simet-lmapd
-PKG_RELEASE:=5
+PKG_RELEASE:=2
 
 #PKG_FIXUP:=
 PKG_INSTALL:=1
 
-PKG_VERSION:=0.15.2
+PKG_VERSION:=0.15.5
 PKG_REV:=v$(PKG_VERSION)
-PKG_HASH:=6f54afe0fe435be10a73b7297ebd942b3d9bcfacc2560d8097b5b2e08e5fdd34
+PKG_HASH:=skip
 PKG_MIRROR_HASH:=$(PKG_HASH)
 
 PKG_SOURCE_URL:=https://github.com/simetnicbr/simet-lmapd.git
@@ -46,7 +46,7 @@ endef
 CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE:STRING=MinSizeRel -DBUILD_SHARED_LIBS:BOOL=ON \
 	-DBUILD_TESTS:BOOL=OFF -DBUILD_XML:BOOL=OFF -DBUILD_JSON:BOOL=ON \
 	-DBUILD_DOCUMENTATION:BOOL=OFF \
-	-DLMAPD_CONFIG_DIR:PATH="/usr/lib/simet/lmap/config.d:/etc/simet/lmap:/var/run/lmapd/lmap-schedule.json" \
+	-DLMAPD_CONFIG_DIR:PATH="/usr/lib/simet/lmap/config.d:/etc/simet/lmap" \
 	-DLMAPD_CAPABILITY_DIR:PATH="/usr/lib/simet/lmap/registry.d" \
 	-DLMAPD_RUN_DIR:PATH="/var/run/lmapd" \
 	-DLMAPD_QUEUE_DIR:PATH="/var/spool/lmapd/queue"

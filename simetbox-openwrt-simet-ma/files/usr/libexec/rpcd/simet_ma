@@ -149,10 +149,9 @@ EOFLIST
   call)
     case "$2" in
       renew_registration)
-        # can be run as root or nicbr-simet, but $SIMETMA_RECONFIG
-        # must run "/etc/init.d/simet-ma reload" as *root*.
         RC=0
-        simet_register_ma.sh >/dev/null 2>&1 || RC=$?
+        start-stop-daemon -S -c nicbr-simet:nicbr-simet -n simet_reg_ma \
+                          -x /usr/bin/simet_register_ma.sh >/dev/null 2>&1 || RC=$?
         status "$RC"
         ;;
       results_credentials)
@@ -169,10 +168,9 @@ EOFLIST
         fi
         ;;
       refresh_schedule)
-        # can run as root or nicbr-simet, $LMAP_RECONFIG must be something
-        # that will work as nicbr-simet *anyway*.
         RC=0
-        simetbox_lmap-fetch-schedule.sh >/dev/null 2>&1 || RC=$?
+        start-stop-daemon -S -c nicbr-simet:nicbr-simet -n simet_fetch_sched \
+                          -x simetbox_lmap-fetch-schedule.sh >/dev/null 2>&1 || RC=$?
         status "$RC"
         ;;
       geolocate)
@@ -208,14 +206,12 @@ EOFLIST
         au_agentid=$(sed -n -e '1 {p;q}' /etc/simet/agent-id-v2 2>/dev/null) || au_agentid=
         au_smain_period=$(uci -q get simet_ma.basic.time_step) || au_smain_period=
         au_sgwp_period=$(uci -q get simet_ma.gw_ping.time_step) || au_sgwp_period=
-        au_sixbrp_period=$(uci -q get simet_ma.ixbr_ping.time_step) || au_sixbrp_period=
         [ "$au_enabled" = "true" ] && is_measurement_running && au_measurement_running=true
         printf "{ \"enabled\":%s, \"version\":\"%s\", \"main_measurement_running\":\"%s\", \"local_measurement_config\":{ " \
                "$au_enabled" "$au_version" "$au_measurement_running"
           vf2=0
           _jsonify_obj_unquoted $vf2 "basic"   "period_minutes" "$au_smain_period" && vf2=1
           _jsonify_obj_unquoted $vf2 "gw_ping" "period_minutes" "$au_sgwp_period" && vf2=1
-          _jsonify_obj_unquoted $vf2 "ixbr_ping" "period_minutes" "$au_sixbrp_period" && vf2=1
         printf ' }'
         _jsonify_pairs 1 "agent-id" "$au_agentid" "simetbox-id" "$au_mac" || :
         printf ' }\n'

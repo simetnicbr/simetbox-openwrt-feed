@@ -5,11 +5,9 @@ menu "Configuration"
 	config SIMET2_SPOOFER
 		bool "SIMET2: anti-spoofing validation"
 		help
-			EXPERIMENTAL MEASUREMENT, not yet for production use.
-			Attempts to measure whether BCP38 anti-spoofing defenses are deployed.
+			Attempts to measure whether anti-origin-spoofing defenses are deployed.
 			Note: this measurement sends packets with spoofed origin address to NIC.br
 			servers.
-			Warning: requires OpenSSL, which takes a large amount of FLASH space.
 		default n
 
 	config SIMETBOX_APPLINK
@@ -17,6 +15,6 @@ menu "Configuration"
 		help
 			Enables functionality related to configuration and joint-testing
 			through mobile apps.
-			Warning: do not enable on Chaos Calmer, rpcd will crash.
+			Warning: do not enable on OpenWRT 15 (Chaos Calmer), rpcd will crash.
 		default n
 endmenu

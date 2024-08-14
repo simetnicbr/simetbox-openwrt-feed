@@ -1,10 +1,21 @@
 [ "$ACTION" = "ifup" ] && (
+	#subshell
+
 	. /lib/functions/network.sh
-	if network_find_wan WAN4 true && [ "$INTERFACE" = "$WAN4" ] ; then
+
+	DOIT=0
+	network_find_wan WAN4 true && [ "$INTERFACE" = "$WAN4" ] && DOIT=1
+	[ $DOIT -eq 0 ] && network_find_wan6 WAN6 true && [ "$INTERFACE" = "$WAN6" ] && DOIT=1
+
+	[ $DOIT -eq 1 ] && (
+		start-stop-daemon -S -c nicbr-simet:nicbr-simet -n simet_reg_ma \
+		    -x /usr/bin/simet_register_ma.sh -- --boot || :
+		# reload if running, start if not running, the procd way
 		/etc/init.d/simet-ma reload || :
-	elif network_find_wan6 WAN6 true && [ "$INTERFACE" = "$WAN6" ] ; then
-		/etc/init.d/simet-ma reload || :
-	fi
+		/etc/init.d/simet-ma start || :
+		# lmapd should not be reloaded "just because", but start it if it died
+		/etc/init.d/simet-lmapd start || :
+	) < /dev/null >/dev/null 2>&1 &
 	:
 )
 :

@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
-PKG_VERSION:=0.18.6.5
+PKG_VERSION:=0.18.11
 PKG_REV:=v$(PKG_VERSION)
 PKG_MIRROR_HASH:=skip
 
@@ -32,7 +32,6 @@ ifdef CONFIG_SIMET2_SPOOFER
 	CONFIGURE_ARGS += --enable-simet-spoofer
 endif
 
-# FIXME: sha256sum dependency below changes do md5sum in simet-ma 0.14.5 and later
 define Package/simetbox-openwrt-simet-ma
   SUBMENU:=SIMETBox
   SECTION:=net
@@ -41,8 +40,8 @@ define Package/simetbox-openwrt-simet-ma
   DEPENDS:=+simetbox-openwrt-base
   DEPENDS+=+libcurl +curl +ca-bundle +!BUSYBOX_CONFIG_FLOCK:flock
   DEPENDS+=+simetbox-openwrt-simet-lmapd
-  DEPENDS+=+SIMET2_SPOOFER:simet-nping
   DEPENDS+=+!BUSYBOX_CONFIG_SHA256SUM:coreutils-sha256sum
+  DEPENDS+=+!BUSYBOX_CONFIG_MD5SUM:coreutils-md5sum
   URL:=https://simet.nic.br
   USERID:=nicbr-simet:nicbr-simet
 #  MENU:=1
@@ -90,6 +89,22 @@ define Package/simetbox-openwrt-simet-ma/postinst
 	echo "Clearing previous non-hardcoded LMAP configuration"
 	rm -f /var/run/lmapd/*.json
 	/etc/init.d/simet-ma enable
+	[ -d /var/run/lmapd ] && {
+	       # no need to touch symlinks, they're either dangling or point to up-to-date packaged data
+	       find /var/run/lmapd -maxdepth 2 -type f -name '*.json' -delete || true
+
+	       # We ensure there *is* a schedule for each lmapd just in case
+	       # shellcheck disable=SC2015
+	       find /var/run/lmapd -mindepth 1 -maxdepth 1 -type d -exec ln -sf /usr/lib/simet/lmap-empty-schedule.json "{}/lmap-schedule.json" \; || true
+	       ln -sf /usr/lib/simet/lmap-emergency-schedule.json /var/run/lmapd/lmap-schedule.json || true
+	       find /var/run/lmapd -maxdepth 2 \( -type f -o -type l \) -name lmap-schedule.json -exec chown -h nicbr-simet:nicbr-simet "{}" + || true
+	}
+	( . /usr/lib/simet/simet_lib_config.sh && {
+	       [ -n "$${AGENT_LOCK}" ] \
+		       && test -s "$${AGENT_LOCK}" \
+		       && printf "0\n" > "$${AGENT_LOCK}" \
+		       || true
+	} ) 2>/dev/null >/dev/null </dev/null || true
 }
 :
 endef

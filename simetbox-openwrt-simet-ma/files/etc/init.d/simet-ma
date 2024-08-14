@@ -14,7 +14,7 @@ simet_config() {
 	if [ $RC -ne 0 ] || [ -z "$AGENT_ID_FILE" ] || [ -z "$AGENT_TOKEN_FILE" ] || \
 		[ -z "$GEOLOC_CACHE" ] || [ -z "$SIMET_INETUP_SERVER" ] ; then
 		echo "$0: required configuration missing, aborting..." >&2
-		exit 1
+		return 1
 	fi
 
 	BOXID=$(get_mac_address.sh 2>/dev/null | tr A-F a-f | tr -d ': -') || :
@@ -38,36 +38,102 @@ simet_netconfig() {
 	}
 }
 
-boot() {
-	simet_config
+x_paranoid_mkdir() {
+	[ -z "$1" ] && {
+		printf "%s: internal error, missing path to paranoid_mkdir\n", "$0" >&2
+		return 2
+	}
+	MKDIRMODE="$2" || :
+	[ -z "$MKDIRMODE" ] && MKDIRMODE=02770
+	#shellcheck disable=SC2015,SC2174
+	[ -n "$1" ] && mkdir -p -m 0700 "$1" && [ -d "$1" ] || {
+		printf "%s: failed to create directory %s\n" "$0" "$1" >&2
+		return 1
+	}
+	find "$1" -maxdepth 0 -type d ! -group nicbr-simet -exec chgrp nicbr-simet '{}' +
+	find "$1" -maxdepth 0 -type d ! -perm "$MKDIRMODE" -exec chmod "$MKDIRMODE" '{}' +
+	:
+}
+
+x_force_group_files_mask_mode() {
+	#shellcheck disable=SC2015
+	[ -n "$1" ] && [ -d "$1" ] || {
+		printf "%s: not a directory: %s" "$0" "$1" >&2
+		return 1
+	}
+	FMASK="$2" || :
+	[ -z "$FMASK" ] && FMASK="0660"
+	FMODE="$3" || :
+	[ -z "$FMODE" ] && FMODE="ug+rw,o="
+	find "$1" -type f ! \( -user nicbr-simet -a -group nicbr-simet \) -exec chown "nicbr-simet:nicbr-simet" '{}' +
+	find "$1" -type f ! -perm "-$FMASK" -exec chmod "$FMODE" '{}' +
+	:
+}
+
+x_force_file_mode() {
+	#shellcheck disable=SC2015
+	[ -n "$1" ] && [ -e "$1" ] || return 0
+	[ -f "$1" ] || {
+		printf "%s: not a file: %s" "$0" "$1" >&2
+		return 1
+	}
+	FMASK="$2" || :
+	[ -z "$FMASK" ] && FMASK="0660"
+	FMODE="$3" || :
+	[ -z "$FMODE" ] && FMODE="ug+rw,o="
+	find "$1" -maxdepth 0 -type f ! \( -group nicbr-simet \) -exec chgrp -h "nicbr-simet" '{}' +
+	find "$1" -maxdepth 0 -type f ! -perm "-$FMASK" -exec chmod "$FMODE" '{}' +
+}
+
+#note: also sourced by cronjob to self-heal permissions
+init_simetma_fs() {
+	simet_config || return $?
 
 	# used for the geolocation cache and ephemeral tokens
-	[ -n "$SIMET_RUNSTATE_DIR" ] && mkdir -m 02770 -p "$SIMET_RUNSTATE_DIR" && chgrp nicbr-simet "$SIMET_RUNSTATE_DIR"
-	[ -n "$SIMET_LOCK_DIR" ] && mkdir -m 0770 -p "$SIMET_LOCK_DIR" && chgrp nicbr-simet "$SIMET_LOCK_DIR"
-	[ -n "$SIMET_PUBRUNSTATE_DIR" ] && \
-		mkdir -m 0770 -p "$SIMET_PUBRUNSTATE_DIR" && \
-		chgrp nicbr-simet "$SIMET_PUBRUNSTATE_DIR" && \
-		chmod 0775 "$SIMET_PUBRUNSTATE_DIR"
-	find "$AGENT_ID_FILE" -type f \! -perm -0660 -exec chmod ug+rw,o-w {} \; 2>/dev/null
-	find "$AGENT_TOKEN_FILE" -type f \! -perm -0660 -exec chmod ug+rw,o-w {} \; 2>/dev/null
-	find "$AGENT_VIEW_CREDENTIALS_FILE" -type f \! -perm -0664 -exec chmod ug+rw,o=r {} \; 2>/dev/null
+	[ -n "$SIMET_RUNSTATE_DIR" ] && {
+		x_paranoid_mkdir "$SIMET_RUNSTATE_DIR" 02770
+		x_force_group_files_mask_mode "$SIMET_RUNSTATE_DIR" 0660 "ug+rw,o="
+	}
+	[ -n "$SIMET_LOCK_DIR" ] && {
+		x_paranoid_mkdir "$SIMET_LOCK_DIR" 0770
+		x_force_group_files_mask_mode "$SIMET_LOCK_DIR" 0640 "u+rw,g+r"
+	}
+	[ -n "$SIMET_PUBRUNSTATE_DIR" ] && {
+		x_paranoid_mkdir "$SIMET_PUBRUNSTATE_DIR" 0775
+		x_force_group_files_mask_mode "$SIMET_PUBRUNSTATE_DIR" 0664 "ug+rw,o+r"
+	}
+
+	x_paranoid_mkdir /etc/simet 02770
+	find /etc/simet -type f ! \( -user nicbr-simet -a -group nicbr-simet \) -exec chown "nicbr-simet:nicbr-simet" '{}' +
+	find /etc/simet -type f ! -perm -0660 -exec chmod ug+rw,o= '{}' +
 	find /etc/simet -perm -0002 -exec chmod o-w {} + 2>/dev/null
+
+	x_force_file_mode "$AGENT_ID_FILE" 0660 "ug+rw,o-w"
+	x_force_file_mode "$AGENT_TOKEN_FILE" 0660 "ug+rw,o-w"
+	x_force_file_mode "$AGENT_VIEW_CREDENTIALS_FILE" 0664 "ug+rw,o=r"
+}
+
+boot() {
+	init_simetma_fs || return $?
 
 	# restoring config backups from other units is a problem we must check for on boot
 	simet_create_vlabel.sh >/dev/null 2>&1 || :
 
 	# warning: try to keep RAM load down for 32MiB devices!
-	( simet_register_ma.sh && {
+        ( start-stop-daemon -S -c nicbr-simet:nicbr-simet -n simet_reg_ma \
+                          -x /usr/bin/simet_register_ma.sh && {
 		simet_geolocation.sh || :
-		( simetbox_lmap-fetch-schedule.sh \
+		( start-stop-daemon -S -c nicbr-simet:nicbr-simet -n simet_fetch_sched \
+				    -x simetbox_lmap-fetch-schedule.sh \
 			&& chown -h nicbr-simet:nicbr-simet "$LMAP_SCHEDULE_FILE" || :
-		) &
+		) </dev/null >/dev/null 2>&1 &
 	} ) </dev/null >/dev/null 2>&1 &
+
 	start "$@"
 }
 
 start_service() {
-	simet_config
+	simet_config || return $?
 	simet_netconfig
 
 	procd_open_instance simet-inetuptime

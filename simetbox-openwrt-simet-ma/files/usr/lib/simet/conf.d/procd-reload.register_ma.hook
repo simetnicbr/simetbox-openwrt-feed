@@ -1,7 +1,17 @@
 #!/bin/sh
 simet_restart_services_override() {
-	[ -z "$SIMETMA_RECONFIG" ] && exit 0
-	/etc/init.d/simet-lmapd reload || true
-	/etc/init.d/simet-ma reload || true
+        [ -n "$SIMETMA_RECONFIG" ] && (
+		#subshell
+		. /usr/lib/simet/simet_lib_config.sh || return 1
+	        . /usr/lib/simet/simet_lib_lmapd.sh || return 1
+
+		# reload lmapd, agent-id might have changed
+		lmapd_lmapctl_validate "$(lmapd_get_sched_filename main)" && \
+			lmapd_lmapctl_reload main || true
+
+		# reload inetup, we cannot use the initscript as non-root
+		start-stop-daemon -K -p /var/run/simet-inetupc.pid -s HUP -u nicbr-simet -n inetupc
+	) </dev/null >/dev/null || return $?
+	:
 }
 :
