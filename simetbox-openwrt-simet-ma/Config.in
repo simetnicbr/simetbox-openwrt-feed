@@ -3,11 +3,12 @@ menu "Configuration"
 	depends on PACKAGE_simetbox-openwrt-simet-ma
 
 	config SIMET2_SPOOFER
-		bool "SIMET2: anti-spoofing validation"
+		bool "SIMET2: anti-spoofing validation (broken)"
 		help
 			Attempts to measure whether anti-origin-spoofing defenses are deployed.
 			Note: this measurement sends packets with spoofed origin address to NIC.br
-			servers.
+			servers.  Warning: currently does not bypass on-device NAT, and it has
+			other issues, please enable only for debugging or development purposes.
 		default n
 
 	config SIMETBOX_APPLINK

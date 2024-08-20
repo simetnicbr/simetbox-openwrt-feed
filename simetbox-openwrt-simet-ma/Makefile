@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
-PKG_VERSION:=0.18.11
+PKG_VERSION:=0.18.11.1
 PKG_REV:=v$(PKG_VERSION)
 PKG_MIRROR_HASH:=skip
 
@@ -28,8 +28,8 @@ PKG_BUILD_DEPENDS:=curl
 include $(INCLUDE_DIR)/package.mk
 
 CONFIGURE_ARGS += --enable-simetbox
-ifdef CONFIG_SIMET2_SPOOFER
-	CONFIGURE_ARGS += --enable-simet-spoofer
+ifndef CONFIG_SIMET2_SPOOFER
+	CONFIGURE_ARGS += --disable-simet-spoofer
 endif
 
 define Package/simetbox-openwrt-simet-ma

@@ -3,7 +3,7 @@
 # Released under the public domain or GPLv2+ at your option
 
 # Spoofer V2 needs either CAP_NET_RAW or SUID root
-chmod u+s /usr/bin/sspooferc || true
+[ -x /usr/bin/sspooferc ] && chmod u+s /usr/bin/sspooferc || true
 
 # stable seed for pseudo-random numbers
 seed=$(printf %u "0x$(get_mac_address.sh | tail -c 5)") || seed=
