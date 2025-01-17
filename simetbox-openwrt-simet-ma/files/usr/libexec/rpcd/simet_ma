@@ -206,6 +206,8 @@ EOFLIST
         au_agentid=$(sed -n -e '1 {p;q}' /etc/simet/agent-id-v2 2>/dev/null) || au_agentid=
         au_smain_period=$(uci -q get simet_ma.basic.time_step) || au_smain_period=
         au_sgwp_period=$(uci -q get simet_ma.gw_ping.time_step) || au_sgwp_period=
+	au_sys_hostname=$(uci -q get system.@system[0].hostname) || au_sys_hostname=
+	au_sys_desc=$(uci -q get system.@system[0].description) || au_sys_desc=
         [ "$au_enabled" = "true" ] && is_measurement_running && au_measurement_running=true
         printf "{ \"enabled\":%s, \"version\":\"%s\", \"main_measurement_running\":\"%s\", \"local_measurement_config\":{ " \
                "$au_enabled" "$au_version" "$au_measurement_running"
@@ -213,7 +215,7 @@ EOFLIST
           _jsonify_obj_unquoted $vf2 "basic"   "period_minutes" "$au_smain_period" && vf2=1
           _jsonify_obj_unquoted $vf2 "gw_ping" "period_minutes" "$au_sgwp_period" && vf2=1
         printf ' }'
-        _jsonify_pairs 1 "agent-id" "$au_agentid" "simetbox-id" "$au_mac" || :
+        _jsonify_pairs 1 "agent-id" "$au_agentid" "simetbox-id" "$au_mac" "hostname" "$au_sys_hostname" "description" "$au_sys_desc" || :
         printf ' }\n'
         ;;
       simet_pairing_status)
