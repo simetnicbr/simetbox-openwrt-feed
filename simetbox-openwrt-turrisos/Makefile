@@ -28,6 +28,8 @@ endef
 define Package/simetbox-openwrt-turrisos/description
  SIMETBox is a suite of tools to measure the quality of the internet. It's designed to be used mainly in Brazil measuring the internet from users home to Internet Exchange Points.
  The simetbox-openwrt-turrisos package must be installed on Turris devices for SIMETBox to work properly.
+
+ Only enable this package when buiding for Turris OS using the Turris OS OpenWRT-based SDK.
 endef
 
 define Package/simetbox-openwrt-turrisos/install
