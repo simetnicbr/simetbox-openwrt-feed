@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
-PKG_VERSION:=0.18.11.3
+PKG_VERSION:=0.18.12.1
 PKG_REV:=v$(PKG_VERSION)
 PKG_MIRROR_HASH:=skip
 
@@ -100,9 +100,13 @@ define Package/simetbox-openwrt-simet-ma/postinst
 	       find /var/run/lmapd -maxdepth 2 \( -type f -o -type l \) -name lmap-schedule.json -exec chown -h nicbr-simet:nicbr-simet "{}" + || true
 	}
 	( . /usr/lib/simet/simet_lib_config.sh && {
+	       [ -n "$${AGENT_TOKEN_LOCK}" ] \
+		       && test -s "$${AGENT_TOKEN_LOCK}" \
+		       && printf "0\n" > "$${AGENT_TOKEN_LOCK}" \
+		       || true
 	       [ -n "$${AGENT_LOCK}" ] \
 		       && test -s "$${AGENT_LOCK}" \
-		       && printf "0\n" > "$${AGENT_LOCK}" \
+		       && : > "$${AGENT_LOCK}" \
 		       || true
 	} ) 2>/dev/null >/dev/null </dev/null || true
 }
