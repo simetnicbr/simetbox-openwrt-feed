@@ -4,6 +4,11 @@ Arquivos necessários para poder compilar e instalar o sistema SIMETBox nas dist
 
 Há suporte limitado ao OpenWRT 19.07 e 18.06, e suporte *muito* limitado ao OpenWRT "Chaos Calmer" (15.05) e lede-17.01.  Nestes casos, é necessário que o openwrt seja atualizado com alguns backports (do openwrt, luci e packages) disponíveis em simetnicbr/openwrt-openwrt, simetnicbr/openwrt-luci e simetnicbr/openwrt-packages.
 
+Documetação para integradores e hardware vendors, estará disponível em arquivos no subdiretório docs/.  Atentem para o fato de, na maioria das vezes, essa documentação não ser especial para o OpenWRT, e portanto estar disponibilizada *no pacote simet-ma upstream*.
+
+* https://docs.medicoes.nic.br/
+* https://github.com/simetnicbr/simet-ma/tree/master/docs
+
 # Sobre o SIMETBox
 
 O SIMETBox é um sistema inicialmente desenvolvido para roteadores com OpenWRT para medir a qualidade de vários quesitos na internet. Vários testes são realizados até os PTTs do [IX.br](http://ix.br). Os testes realizados pela solução são: latência até os PTTs e gateway da rede, perda de pacotes, jitter, vazão, qualidade dos sites mais acessados no Brasil, localização dos servidores de conteúdo, validação da [BCP-38](http://bcp.nic.br), teste para [gerência de porta 25](http://www.antispam.br/admin/porta25/definicao/) e testes de P2P. Os resultados ficam disponíveis aos usuários através de interface WEB e ao provedor através de [portal](https://pas.nic.br) próprio para isto.
