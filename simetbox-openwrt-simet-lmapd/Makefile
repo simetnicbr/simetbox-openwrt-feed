@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=simetbox-openwrt-simet-lmapd
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 #PKG_FIXUP:=
 PKG_INSTALL:=1
 
-PKG_VERSION:=0.15.5
+PKG_VERSION:=0.15.6
 PKG_REV:=v$(PKG_VERSION)
 PKG_HASH:=skip
 PKG_MIRROR_HASH:=$(PKG_HASH)

@@ -1,7 +1,7 @@
 diff --git a/src/json-io.c b/src/json-io.c
 --- a/src/json-io.c
 +++ b/src/json-io.c
-@@ -1569,11 +1569,12 @@ parse_file(const char *file, const char *what)
+@@ -1595,11 +1595,12 @@ parse_file(const char *file, const char *what)
  	goto res_out;
      }
  
@@ -11,7 +11,7 @@ diff --git a/src/json-io.c b/src/json-io.c
  	lmap_err("failed to open '%s': %s", file, strerror(errno));
  	goto res_out;
      }
-+    (void *) fcntl(file, F_SETFD, FD_CLOEXEC);
++    (void) fcntl(fd, F_SETFD, FD_CLOEXEC);
  
      json_tokener_set_flags(jtk, JSON_TOKENER_STRICT);
      do {
