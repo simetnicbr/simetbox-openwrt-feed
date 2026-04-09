@@ -148,6 +148,7 @@ start_service() {
 	[ -n "$AGENT_ID_FILE" ] && procd_append_param command -d "$AGENT_ID_FILE"
 	[ -n "$BOOTID" ] && procd_append_param command -b "$BOOTID"
 	[ -n "$BOXID" ] && procd_append_param command -m "$BOXID"
+	[ -n "$SIMET2_AGENT_FAMILY" ] && procd_append_param command -F "$SIMET2_AGENT_FAMILY"
 	procd_append_param command -i "$SIMET_RUNSTATE_DIR/inetup-wan-dev"
 	procd_append_param command "$SIMET_INETUP_SERVER"
 	procd_close_instance
