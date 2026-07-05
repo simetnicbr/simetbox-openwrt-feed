@@ -2,7 +2,6 @@ module("luci.controller.simet", package.seeall)
 
 function index()
 	local fs = require "nixio.fs"
-	local simet1_enabled = fs.stat("/usr/bin/simet_client") or nil
 	local page
 
 	page = entry({"admin", "simet"}, firstchild(), _("SIMET"), 10)
@@ -22,28 +21,6 @@ function index()
 	page = entry({"admin", "simet", "simet2_config"}, template("simet/simet2_cfg"), translate("SIMET2 Settings"), 30)
 	page.dependent = false
 	page.leaf = true
-
-	if simet1_enabled ~= nil then
-		page = entry({"admin", "simet", "simet"}, template("simet/simet"), translate("SIMET1 Results"), 15)
-		page.dependent = false
-		page.leaf = true
-
-		page = entry({"admin", "simet", "configuracoes"}, template("simet/configuracoes"), translate("SIMET1 Settings"), 30)
-		page.dependent = false
-		page.leaf = true
-
-		page = entry({"admin", "simet", "getcrontaboptions"}, call("get_crontab_options"), nil)
-		page.leaf = true
-
-		page = entry({"admin", "simet", "setcrontaboptions"}, call("set_crontab_options"), nil)
-		page.leaf = true
-
-		page = entry({"admin", "simet", "run_simet_client"}, call("run_simet_client"), nil)
-		page.leaf = true
-
-		page = entry({"admin", "simet", "simet_client_process"}, call("simet_client_process"), nil)
-		page.leaf = true
-	end
 
 	page = entry({"admin", "simet", "simet_auto_upgrade_now"}, call("run_simet_autoupgrade"), nil)
 	page.leaf = true
@@ -123,47 +100,6 @@ function simet_set_simetma_config()
 	else
 		luci.http.status(503, "configuration update not applied")
 	end
-end
-
-function get_crontab_options()
-	require "simet.simet_utils"
-	local options = luci.http.formvalue('options',true)
-
-	options = json_decode(options)
-
-	for key, value in pairs(options) do
-		for key2, value2 in pairs(value) do
-			options[key][key2] = read_uci_option('simet_cron', key, key2)
-		end
-	end
-
-	luci.http.prepare_content("application/json")
-	luci.http.write(json_encode(options))
-end
-
-function set_crontab_options()
-	require "simet.crontab_writer"
-	require "simet.simet_utils"
-	local options = luci.http.formvalue('options',false)
-
-	options = json_decode(options)
-
-	for key, value in pairs(options) do
-		for key2, value2 in pairs(value) do
-			write_uci_option('simet_cron', key, key2, value2)
-		end
-	end
-
-	commit_uci_config('simet_cron')
-
-	generate_crontab()
-	luci.http.status(200)
-end
-
-function run_simet_client()
-	require "simet.simet_utils"
-	local result = read_from_bash('run_simet.sh')
-	luci.http.write(result)
 end
 
 function run_simet_autoupgrade()
@@ -246,9 +182,3 @@ function simet_ma_get_results_url()
 		luci.http.status(503, "failed to retrieve interactive web UI URL to view measurement results")
 	end
 end
-
-function simet_client_process()
-	local result = read_from_bash('ps w | grep run_simet.sh | grep -v grep | grep -v Z')
-	luci.http.write(result)
-end
-
