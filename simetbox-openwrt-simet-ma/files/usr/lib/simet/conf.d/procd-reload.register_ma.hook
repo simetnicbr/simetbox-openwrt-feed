@@ -10,7 +10,10 @@ simet_restart_services_override() {
 			lmapd_lmapctl_reload main || true
 
 		# reload inetup, we cannot use the initscript as non-root
-		start-stop-daemon -K -p /var/run/simet-inetupc.pid -s HUP -u nicbr-simet -n inetupc
+		# older procd won't create the pidfile, so try by executable on failure
+		start-stop-daemon -K -p /var/run/simet-inetupc.pid  -s HUP -u nicbr-simet -n inetupc \
+			|| start-stop-daemon -K -x /usr/bin/inetupc -s HUP -u nicbr-simet -n inetupc \
+			|| true
 	) </dev/null >/dev/null || return $?
 	:
 }
